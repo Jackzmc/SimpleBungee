@@ -3,13 +3,17 @@ package me.jackz.simplebungee.commands;
 import me.jackz.simplebungee.SimpleBungee;
 import me.jackz.simplebungee.lib.OfflinePlayerStore;
 import me.jackz.simplebungee.lib.PlayerLoader;
+import me.jackz.simplebungee.lib.Util;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.config.Configuration;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Friends extends Command {
     private SimpleBungee plugin;
@@ -61,7 +65,11 @@ public class Friends extends Command {
                         Collection<ProxiedPlayer> playerMatches = plugin.getProxy().matchPlayer(args[1]);
                         if (playerMatches.size() > 0) {
                             ProxiedPlayer friend = playerMatches.iterator().next();
-                            List<UUID> friends_list = FRIEND_REQUESTS.get(friend.getUniqueId());
+                            List<UUID> friends_list = FRIENDS_LIST.get(friend.getUniqueId());
+                            if(friends_list != null && friends_list.contains(friend.getUniqueId())) {
+                                sender.sendMessage(new TextComponent("§cYou are already friends with " + friend.getName()));
+                                return;
+                            }
                             addFriendRequest(friend.getUniqueId(), player.getUniqueId());
 
                             TextComponent base = new TextComponent("§e" + sender.getName() + " §7sent you a friend request ");
@@ -86,9 +94,24 @@ public class Friends extends Command {
                     break;
                 }
                 case "remove":
-                case "join":
+                case "_join":
+                    try {
+                        UUID uuid = UUID.fromString(args[1]);
+                        ProxiedPlayer friend = plugin.getProxy().getPlayer(uuid);
+                        if(friend != null) {
+                            player.connect(friend.getServer().getInfo());
+                            player.sendMessage(new TextComponent("§eTeleporting you to " + friend.getName() + "'s active server..."));
+                        }else{
+                            sender.sendMessage(new TextComponent("§cYour friend is no longer online."));
+                        }
+                    }catch(IllegalArgumentException e) {
+                        sender.sendMessage(new TextComponent("§cCould not find that player"));
+                    }
+                    break;
                 case "leave":
                 case "msg":
+                    sender.sendMessage("feature not implemented at this time.");
+                    break;
                 case "list": {
                     List<UUID> friends = FRIENDS_LIST.get(player.getUniqueId());
                     List<UUID> requests = FRIEND_REQUESTS.get(player.getUniqueId());
@@ -97,10 +120,30 @@ public class Friends extends Command {
                     if (friends != null && friends.size() > 0) {
                         for (UUID uuid : friends) {
                             boolean is_online = playerLoader.isPlayerOnline(uuid);
-                            OfflinePlayerStore friend = playerLoader.getPlayer(uuid);
-                            TextComponent comp_friend = new TextComponent(friend.getLastUsername());
-                            comp_friend.setColor(is_online ? ChatColor.GREEN : ChatColor.RED);
+                            TextComponent comp_friend;
+                            if(is_online) {
+                                ProxiedPlayer friend = plugin.getProxy().getPlayer(uuid);
+                                comp_friend = new TextComponent(friend.getName());
 
+                                TextComponent join = new TextComponent(" [JOIN]");
+                                join.setColor(ChatColor.LIGHT_PURPLE);
+                                join.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/friend _join " + uuid.toString()));
+
+                                BaseComponent[] hovertext = new ComponentBuilder("§7Server: §e" + Util.getServerName(friend.getServer()))
+                                        .append("\n§7Click to join their current server")
+                                        .create();
+                                comp_friend.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,hovertext));
+                                comp_friend.addExtra(join);
+                            }else{
+                                OfflinePlayerStore friend = playerLoader.getPlayer(uuid);
+                                comp_friend = new TextComponent(friend.getLastUsername());
+
+                                BaseComponent[] hovertext = new ComponentBuilder("§7Last Online: §e" + friend.getLastOnline())
+                                        .append("\n§7Last Server: §e" + friend.getLastServer())
+                                        .create();
+                                comp_friend.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,hovertext));
+                            }
+                            comp_friend.setColor(is_online ? ChatColor.GREEN : ChatColor.RED);
                             tc.addExtra("\n");
                             tc.addExtra(comp_friend);
                         }
@@ -109,20 +152,51 @@ public class Friends extends Command {
                     }
 
                     if (requests != null && requests.size() > 0) {
-                        tc.addExtra("\n[debug] " + requests.size() + " friend requests");
+                        tc.addExtra("\n§6Friend Requests");
+                        tc.addExtra("\n§7You have " + requests.size() + " friend requests");
+                        for (UUID request : requests) {
+                            OfflinePlayerStore friend = playerLoader.getPlayer(request);
+                            TextComponent comp_request = new TextComponent(friend.getLastUsername());
+                            comp_request.setColor(ChatColor.YELLOW);
 
+                            TextComponent approve = new TextComponent(" [ACCEPT] ");
+                            TextComponent reject = new TextComponent("[REJECT]");
+                            approve.setColor(ChatColor.GREEN);
+                            approve.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend approve " + player.getUniqueId()));
+                            approve.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Approve friend request").create()));
+                            reject.setColor(ChatColor.RED);
+                            reject.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend reject " + player.getUniqueId()));
+                            reject.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Rejects friend request").create()));
+
+                            comp_request.addExtra(approve);
+                            comp_request.addExtra(reject);
+                            tc.addExtra("\n");
+                            tc.addExtra(comp_request);
+                        }
                     }
                     sender.sendMessage(tc);
                     break;
                 }
+                case "approve":
                 case "accept": {
                     if(args.length >= 2) {
                         try {
                             UUID uuid = UUID.fromString(args[1]);
-                            List<UUID> requests = getFriends(player.getUniqueId());
+                            List<UUID> requests = getFriendRequests(player.getUniqueId());
                             if(requests.contains(uuid)) {
+                                OfflinePlayerStore friend = playerLoader.getPlayer(uuid);
+
                                 requests.remove(uuid);
                                 addFriend(player.getUniqueId(),uuid);
+                                addFriend(uuid,player.getUniqueId());
+
+                                sender.sendMessage(new TextComponent("§aYou accepted the friend request from " + friend.getLastUsername()));
+
+                                ProxiedPlayer online_friend = friend.getOnlinePlayer(plugin.getProxy());
+                                //if friend is online
+                                if(online_friend != null) {
+                                    online_friend.sendMessage(new TextComponent("§e" + player.getName() + " has accepted your friend request"));
+                                }
                             }else{
                                 sender.sendMessage(new TextComponent("§cThere is no pending friend request from that player."));
                             }
@@ -135,13 +209,16 @@ public class Friends extends Command {
                     }
                     break;
                 }
+                case "deny":
                 case "reject": {
                     if(args.length >= 2) {
                         try {
                             UUID uuid = UUID.fromString(args[1]);
-                            List<UUID> requests = getFriends(player.getUniqueId());
+                            List<UUID> requests = getFriendRequests(player.getUniqueId());
                             if(requests.contains(uuid)) {
+                                OfflinePlayerStore friend = playerLoader.getPlayer(uuid);
                                 requests.remove(uuid);
+                                sender.sendMessage(new TextComponent("§cRejected friend request from " + friend.getLastUsername()));
                             }else{
                                 sender.sendMessage(new TextComponent("§cThere is no pending friend request from that player."));
                             }
@@ -180,10 +257,36 @@ public class Friends extends Command {
         FRIEND_REQUESTS.put(target,list);
     }
 
-    public void SaveFriendsList() {
+    public void SaveFriendsList() throws IOException {
+        Configuration data = plugin.getData();
+        for (Map.Entry<UUID, List<UUID>> entry : FRIENDS_LIST.entrySet()) {
+            Configuration sub_player = data.getSection("friends." + entry.getKey().toString());
+            List<UUID> requests = FRIEND_REQUESTS.get(entry.getKey());
 
+            List<String> string_friends = entry.getValue().stream().map(UUID::toString).collect(Collectors.toList());
+            sub_player.set("friends",string_friends);
+            if(requests != null) {
+                List<String> string_requests = requests.stream().map(UUID::toString).collect(Collectors.toList());
+                sub_player.set("requests",string_requests);
+            }
+        }
+        plugin.saveData(data);
     }
-    public void LoadFriendsList() {
+    public void LoadFriendsList() throws IOException {
+        Configuration data = plugin.getData();
+        Configuration sub_friends = data.getSection("friends");
+        FRIENDS_LIST = new HashMap<>();
+        FRIEND_REQUESTS = new HashMap<>();
+        for (String id : sub_friends.getKeys()) {
+            UUID uuid = UUID.fromString(id);
+            Configuration sub_player = data.getSection("friends." + id);
+            List<String> str_friends = sub_player.getStringList("friends");
+            List<String> str_requests = sub_player.getStringList("requests");
 
+            List<UUID> friends = str_friends.stream().map(UUID::fromString).collect(Collectors.toList());
+            List<UUID> requests = str_requests.stream().map(UUID::fromString).collect(Collectors.toList());
+            FRIENDS_LIST.put(uuid,friends);
+            FRIEND_REQUESTS.put(uuid,requests);
+        }
     }
 }

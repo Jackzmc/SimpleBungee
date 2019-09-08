@@ -1,5 +1,6 @@
 package me.jackz.simplebungee.lib;
 
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.UUID;
@@ -58,5 +59,12 @@ public class OfflinePlayerStore {
 
     public UUID getUUID() {
         return id;
+    }
+
+    public boolean isOnline(ProxyServer proxy) {
+        return proxy.getPlayer(id) != null;
+    }
+    public ProxiedPlayer getOnlinePlayer(ProxyServer proxy) {
+        return proxy.getPlayer(id);
     }
 }

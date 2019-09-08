@@ -1,5 +1,7 @@
 package me.jackz.simplebungee.lib;
 
+import net.md_5.bungee.api.connection.Server;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,5 +21,9 @@ public class Util {
         if(diffDays > 0) strings.add(diffDays + " days");
         Collections.reverse(strings);
         return String.join(", ", strings);
+    }
+    public static String getServerName(Server server) {
+        if(server == null) return null;
+        return (server.isConnected()) ? server.getInfo().getName() : null;
     }
 }

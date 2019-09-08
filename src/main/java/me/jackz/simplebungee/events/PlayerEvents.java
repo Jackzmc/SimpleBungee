@@ -13,15 +13,13 @@ import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-import java.io.IOException;
-
 public class PlayerEvents implements Listener {
     private SimpleBungee plugin;
     private PlayerLoader playerLoader;
 
     public PlayerEvents(SimpleBungee plugin) {
         this.plugin = plugin;
-        this.playerLoader = new PlayerLoader(plugin);
+        this.playerLoader = plugin.getPlayerLoader();
     }
 
     @EventHandler
@@ -44,7 +42,7 @@ public class PlayerEvents implements Listener {
 
         try {
             playerLoader.save(player);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             plugin.getLogger().warning("Could not save player information for " + player.getName());
         }
     }

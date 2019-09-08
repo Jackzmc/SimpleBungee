@@ -1,6 +1,5 @@
 package me.jackz.simplebungee.lib;
 
-import jdk.internal.jline.internal.Nullable;
 import me.jackz.simplebungee.SimpleBungee;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
@@ -19,6 +18,7 @@ public class PlayerLoader {
     }
     public void save(ProxiedPlayer player) throws IOException {
         Configuration data = plugin.getData();
+        if(player == null) return;
         OfflinePlayerStore store = new OfflinePlayerStore(player);
         //data.set("players." + player.getUniqueId(),store);
         String key = "players." + player.getUniqueId() + ".";
@@ -40,7 +40,6 @@ public class PlayerLoader {
      * @param uuid player's unique id
      * @return OfflinePlayerStore
      */
-    @Nullable
     public OfflinePlayerStore getPlayer(UUID uuid) {
         Configuration data = null;
         try {
@@ -62,7 +61,6 @@ public class PlayerLoader {
      * @param username Player's username
      * @return OfflinePlayerStore or null
      */
-    @Nullable
     public OfflinePlayerStore getOfflinePlayer(String username){
         UUID uuid = FindOfflinePlayer(username);
         if(uuid != null) {

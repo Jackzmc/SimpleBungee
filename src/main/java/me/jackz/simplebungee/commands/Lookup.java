@@ -17,7 +17,7 @@ public class Lookup extends Command {
     public Lookup(SimpleBungee plugin) {
         super("lookup");
         this.plugin = plugin;
-        this.playerLoader = new PlayerLoader(plugin);
+        this.playerLoader =  plugin.getPlayerLoader();
     }
 
     @Override

@@ -2,6 +2,8 @@ package me.jackz.simplebungee;
 
 import me.jackz.simplebungee.commands.*;
 import me.jackz.simplebungee.events.PlayerEvents;
+import me.jackz.simplebungee.lib.PlayerLoader;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.config.Configuration;
@@ -17,23 +19,27 @@ TODO:
 1. reporting
 2. bans?
 3. parties?
-4. friends?
+4. [60%] friends?
 5. staff chat
 6. global chat?
-[1/2] 7. lookup (name, ip, ping, last login, playtime)
+[50%] 7. lookup (name, ip, ping, last login, playtime)
     -> data.yml, store users & their last login, and when online store session
-[1.75] 8. global join/leave messages
+[DONE] 8. global join/leave messages
 9. mail utilities
+
+10. save loop (run tasks to save, ex: friends)
  */
 
 public final class SimpleBungee extends Plugin {
-
+    private Friends friends;
+    private PlayerLoader playerLoader;
 
 
     @Override
     public void onEnable() {
         // Plugin startup logic
-
+        friends = new Friends(this);
+        playerLoader = new PlayerLoader(this);
         try {
             Configuration config = getConfig();
             PluginManager pm = getProxy().getPluginManager();
@@ -41,10 +47,12 @@ public final class SimpleBungee extends Plugin {
             if(config.getBoolean("commands.servers")) pm.registerCommand(this,new Servers(this));
             if(config.getBoolean("commands.online")) pm.registerCommand(this,new OnlineCount(this));
             if(config.getBoolean("commands.uuid")) pm.registerCommand(this,new UUIDCommand(this));
-            pm.registerCommand(this,new Friends(this));
+            pm.registerCommand(this,friends);
             pm.registerCommand(this,new Lookup(this));
 
             pm.registerListener(this,new PlayerEvents(this));
+
+            friends.LoadFriendsList();
         } catch (IOException e) {
             getLogger().severe("Could not save or load config.yml. " + e.getMessage());
         }
@@ -58,10 +66,19 @@ public final class SimpleBungee extends Plugin {
 
     @Override
     public void onDisable() {
-
+        try {
+            friends.SaveFriendsList();
+            for (ProxiedPlayer player : getProxy().getPlayers()) {
+                playerLoader.save(player);
+            }
+        } catch (IOException e) {
+            getLogger().severe("Could not save friend list and friend requests.");
+        }
         // Plugin shutdown logic
     }
-
+    public PlayerLoader getPlayerLoader() {
+        return playerLoader;
+    }
     public Configuration getConfig() throws IOException {
         File config_file = new File(getDataFolder(),"config.yml");
         if(!getDataFolder().exists()) {
@@ -98,7 +115,11 @@ public final class SimpleBungee extends Plugin {
         ConfigurationProvider.getProvider(YamlConfiguration.class).save(data, data_file);
         return data;
     }
-    public void saveConfiguration(Configuration c, File file) throws IOException {
+    public void saveConfiguration(Configuration c, File file ) throws IOException {
         ConfigurationProvider.getProvider(YamlConfiguration.class).save(c, file);
+    }
+    public void saveData(Configuration c) throws IOException {
+        File file = new File(getDataFolder(),"data.yml");
+        saveConfiguration(c,file);
     }
 }
