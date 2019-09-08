@@ -19,10 +19,10 @@ TODO:
 1. reporting
 2. bans?
 3. parties?
-4. [60%] friends?
+4. [80%] friends? -> saved on quit, possibly save loop
 5. staff chat
 6. global chat?
-[50%] 7. lookup (name, ip, ping, last login, playtime)
+[DONE] 7. lookup (name, ip, ping, last login, playtime) -> last online info stored on player quit
     -> data.yml, store users & their last login, and when online store session
 [DONE] 8. global join/leave messages
 9. mail utilities
@@ -33,7 +33,7 @@ TODO:
 public final class SimpleBungee extends Plugin {
     private Friends friends;
     private PlayerLoader playerLoader;
-
+    public Configuration data;
 
     @Override
     public void onEnable() {
@@ -57,7 +57,7 @@ public final class SimpleBungee extends Plugin {
             getLogger().severe("Could not save or load config.yml. " + e.getMessage());
         }
         try {
-            Configuration data = getData();
+            data = loadData();
             //PLAYER_MAP;
         }catch(IOException e) {
             getLogger().severe("Could not save or load data.yml. " + e.getMessage());
@@ -102,7 +102,7 @@ public final class SimpleBungee extends Plugin {
         return config;
     }
 
-    public Configuration getData() throws IOException {
+    private Configuration loadData() throws IOException {
         File data_file = new File(getDataFolder(),"data.yml");
         if(data_file.exists()) {
             try {
@@ -118,8 +118,8 @@ public final class SimpleBungee extends Plugin {
     public void saveConfiguration(Configuration c, File file ) throws IOException {
         ConfigurationProvider.getProvider(YamlConfiguration.class).save(c, file);
     }
-    public void saveData(Configuration c) throws IOException {
+    public void saveData() throws IOException {
         File file = new File(getDataFolder(),"data.yml");
-        saveConfiguration(c,file);
+        saveConfiguration(data,file);
     }
 }

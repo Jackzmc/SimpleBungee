@@ -258,7 +258,7 @@ public class Friends extends Command {
     }
 
     public void SaveFriendsList() throws IOException {
-        Configuration data = plugin.getData();
+        Configuration data = plugin.data;
         for (Map.Entry<UUID, List<UUID>> entry : FRIENDS_LIST.entrySet()) {
             Configuration sub_player = data.getSection("friends." + entry.getKey().toString());
             List<UUID> requests = FRIEND_REQUESTS.get(entry.getKey());
@@ -270,10 +270,10 @@ public class Friends extends Command {
                 sub_player.set("requests",string_requests);
             }
         }
-        plugin.saveData(data);
+        plugin.saveData();
     }
     public void LoadFriendsList() throws IOException {
-        Configuration data = plugin.getData();
+        Configuration data = plugin.data;
         Configuration sub_friends = data.getSection("friends");
         FRIENDS_LIST = new HashMap<>();
         FRIEND_REQUESTS = new HashMap<>();
