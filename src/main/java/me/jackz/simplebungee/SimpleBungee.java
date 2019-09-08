@@ -41,12 +41,19 @@ public final class SimpleBungee extends Plugin {
         friends = new Friends(this);
         playerLoader = new PlayerLoader(this);
         try {
+            data = loadData();
+            //PLAYER_MAP;
+        }catch(IOException e) {
+            getLogger().severe("Could not save or load data.yml. " + e.getMessage());
+        }
+        try {
             Configuration config = getConfig();
             PluginManager pm = getProxy().getPluginManager();
             if(config.getBoolean("commands.ping")) pm.registerCommand(this,new PingCommand(this));
             if(config.getBoolean("commands.servers")) pm.registerCommand(this,new Servers(this));
             if(config.getBoolean("commands.online")) pm.registerCommand(this,new OnlineCount(this));
             if(config.getBoolean("commands.uuid")) pm.registerCommand(this,new UUIDCommand(this));
+            pm.registerCommand(this,new MainCommand(this));
             pm.registerCommand(this,friends);
             pm.registerCommand(this,new Lookup(this));
 
@@ -56,12 +63,7 @@ public final class SimpleBungee extends Plugin {
         } catch (IOException e) {
             getLogger().severe("Could not save or load config.yml. " + e.getMessage());
         }
-        try {
-            data = loadData();
-            //PLAYER_MAP;
-        }catch(IOException e) {
-            getLogger().severe("Could not save or load data.yml. " + e.getMessage());
-        }
+
     }
 
     @Override
@@ -120,6 +122,7 @@ public final class SimpleBungee extends Plugin {
     }
     public void saveData() throws IOException {
         File file = new File(getDataFolder(),"data.yml");
+        if(data == null) throw new NullPointerException("Data Configuration is null");
         saveConfiguration(data,file);
     }
 }

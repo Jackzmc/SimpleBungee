@@ -1,0 +1,46 @@
+package me.jackz.simplebungee.commands;
+
+import me.jackz.simplebungee.SimpleBungee;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.plugin.Command;
+
+public class MainCommand extends Command {
+    public MainCommand(SimpleBungee plugin) {
+        super("simplebungee","simplebungee.command.simplebungee","sb");
+    }
+
+    @Override
+    public void execute(CommandSender sender, String[] args) {
+        if(args.length == 0 || args[0].equalsIgnoreCase("help")) {
+            TextComponent tc = new TextComponent("§6SimpleBungee Help");
+            tc.addExtra("\n§e/simplebungee reload §7- reload the config.yml");
+            tc.addExtra("\n§e/simplebungee commands §7- view all commands in plugin");
+            sender.sendMessage(tc);
+            return;
+        }
+        switch(args[0].toLowerCase()) {
+            case "reload": {
+                if(sender.hasPermission("simplebungee.command.reload")) {
+                    sender.sendMessage(new TextComponent("§cFeature not implemented"));
+                }else{
+                    sender.sendMessage(new TextComponent("§cYou don't have permission to use this command."));
+                }
+                break;
+            }
+            case "commands": {
+                TextComponent tc = new TextComponent("§6Commands");
+                tc.addExtra("\n§e/lookup <player> §7- get information about a player");
+                tc.addExtra("\n§e/ping [player] §7- view a players ping to the network");
+                tc.addExtra("\n§e/servers §7- view all bungeecoord servers with ability to join");
+                tc.addExtra("\n§e/uuid [player] §7- get a player's UUID");
+                tc.addExtra("\n§e/online §7- view all online players");
+                tc.addExtra("\n§e/friends <help/add/list/etc..> §7- friends management system");
+                sender.sendMessage(tc);
+                break;
+            }
+            default:
+                sender.sendMessage(new TextComponent("§cUnknown argument, try /simplebungee help"));
+        }
+    }
+}
