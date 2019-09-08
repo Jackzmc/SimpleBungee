@@ -5,9 +5,11 @@ import me.jackz.simplebungee.SimpleBungee;
 import me.jackz.simplebungee.lib.PlayerLoader;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
@@ -45,5 +47,18 @@ public class PlayerEvents implements Listener {
         } catch (IOException ex) {
             plugin.getLogger().warning("Could not save player information for " + player.getName());
         }
+    }
+
+    @EventHandler
+    public void onServerSwitch(ServerConnectEvent e) {
+        ProxiedPlayer player = e.getPlayer();
+        ServerInfo dest = e.getTarget();
+        if(player.isConnected() && player.getServer() != null) {
+            ServerInfo current = player.getServer().getInfo();
+            TextComponent tc = new TextComponent(player.getName() + " switched servers from " + current.getName() + " to " + dest.getName());
+            tc.setColor(ChatColor.YELLOW);
+            plugin.getProxy().broadcast(tc);
+        }
+
     }
 }

@@ -1,11 +1,12 @@
-me\jackz\simplebungee\DataStore.class
-me\jackz\simplebungee\commands\Servers.class
-me\jackz\simplebungee\commands\OnlineCount.class
 me\jackz\simplebungee\commands\PingCommand.class
 me\jackz\simplebungee\lib\OfflinePlayerStore.class
-me\jackz\simplebungee\lib\PlayerLoader.class
 me\jackz\simplebungee\commands\Lookup.class
 me\jackz\simplebungee\commands\UUIDCommand.class
-me\jackz\simplebungee\events\PlayerEvents.class
 me\jackz\simplebungee\lib\Util.class
+me\jackz\simplebungee\DataStore.class
+me\jackz\simplebungee\commands\Friends.class
+me\jackz\simplebungee\commands\Servers.class
+me\jackz\simplebungee\commands\OnlineCount.class
+me\jackz\simplebungee\lib\PlayerLoader.class
+me\jackz\simplebungee\events\PlayerEvents.class
 me\jackz\simplebungee\SimpleBungee.class

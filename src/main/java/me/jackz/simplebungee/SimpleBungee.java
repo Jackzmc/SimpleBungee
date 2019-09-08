@@ -20,9 +20,9 @@ TODO:
 4. friends?
 5. staff chat
 6. global chat?
-7. lookup (name, ip, ping, last login, playtime)
+[1/2] 7. lookup (name, ip, ping, last login, playtime)
     -> data.yml, store users & their last login, and when online store session
-8. global join/leave messages
+[1.75] 8. global join/leave messages
 9. mail utilities
  */
 
@@ -41,7 +41,9 @@ public final class SimpleBungee extends Plugin {
             if(config.getBoolean("commands.servers")) pm.registerCommand(this,new Servers(this));
             if(config.getBoolean("commands.online")) pm.registerCommand(this,new OnlineCount(this));
             if(config.getBoolean("commands.uuid")) pm.registerCommand(this,new UUIDCommand(this));
+            pm.registerCommand(this,new Friends(this));
             pm.registerCommand(this,new Lookup(this));
+
             pm.registerListener(this,new PlayerEvents(this));
         } catch (IOException e) {
             getLogger().severe("Could not save or load config.yml. " + e.getMessage());

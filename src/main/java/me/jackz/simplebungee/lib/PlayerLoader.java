@@ -1,5 +1,6 @@
 package me.jackz.simplebungee.lib;
 
+import jdk.internal.jline.internal.Nullable;
 import me.jackz.simplebungee.SimpleBungee;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
@@ -10,12 +11,13 @@ import java.util.UUID;
 
 public class PlayerLoader {
     private SimpleBungee plugin;
+    private final File data_file;
 
     public PlayerLoader(SimpleBungee plugin) {
+        this.data_file = new File(plugin.getDataFolder(), "data.yml");
         this.plugin = plugin;
     }
     public void save(ProxiedPlayer player) throws IOException {
-        File data_file = new File(plugin.getDataFolder(),"data.yml");
         Configuration data = plugin.getData();
         OfflinePlayerStore store = new OfflinePlayerStore(player);
         //data.set("players." + player.getUniqueId(),store);
@@ -26,30 +28,80 @@ public class PlayerLoader {
         data.set(key + "last_server",store.getLastServer());
         plugin.saveConfiguration(data,data_file);
     }
-    public OfflinePlayerStore getPlayer(UUID uuid) throws IOException {
-        File data_file = new File(plugin.getDataFolder(),"data.yml");
-        Configuration data = plugin.getData();
-        String key = "players." + uuid + ".";
-        String username = data.getString(key + "last_username");
-        long lastonline = data.getLong(key + "last_login");
-        String IP = data.getString(key + "last_ip");
-        String last_server = data.getString(key+"last_server");
-        OfflinePlayerStore store = new OfflinePlayerStore(uuid,username,last_server,lastonline,IP);
-        return store;
+    public boolean isPlayerOnline(UUID uuid) {
+        ProxiedPlayer p = plugin.getProxy().getPlayer(uuid);
+        if(p == null) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+    public boolean isPlayerOnline(String username) {
+        ProxiedPlayer p = plugin.getProxy().getPlayer(username);
+        if(p == null) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+    /** Get an OfflinePlayerStore object containing information about player's last information
+     * @param uuid player's unique id
+     * @return OfflinePlayerStore
+     */
+    @Nullable
+    public OfflinePlayerStore getPlayer(UUID uuid) {
+        Configuration data = null;
+        try {
+            data = plugin.getData();
+            String key = "players." + uuid + ".";
+            String username = data.getString(key + "last_username");
+            long lastonline = data.getLong(key + "last_login");
+            String IP = data.getString(key + "last_ip");
+            String last_server = data.getString(key+"last_server");
+            OfflinePlayerStore store = new OfflinePlayerStore(uuid,username,last_server,lastonline,IP);
+            return store;
+        } catch (IOException e) {
+            plugin.getLogger().warning("Could not load data.yml file");
+            return null;
+        }
     }
 
-    public UUID FindOfflinePlayer(String username) throws IOException {
-        File data_file = new File(plugin.getDataFolder(),"data.yml");
-        Configuration players = plugin.getData().getSection("players");
+    /** Gets an OfflinePlayerStore searched from a username
+     * @param username Player's username
+     * @return OfflinePlayerStore or null
+     */
+    @Nullable
+    public OfflinePlayerStore getOfflinePlayer(String username){
+        UUID uuid = FindOfflinePlayer(username);
+        if(uuid != null) {
+            OfflinePlayerStore player = getPlayer(uuid);
+            return player;
+        }
+        return null;
+    }
+
+    /** Gets the UUID from an offline player based on username
+     * @param username The username to search for
+     * @return UUID
+     */
+    public UUID FindOfflinePlayer(String username) {
+        Configuration players = null;
+        try {
+            players = plugin.getData().getSection("players");
+            for (String uuid : players.getKeys()) {
+                String last_username = players.getString(uuid + ".last_username");
+                if(last_username.equalsIgnoreCase(username)) return UUID.fromString(uuid);
+            }
+            return null;
+        } catch (IOException e) {
+            plugin.getLogger().warning("Could not load data.yml file");
+            return null;
+        }
         /*
         players: [var: players]
             <uuid>: [for loop of UUID]
                 last_username: <username>
          */
-        for (String uuid : players.getKeys()) {
-            String last_username = players.getString(uuid + ".last_username");
-            if(last_username.equalsIgnoreCase(username)) return UUID.fromString(uuid);
-        }
-        return null;
+
     }
 }
