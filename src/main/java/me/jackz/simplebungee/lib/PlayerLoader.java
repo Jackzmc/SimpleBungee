@@ -30,19 +30,11 @@ public class PlayerLoader {
     }
     public boolean isPlayerOnline(UUID uuid) {
         ProxiedPlayer p = plugin.getProxy().getPlayer(uuid);
-        if(p == null) {
-            return false;
-        }else{
-            return true;
-        }
+        return p != null;
     }
     public boolean isPlayerOnline(String username) {
         ProxiedPlayer p = plugin.getProxy().getPlayer(username);
-        if(p == null) {
-            return false;
-        }else{
-            return true;
-        }
+        return p != null;
     }
     /** Get an OfflinePlayerStore object containing information about player's last information
      * @param uuid player's unique id

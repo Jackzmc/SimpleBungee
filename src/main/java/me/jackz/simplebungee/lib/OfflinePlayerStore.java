@@ -2,7 +2,6 @@ package me.jackz.simplebungee.lib;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-import java.util.Map;
 import java.util.UUID;
 
 //will be stored in data.yml
@@ -14,7 +13,7 @@ public class OfflinePlayerStore {
     private String last_server;
     private long last_online;
     private String IP;
-    public static Map<UUID,Long> CURRENT_PLAYTIME_STORE;
+    //public static Map<UUID,Long> CURRENT_PLAYTIME_STORE;
 
     public OfflinePlayerStore(UUID id, String username, String server, long lastonline, String IP) {
         this.id = id;
