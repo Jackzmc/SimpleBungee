@@ -37,12 +37,13 @@ public class Lookup extends Command {
 
                     base.setColor(ChatColor.GOLD);
                     base.addExtra("\n§7UUID: §e" + player.getUniqueId());
-                    base.addExtra("\n§7Last Server: §e" + player.getServer().getInfo().getName());
-                    base.addExtra("\n§7Online for §e" + Util.getTimeBetween(now,playtime));
-                    base.addExtra("\n§7Ping: §e" + player.getPing());
+                    base.addExtra("\n§7Server: §e" + player.getServer().getInfo().getName());
+                    base.addExtra("\n§7Online for §e" + Util.getTimeBetween(playtime,now));
+                    base.addExtra("\n§7Ping: §e" + player.getPing() + " ms");
                     if(show_advanced) {
                         base.addExtra("\n§7IP: §e" + player.getAddress().getHostString());
                     }
+                    sender.sendMessage(base);
                 }else{
                     sender.sendMessage(new TextComponent("§cCould not get information about player"));
                 }

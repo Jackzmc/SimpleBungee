@@ -10,8 +10,14 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class PlayerEvents implements Listener {
     private SimpleBungee plugin;
@@ -46,17 +52,26 @@ public class PlayerEvents implements Listener {
             plugin.getLogger().warning("Could not save player information for " + player.getName());
         }
     }
+    private Map<UUID,ServerInfo> LAST_SERVER_MAP = new HashMap<>();
 
-    @EventHandler
-    public void onServerSwitch(ServerConnectEvent e) {
+
+    @EventHandler(priority = EventPriority.LOW)
+    public void onServerConnect(ServerConnectEvent e) {
         ProxiedPlayer player = e.getPlayer();
-        ServerInfo dest = e.getTarget();
-        if(player.isConnected() && player.getServer() != null) {
-            ServerInfo current = player.getServer().getInfo();
-            TextComponent tc = new TextComponent(player.getName() + " switched servers from " + current.getName() + " to " + dest.getName());
+        if(player.isConnected() && player.getServer() != null && !e.isCancelled()) {
+            LAST_SERVER_MAP.put(player.getUniqueId(),e.getPlayer().getServer().getInfo());
+        }
+
+    }
+    @EventHandler
+    public void onServerSwitch(ServerSwitchEvent e) {
+        ProxiedPlayer player = e.getPlayer();
+        ServerInfo previous = LAST_SERVER_MAP.get(player.getUniqueId());
+        ServerInfo current = player.getServer().getInfo();
+        if(current != null) {
+            TextComponent tc = new TextComponent(player.getName() + " switched servers from " + previous.getName() + " to " + current.getName());
             tc.setColor(ChatColor.YELLOW);
             plugin.getProxy().broadcast(tc);
         }
-
     }
 }
