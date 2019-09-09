@@ -19,7 +19,7 @@ TODO:
 1. reporting
 2. bans?
 3. parties?
-4. [80%] friends? -> saved on quit, possibly save loop
+[DONE 4. friends? -> saved on quit, possibly save loop
 5. staff chat
 6. global chat?
 [DONE] 7. lookup (name, ip, ping, last login, playtime) -> last online info stored on player quit
@@ -54,12 +54,13 @@ public final class SimpleBungee extends Plugin {
             if(config.getBoolean("commands.online")) pm.registerCommand(this,new OnlineCount(this));
             if(config.getBoolean("commands.uuid")) pm.registerCommand(this,new UUIDCommand(this));
             pm.registerCommand(this,new MainCommand(this));
-            pm.registerCommand(this,friends);
-            pm.registerCommand(this,new Lookup(this));
-
+            if(config.getBoolean("commands.friends")) {
+                friends.LoadFriendsList();
+                pm.registerCommand(this, friends);
+            }
+            if(config.getBoolean("commands.lookup")) pm.registerCommand(this,new Lookup(this));
             pm.registerListener(this,new PlayerEvents(this));
 
-            friends.LoadFriendsList();
         } catch (IOException e) {
             getLogger().severe("Could not save or load config.yml. " + e.getMessage());
         }
@@ -99,6 +100,11 @@ public final class SimpleBungee extends Plugin {
         config.set("commands.servers",true);
         config.set("commands.online",true);
         config.set("commands.uuid",true);
+        config.set("commands.friends",true);
+        config.set("commands.report",true);
+        config.set("commands.lookup",true);
+        config.set("connection-messages.bungee",true);
+        config.set("connection-messages.serverswitch",true);
         config.set("server_shortcuts",new ArrayList<String>());
         ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, config_file);
         return config;

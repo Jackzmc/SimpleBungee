@@ -3,10 +3,10 @@ package me.jackz.simplebungee.commands;
 import me.jackz.simplebungee.SimpleBungee;
 import me.jackz.simplebungee.lib.OfflinePlayerStore;
 import me.jackz.simplebungee.lib.PlayerLoader;
-import me.jackz.simplebungee.lib.Util;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.*;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.config.Configuration;
@@ -48,12 +48,12 @@ public class Friends extends Command {
         ProxiedPlayer player = (ProxiedPlayer) sender;
         if(args.length == 0 || args[0].equalsIgnoreCase("help")) {
             //show gui
-            BaseComponent[] tc = new ComponentBuilder("§6Friends Menu").color(ChatColor.GOLD)
+            BaseComponent[] tc = new ComponentBuilder("§6Friends Help Menu").color(ChatColor.GOLD)
                     .append("\n/friend add <player> - send a friend request").color(ChatColor.YELLOW)
                     .append("\n/friend remove <player> - unfriend a player")
                     .append("\n/friend join <player> - join your friend's game")
                     .append("\n/friend list - view all your friends and friend requests")
-                    .append("\n/friend msg <player> <msg> - send a message to a friend")
+                    .append("\n/friend invite <player> - invite a friend to join your server")
                     //.append("\n/friend accept <player> - accept a friend request")
                     //.append("\n/friend reject <player> - reject a friend request")
                     .create();
@@ -71,6 +71,7 @@ public class Friends extends Command {
                                 return;
                             }
                             addFriendRequest(friend.getUniqueId(), player.getUniqueId());
+                            sender.sendMessage(new TextComponent("§aSent a friend request to " + friend.getName()));
 
                             TextComponent base = new TextComponent("§e" + sender.getName() + " §7sent you a friend request ");
                             TextComponent approve = new TextComponent("[ACCEPT] ");
@@ -99,8 +100,12 @@ public class Friends extends Command {
                         UUID uuid = UUID.fromString(args[1]);
                         ProxiedPlayer friend = plugin.getProxy().getPlayer(uuid);
                         if(friend != null) {
-                            player.connect(friend.getServer().getInfo());
-                            player.sendMessage(new TextComponent("§eTeleporting you to " + friend.getName() + "'s active server..."));
+                            if(getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
+                                player.connect(friend.getServer().getInfo());
+                                player.sendMessage(new TextComponent("§eConnecting you to " + friend.getName() + "'s active server..."));
+                            }else{
+                                sender.sendMessage(new TextComponent("§cYou are not friends with " + friend.getName()));
+                            }
                         }else{
                             sender.sendMessage(new TextComponent("§cYour friend is no longer online."));
                         }
@@ -108,32 +113,66 @@ public class Friends extends Command {
                         sender.sendMessage(new TextComponent("§cCould not find that player"));
                     }
                     break;
-                case "leave":
+                case "invite":
+                    if(args.length > 1) {
+                        Collection<ProxiedPlayer> friends = plugin.getProxy().matchPlayer(args[1]);
+                        if(friends.size() > 0) {
+                            ProxiedPlayer friend = friends.iterator().next();
+                            if(getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
+                                player.sendMessage(new TextComponent("§aInvited " + friend.getName() + " to join your server."));
+
+                                TextComponent tc = new TextComponent("§e" + player.getName() + " has sent you an invite to join their server. ");
+                                TextComponent join = new TextComponent("[JOIN]");
+                                join.setColor(ChatColor.GREEN);
+                                join.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/friend _join " + player.getUniqueId() ));
+                                join.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("Join your friend's game").create()));
+                                tc.addExtra(join);
+                                friend.sendMessage(tc);
+                            }else{
+                                sender.sendMessage(new TextComponent("§cYou are not friends with " + friend.getName()));
+                            }
+                        }else{
+                            sender.sendMessage(new TextComponent("§cCould not find any friend matching that name online."));
+                        }
+                    }else{
+                        sender.sendMessage(new TextComponent("§cPlease enter a friend to invite. Usage: /friend invite <username>"));
+                    }
+
+                    break;
                 case "msg":
                     sender.sendMessage("feature not implemented at this time.");
                     break;
                 case "list": {
                     List<UUID> friends = FRIENDS_LIST.get(player.getUniqueId());
                     List<UUID> requests = FRIEND_REQUESTS.get(player.getUniqueId());
-
-                    TextComponent tc = new TextComponent("§6Friends");
+                    ServerInfo player_server = player.getServer().getInfo();
+                    TextComponent title_friends = new TextComponent("§6§nFriends§r");
                     if (friends != null && friends.size() > 0) {
                         for (UUID uuid : friends) {
                             boolean is_online = playerLoader.isPlayerOnline(uuid);
                             TextComponent comp_friend;
                             if(is_online) {
                                 ProxiedPlayer friend = plugin.getProxy().getPlayer(uuid);
+                                ServerInfo server = friend.getServer().getInfo();
                                 comp_friend = new TextComponent(friend.getName());
 
                                 TextComponent join = new TextComponent(" [JOIN]");
                                 join.setColor(ChatColor.LIGHT_PURPLE);
                                 join.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/friend _join " + uuid.toString()));
 
-                                BaseComponent[] hovertext = new ComponentBuilder("§7Server: §e" + Util.getServerName(friend.getServer()))
-                                        .append("\n§7Click to join their current server")
+                                BaseComponent[] hovertext = new ComponentBuilder("§7Server: §e" + server.getName())
+                                        .append(" (" + server.getPlayers().size() + " online)")
+                                        .append("\n§7Ping: §e" + friend.getPing())
                                         .create();
                                 comp_friend.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,hovertext));
-                                comp_friend.addExtra(join);
+                                join.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("§7Click to join their server").create()));
+                                if(!server.equals(player_server)) {
+                                    comp_friend.addExtra(join);
+                                }else{
+                                    TextComponent in_server = new TextComponent(" [In Server]");
+                                    in_server.setColor(ChatColor.LIGHT_PURPLE);
+                                    comp_friend.addExtra(in_server);
+                                }
                             }else{
                                 OfflinePlayerStore friend = playerLoader.getPlayer(uuid);
                                 comp_friend = new TextComponent(friend.getLastUsername());
@@ -144,16 +183,18 @@ public class Friends extends Command {
                                 comp_friend.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,hovertext));
                             }
                             comp_friend.setColor(is_online ? ChatColor.GREEN : ChatColor.RED);
-                            tc.addExtra("\n");
-                            tc.addExtra(comp_friend);
+                            title_friends.addExtra("\n");
+                            title_friends.addExtra(comp_friend);
                         }
                     } else {
-                        tc.addExtra("\n§cYou have no friends, why not find some?");
+                        title_friends.addExtra("\n§cYou have no friends, why not find some?");
                     }
 
                     if (requests != null && requests.size() > 0) {
-                        tc.addExtra("\n§6Friend Requests");
-                        tc.addExtra("\n§7You have " + requests.size() + " friend requests");
+                        TextComponent title_friend_requests = new TextComponent("\n§6§nFriend Requests§r");
+                        title_friend_requests.setColor(ChatColor.GOLD);
+                        title_friends.addExtra(title_friend_requests);
+                        title_friends.addExtra("\n§7You have " + requests.size() + " friend requests");
                         for (UUID request : requests) {
                             OfflinePlayerStore friend = playerLoader.getPlayer(request);
                             TextComponent comp_request = new TextComponent(friend.getLastUsername());
@@ -170,11 +211,11 @@ public class Friends extends Command {
 
                             comp_request.addExtra(approve);
                             comp_request.addExtra(reject);
-                            tc.addExtra("\n");
-                            tc.addExtra(comp_request);
+                            title_friends.addExtra("\n");
+                            title_friends.addExtra(comp_request);
                         }
                     }
-                    sender.sendMessage(tc);
+                    sender.sendMessage(title_friends);
                     break;
                 }
                 case "approve":

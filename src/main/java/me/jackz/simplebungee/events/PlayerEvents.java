@@ -12,9 +12,11 @@ import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -23,9 +25,22 @@ public class PlayerEvents implements Listener {
     private SimpleBungee plugin;
     private PlayerLoader playerLoader;
 
+    private boolean network_messages;
+    private boolean switch_server;
+
     public PlayerEvents(SimpleBungee plugin) {
         this.plugin = plugin;
         this.playerLoader = plugin.getPlayerLoader();
+        Configuration config = null;
+        try {
+            config = plugin.getConfig();
+            network_messages = config.getBoolean("connection-messages.bungee");
+            switch_server = config.getBoolean("connection-messages.serverswitch");
+        } catch (IOException e) {
+            network_messages = false;
+            switch_server = false;
+            plugin.getLogger().warning("Could not load config.yml, join messages disconnected");
+        }
     }
 
     @EventHandler
@@ -34,16 +49,21 @@ public class PlayerEvents implements Listener {
         long date = System.currentTimeMillis() / 1000L;
         DataStore.CURRENT_PLAYTIME_STORE.put(player.getUniqueId(),date);
 
-        TextComponent join_message = new TextComponent(player.getName() + " has joined the network");
-        join_message.setColor(ChatColor.YELLOW);
-        plugin.getProxy().broadcast(join_message);
+        if(network_messages) {
+            TextComponent join_message = new TextComponent(player.getName() + " has joined the network");
+            join_message.setColor(ChatColor.YELLOW);
+            plugin.getProxy().broadcast(join_message);
+        }
+
     }
     @EventHandler
     public void onQuit(PlayerDisconnectEvent e) {
         ProxiedPlayer player = e.getPlayer();
-        TextComponent leave_message = new TextComponent(player.getName() + " has left the network");
-        leave_message.setColor(ChatColor.YELLOW);
-        plugin.getProxy().broadcast(leave_message);
+        if(network_messages) {
+            TextComponent leave_message = new TextComponent(player.getName() + " has left the network");
+            leave_message.setColor(ChatColor.YELLOW);
+            plugin.getProxy().broadcast(leave_message);
+        }
         DataStore.CURRENT_PLAYTIME_STORE.remove(player.getUniqueId());
 
         try {
@@ -59,19 +79,24 @@ public class PlayerEvents implements Listener {
     public void onServerConnect(ServerConnectEvent e) {
         ProxiedPlayer player = e.getPlayer();
         if(player.isConnected() && player.getServer() != null && !e.isCancelled()) {
-            LAST_SERVER_MAP.put(player.getUniqueId(),e.getPlayer().getServer().getInfo());
+            if(switch_server) {
+                LAST_SERVER_MAP.put(player.getUniqueId(),e.getPlayer().getServer().getInfo());
+            }
         }
 
     }
     @EventHandler
     public void onServerSwitch(ServerSwitchEvent e) {
         ProxiedPlayer player = e.getPlayer();
-        ServerInfo previous = LAST_SERVER_MAP.get(player.getUniqueId());
-        ServerInfo current = player.getServer().getInfo();
-        if(current != null) {
-            TextComponent tc = new TextComponent(player.getName() + " switched servers from " + previous.getName() + " to " + current.getName());
-            tc.setColor(ChatColor.YELLOW);
-            plugin.getProxy().broadcast(tc);
+        if(switch_server) {
+            ServerInfo previous = LAST_SERVER_MAP.get(player.getUniqueId());
+            ServerInfo current = player.getServer().getInfo();
+            if(current != null) {
+                TextComponent tc = new TextComponent(player.getName() + " switched servers from " + previous.getName() + " to " + current.getName());
+                tc.setColor(ChatColor.YELLOW);
+                plugin.getProxy().broadcast(tc);
+            }
         }
+
     }
 }
