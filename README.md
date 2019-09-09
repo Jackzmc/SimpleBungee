@@ -4,22 +4,24 @@ A set of simple tools for a bungeecoord setup
 Currently in development, features are still in development and may change.
 
 ### Commands
-Current features at this time:
-* **/uuid [player]** -> get users uuid
-* **/ping [player]** -> get users ping to bungeecoord
-* **/lookup <username>** -> gets (last, or current) information for player
-* **/servers** -> lists all servers and has one click join button
-* **/friend** -> full friend system (can join, and msg, and more)
-* **/simplebungee** -> includes reload of config, maybe more commands later
+|  Name              |  Permission                                                     |  Description                                         |
+|--------------------|-----------------------------------------------------------------|------------------------------------------------------|
+| /uuid [player]     | simplebungee.command.uuid                                       | get users uuid                                       |
+| /ping [player]     | simplebungee.command.ping                                       | get users ping to bungeecoord                        |
+| /lookup <username> | simplebungee.command.lookup                                     | gets (last, or current) information for player       |
+| /servers           | simplebungee.command.servers                                    | lists all servers and has one click join button      |
+|  /friends          | simplebungee.command.friends                                    | full friend system (can join, and msg, and more)     |
+| /simplebungee      |  simplebungee.command.simplebungee  simplebungee.command.reload | includes reload of config, maybe more commands later |
 
-### Permissions
-* **simplebungee.command.simplebungee** - use the main /simplebungee command (reloading)
-* **simplebungee.command.friends** - allows access to the /friends command
-* **simplebungee.command.ping** - allows access to the /ping command
-* **simplebungee.command.online** - allows access to the /online command
-* **simplebungee.command.servers** - allows access to the /servers command
-* **simplebungee.command.uuid** - allows access to the /uuid command
-* **simplebungee.command.reload** - allows access to the /simplebungee reload command
+### Configuration
+
+| Name                             |  Type   | Default |  Description |
+|----------------------------------|---------|---------|--------------|
+| connection-messages.bungee       | boolean | true    |  Send \<player> joined the network messages            |
+| connection-messages.serverswitch | boolean | true    |  Send \<player> switched servers from X to Y messages            |
+| connection-messages.friends      | boolean | true    |  Send \<friend> joined/switched servers (only if above are off)            |
+
+
 ## Development Builds
 View development builds on jenkins at https://ci.jackz.me/view/Java/job/SimpleBungee/
 

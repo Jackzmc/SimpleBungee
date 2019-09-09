@@ -2,6 +2,7 @@ package me.jackz.simplebungee;
 
 import me.jackz.simplebungee.commands.*;
 import me.jackz.simplebungee.events.PlayerEvents;
+import me.jackz.simplebungee.lib.ConfigProperty;
 import me.jackz.simplebungee.lib.PlayerLoader;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -89,25 +90,30 @@ public final class SimpleBungee extends Plugin {
             //noinspection ResultOfMethodCallIgnored
             getDataFolder().mkdir();
         }
+        Configuration config = null;
         if(config_file.exists()) {
             try {
-                return ConfigurationProvider.getProvider(YamlConfiguration.class).load(config_file);
+                config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(config_file);
             } catch (IOException e) {
                 getLogger().warning("Could not load config.yml, using default config");
             }
         }
-        Configuration config = new Configuration();
-        config.set("commands.ping",true);
-        config.set("commands.servers",true);
-        config.set("commands.online",true);
-        config.set("commands.uuid",true);
-        config.set("commands.friends",true);
-        config.set("commands.report",true);
-        config.set("commands.lookup",true);
-        config.set("connection-messages.bungee",true);
-        config.set("connection-messages.serverswitch",true);
-        config.set("server_shortcuts",new ArrayList<String>());
-        ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, config_file);
+        if(config == null) config = new Configuration();
+        ConfigProperty cp = new ConfigProperty(config);
+        
+        cp.addDefault("commands.ping",true);
+        cp.addDefault("commands.servers",true);
+        cp.addDefault("commands.online",true);
+        cp.addDefault("commands.uuid",true);
+        cp.addDefault("commands.friends",true);
+        cp.addDefault("commands.report",true);
+        cp.addDefault("commands.lookup",true);
+        cp.addDefault("connection-messages.bungee",true);
+        cp.addDefault("connection-messages.serverswitch",true);
+        cp.addDefault("connection-messages.friends",true);
+        cp.addDefault("server_shortcuts",new ArrayList<String>());
+        config = cp.getConfig();
+        saveConfiguration(config,config_file);
         return config;
     }
 
