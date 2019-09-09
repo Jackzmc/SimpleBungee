@@ -49,11 +49,16 @@ public class Friends extends Command {
         if(args.length == 0 || args[0].equalsIgnoreCase("help")) {
             //show gui
             BaseComponent[] tc = new ComponentBuilder("§6Friends Help Menu").color(ChatColor.GOLD)
-                    .append("\n/friend add <player> - send a friend request").color(ChatColor.YELLOW)
-                    .append("\n/friend remove <player> - unfriend a player")
-                    .append("\n/friend join <player> - join your friend's game")
-                    .append("\n/friend list - view all your friends and friend requests")
-                    .append("\n/friend invite <player> - invite a friend to join your server")
+                    .append("\n/friend add <player>").color(ChatColor.YELLOW)
+                        .append(" - send a friend request").color(ChatColor.GRAY)
+                    .append("\n/friend remove <player>").color(ChatColor.YELLOW)
+                        .append(" - unfriend a player").color(ChatColor.GRAY)
+                    .append("\n/friend join <player>").color(ChatColor.YELLOW)
+                        .append(" - join your friend's game").color(ChatColor.GRAY)
+                    .append("\n/friend invite <player>").color(ChatColor.YELLOW)
+                        .append(" - invite a friend to join your server").color(ChatColor.GRAY)
+                    .append("\n/friend list").color(ChatColor.YELLOW)
+                        .append(" - view all your friends and friend requests").color(ChatColor.GRAY)
                     //.append("\n/friend accept <player> - accept a friend request")
                     //.append("\n/friend reject <player> - reject a friend request")
                     .create();
@@ -94,7 +99,23 @@ public class Friends extends Command {
                     }
                     break;
                 }
-                case "remove":
+                case "remove": {
+                    if(args.length > 1) {
+                        Collection<ProxiedPlayer> friends = plugin.getProxy().matchPlayer(args[1]);
+                        if(friends.size() > 0) {
+                            ProxiedPlayer friend = friends.iterator().next();
+                            removeFriend(friend.getUniqueId(),player.getUniqueId());
+                            removeFriend(player.getUniqueId(),friend.getUniqueId());
+                            sender.sendMessage(new TextComponent("§cRemoved " + friend.getName() + " from your friends list"));
+                            sender.sendMessage(new TextComponent("§c" + player.getName() + " has unfriended you."));
+                        }else{
+                            sender.sendMessage(new TextComponent("§cCould not find any friend matching that name online."));
+                        }
+                    }else{
+                        sender.sendMessage(new TextComponent("§cPlease enter a friend to remove. Usage: /friend remove <username>"));
+                    }
+                    break;
+                }
                 case "_join":
                     try {
                         UUID uuid = UUID.fromString(args[1]);
@@ -113,6 +134,28 @@ public class Friends extends Command {
                         sender.sendMessage(new TextComponent("§cCould not find that player"));
                     }
                     break;
+                case "join":
+                    if(args.length > 1) {
+                        Collection<ProxiedPlayer> friends = plugin.getProxy().matchPlayer(args[1]);
+                        if(friends.size() > 0) {
+                            ProxiedPlayer friend = friends.iterator().next();
+                            if(friend != null) {
+                                if(getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
+                                    player.connect(friend.getServer().getInfo());
+                                    player.sendMessage(new TextComponent("§eConnecting you to " + friend.getName() + "'s active server..."));
+                                }else{
+                                    sender.sendMessage(new TextComponent("§cYou are not friends with " + friend.getName()));
+                                }
+                            }else{
+                                sender.sendMessage(new TextComponent("§cYour friend is no longer online."));
+                            }
+                        }else{
+                            sender.sendMessage(new TextComponent("§cCould not find any friend matching that name online."));
+                        }
+                    }else{
+                        sender.sendMessage(new TextComponent("§cPlease enter a friend to join. Usage: /friend join <username>"));
+                    }
+                    break;
                 case "invite":
                     if(args.length > 1) {
                         Collection<ProxiedPlayer> friends = plugin.getProxy().matchPlayer(args[1]);
@@ -120,8 +163,9 @@ public class Friends extends Command {
                             ProxiedPlayer friend = friends.iterator().next();
                             if(getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
                                 player.sendMessage(new TextComponent("§aInvited " + friend.getName() + " to join your server."));
+                                ServerInfo player_server = player.getServer().getInfo();
 
-                                TextComponent tc = new TextComponent("§e" + player.getName() + " has sent you an invite to join their server. ");
+                                TextComponent tc = new TextComponent("§e" + player.getName() + " has sent you an invite to join " + player_server.getName());
                                 TextComponent join = new TextComponent("[JOIN]");
                                 join.setColor(ChatColor.GREEN);
                                 join.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/friend _join " + player.getUniqueId() ));
@@ -139,9 +183,6 @@ public class Friends extends Command {
                     }
 
                     break;
-                case "msg":
-                    sender.sendMessage("feature not implemented at this time.");
-                    break;
                 case "list": {
                     List<UUID> friends = FRIENDS_LIST.get(player.getUniqueId());
                     List<UUID> requests = FRIEND_REQUESTS.get(player.getUniqueId());
@@ -156,17 +197,21 @@ public class Friends extends Command {
                                 ServerInfo server = friend.getServer().getInfo();
                                 comp_friend = new TextComponent(friend.getName());
 
-                                TextComponent join = new TextComponent(" [JOIN]");
-                                join.setColor(ChatColor.LIGHT_PURPLE);
-                                join.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/friend _join " + uuid.toString()));
-
                                 BaseComponent[] hovertext = new ComponentBuilder("§7Server: §e" + server.getName())
                                         .append(" (" + server.getPlayers().size() + " online)")
-                                        .append("\n§7Ping: §e" + friend.getPing())
+                                        .append("\n§7Ping: §e" + friend.getPing() + " ms")
                                         .create();
                                 comp_friend.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,hovertext));
-                                join.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("§7Click to join their server").create()));
                                 if(!server.equals(player_server)) {
+                                    TextComponent join = new TextComponent(" [JOIN]");
+                                    join.setColor(ChatColor.LIGHT_PURPLE);
+                                    join.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/friend _join " + uuid.toString()));
+                                    join.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("§7Click to join their server").create()));
+
+                                    TextComponent invite = new TextComponent(" [INVITE]");
+                                    invite.setColor(ChatColor.DARK_PURPLE);
+                                    invite.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/friend invite " + friend.getName()));
+                                    invite.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("§7Click to invite them to join your server").create()));
                                     comp_friend.addExtra(join);
                                 }else{
                                     TextComponent in_server = new TextComponent(" [In Server]");
@@ -289,6 +334,12 @@ public class Friends extends Command {
         if(target == friend) return;
         List<UUID> list = getFriends(target);
         list.add(friend);
+        FRIENDS_LIST.put(target, list);
+    }
+    private void removeFriend(UUID target, UUID friend) {
+        if(target == friend) return;
+        List<UUID> list = getFriends(target);
+        list.remove(friend);
         FRIENDS_LIST.put(target, list);
     }
     private void addFriendRequest(UUID target, UUID friend) {
