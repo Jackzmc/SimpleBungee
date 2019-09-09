@@ -209,10 +209,11 @@ public class Friends extends Command {
                                     join.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("§7Click to join their server").create()));
 
                                     TextComponent invite = new TextComponent(" [INVITE]");
-                                    invite.setColor(ChatColor.DARK_PURPLE);
+                                    invite.setColor(ChatColor.BLUE);
                                     invite.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/friend invite " + friend.getName()));
                                     invite.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("§7Click to invite them to join your server").create()));
                                     comp_friend.addExtra(join);
+                                    comp_friend.addExtra(invite);
                                 }else{
                                     TextComponent in_server = new TextComponent(" [In Server]");
                                     in_server.setColor(ChatColor.LIGHT_PURPLE);

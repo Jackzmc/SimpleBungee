@@ -19,9 +19,8 @@ TODO:
 [10%] 1. reporting
 [10%] 2. bans?
 [10%] 3. parties?
-[90%] 4. friends? -> saved on quit, possibly save loop;
-        NEED /friend join <username>
-        NEED /friend list [INVITE] button
+[80%] 4. friends? -> saved on quit, possibly save loop;
+        NEED friend join/leave message? (disable if global on)
 5. staff chat
 [10%] 6. global chat?
 [DONE] 7. lookup (name, ip, ping, last login, playtime) -> last online info stored on player quit
