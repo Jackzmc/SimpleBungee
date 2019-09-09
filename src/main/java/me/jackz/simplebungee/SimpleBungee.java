@@ -16,12 +16,14 @@ import java.util.ArrayList;
 
 /*
 TODO:
-1. reporting
-2. bans?
-3. parties?
-[DONE 4. friends? -> saved on quit, possibly save loop
+[10%] 1. reporting
+[10%] 2. bans?
+[10%] 3. parties?
+[90%] 4. friends? -> saved on quit, possibly save loop;
+        NEED /friend join <username>
+        NEED /friend list [INVITE] button
 5. staff chat
-6. global chat?
+[10%] 6. global chat?
 [DONE] 7. lookup (name, ip, ping, last login, playtime) -> last online info stored on player quit
     -> data.yml, store users & their last login, and when online store session
 [DONE] 8. global join/leave messages

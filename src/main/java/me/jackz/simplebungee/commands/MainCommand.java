@@ -4,10 +4,15 @@ import me.jackz.simplebungee.SimpleBungee;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.config.Configuration;
+
+import java.io.IOException;
 
 public class MainCommand extends Command {
+    private SimpleBungee plugin;
     public MainCommand(SimpleBungee plugin) {
         super("simplebungee","simplebungee.command.simplebungee","sb");
+        this.plugin = plugin;
     }
 
     @Override
@@ -29,14 +34,21 @@ public class MainCommand extends Command {
                 break;
             }
             case "commands": {
-                TextComponent tc = new TextComponent("§6Commands");
-                tc.addExtra("\n§e/lookup <player> §7- get information about a player");
-                tc.addExtra("\n§e/ping [player] §7- view a players ping to the network");
-                tc.addExtra("\n§e/servers §7- view all bungeecoord servers with ability to join");
-                tc.addExtra("\n§e/uuid [player] §7- get a player's UUID");
-                tc.addExtra("\n§e/online §7- view all online players");
-                tc.addExtra("\n§e/friends <help/add/list/etc..> §7- friends management system");
-                sender.sendMessage(tc);
+                Configuration config = null;
+                try {
+                    config = plugin.getConfig();
+                    TextComponent tc = new TextComponent("§6Commands");
+                    if(config.getBoolean("commands.lookup")) tc.addExtra("\n§e/lookup <player> §7- get information about a player");
+                    if(config.getBoolean("commands.ping")) tc.addExtra("\n§e/ping [player] §7- view a players ping to the network");
+                    if(config.getBoolean("commands.servers")) tc.addExtra("\n§e/servers §7- view all bungeecoord servers with ability to join");
+                    if(config.getBoolean("commands.uuid")) tc.addExtra("\n§e/uuid [player] §7- get a player's UUID");
+                    if(config.getBoolean("commands.online")) tc.addExtra("\n§e/online §7- view all online players");
+                    if(config.getBoolean("commands.friends")) tc.addExtra("\n§e/friends <help/add/list/etc..> §7- friends management system");
+                    sender.sendMessage(tc);
+                } catch (IOException e) {
+                    plugin.getLogger().warning("Can not get configuration file");
+                    sender.sendMessage(new TextComponent(e.getMessage()));
+                }
                 break;
             }
             default:
