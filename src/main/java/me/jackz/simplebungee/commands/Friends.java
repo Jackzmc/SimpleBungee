@@ -37,7 +37,8 @@ public class Friends extends Command {
     7. reject <request>
     8. help
 
-    //GUI probavly instead?
+    friend add COOLDOWN / limit
+    multiple friend bug
      */
     @Override
     public void execute(CommandSender sender, String[] args) {
@@ -70,9 +71,16 @@ public class Friends extends Command {
                         Collection<ProxiedPlayer> playerMatches = plugin.getProxy().matchPlayer(args[1]);
                         if (playerMatches.size() > 0) {
                             ProxiedPlayer friend = playerMatches.iterator().next();
-                            List<UUID> friends_list = FRIENDS_LIST.get(friend.getUniqueId());
-                            if(friends_list != null && friends_list.contains(friend.getUniqueId())) {
+                            List<UUID> friends_list = getFriends(friend.getUniqueId());
+                            List<UUID> friend_requests = getFriendRequests(friend.getUniqueId());
+                            if(friends_list.contains(player.getUniqueId())) {
                                 sender.sendMessage(new TextComponent("§cYou are already friends with " + friend.getName()));
+                                return;
+                            }else if(friend_requests.contains(player.getUniqueId())) {
+                                sender.sendMessage(new TextComponent("§cYou already sent a friend request to " + friend.getName()));
+                                return;
+                            }else if(friend == player) {
+                                sender.sendMessage(new TextComponent("§cYou can't be friends with yourself!"));
                                 return;
                             }
                             addFriendRequest(friend.getUniqueId(), player.getUniqueId());
@@ -120,18 +128,9 @@ public class Friends extends Command {
                     try {
                         UUID uuid = UUID.fromString(args[1]);
                         ProxiedPlayer friend = plugin.getProxy().getPlayer(uuid);
-                        if(friend != null) {
-                            if(getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
-                                player.connect(friend.getServer().getInfo());
-                                player.sendMessage(new TextComponent("§eConnecting you to " + friend.getName() + "'s active server..."));
-                            }else{
-                                sender.sendMessage(new TextComponent("§cYou are not friends with " + friend.getName()));
-                            }
-                        }else{
-                            sender.sendMessage(new TextComponent("§cYour friend is no longer online."));
-                        }
+                        joinFriend(player, friend);
                     }catch(IllegalArgumentException e) {
-                        sender.sendMessage(new TextComponent("§cCould not find that player"));
+                        player.sendMessage(new TextComponent("§cCould not find that player"));
                     }
                     break;
                 case "join":
@@ -139,21 +138,12 @@ public class Friends extends Command {
                         Collection<ProxiedPlayer> friends = plugin.getProxy().matchPlayer(args[1]);
                         if(friends.size() > 0) {
                             ProxiedPlayer friend = friends.iterator().next();
-                            if(friend != null) {
-                                if(getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
-                                    player.connect(friend.getServer().getInfo());
-                                    player.sendMessage(new TextComponent("§eConnecting you to " + friend.getName() + "'s active server..."));
-                                }else{
-                                    sender.sendMessage(new TextComponent("§cYou are not friends with " + friend.getName()));
-                                }
-                            }else{
-                                sender.sendMessage(new TextComponent("§cYour friend is no longer online."));
-                            }
+                            joinFriend(player, friend);
                         }else{
-                            sender.sendMessage(new TextComponent("§cCould not find any friend matching that name online."));
+                            player.sendMessage(new TextComponent("§cCould not find any friend matching that name online."));
                         }
                     }else{
-                        sender.sendMessage(new TextComponent("§cPlease enter a friend to join. Usage: /friend join <username>"));
+                        player.sendMessage(new TextComponent("§cPlease enter a friend to join. Usage: /friend join <username>"));
                     }
                     break;
                 case "invite":
@@ -323,6 +313,20 @@ public class Friends extends Command {
             }
         }
     }
+
+    private void joinFriend(ProxiedPlayer player, ProxiedPlayer friend) {
+        if(friend != null) {
+            if(getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
+                player.connect(friend.getServer().getInfo());
+                player.sendMessage(new TextComponent("§eConnecting you to " + friend.getName() + "'s active server..."));
+            }else{
+                player.sendMessage(new TextComponent("§cYou are not friends with " + friend.getName()));
+            }
+        }else{
+            player.sendMessage(new TextComponent("§cCould not find an online friend with that name."));
+        }
+    }
+
     private List<UUID> getFriends(UUID target) {
         List<UUID> list = FRIENDS_LIST.get(target);
         return (list != null) ? list : new ArrayList<>();
@@ -332,8 +336,10 @@ public class Friends extends Command {
         return (list != null) ? list : new ArrayList<>();
     }
     private void addFriend(UUID target, UUID friend) {
-        if(target == friend) return;
+        if(target == friend) return; //if trying to add self as friend ,fail
         List<UUID> list = getFriends(target);
+        if(list.contains(friend)) return; //silent fail if friend is already friends with target
+
         list.add(friend);
         FRIENDS_LIST.put(target, list);
     }
@@ -354,14 +360,9 @@ public class Friends extends Command {
         Configuration data = plugin.data;
         for (Map.Entry<UUID, List<UUID>> entry : FRIENDS_LIST.entrySet()) {
             Configuration sub_player = data.getSection("friends." + entry.getKey().toString());
-            List<UUID> requests = FRIEND_REQUESTS.get(entry.getKey());
 
             List<String> string_friends = entry.getValue().stream().map(UUID::toString).collect(Collectors.toList());
             sub_player.set("friends",string_friends);
-            if(requests != null) {
-                List<String> string_requests = requests.stream().map(UUID::toString).collect(Collectors.toList());
-                sub_player.set("requests",string_requests);
-            }
         }
         plugin.saveData();
     }
@@ -369,17 +370,13 @@ public class Friends extends Command {
         Configuration data = plugin.data;
         Configuration sub_friends = data.getSection("friends");
         FRIENDS_LIST = new HashMap<>();
-        FRIEND_REQUESTS = new HashMap<>();
         for (String id : sub_friends.getKeys()) {
             UUID uuid = UUID.fromString(id);
             Configuration sub_player = data.getSection("friends." + id);
             List<String> str_friends = sub_player.getStringList("friends");
-            List<String> str_requests = sub_player.getStringList("requests");
 
             List<UUID> friends = str_friends.stream().map(UUID::fromString).collect(Collectors.toList());
-            List<UUID> requests = str_requests.stream().map(UUID::fromString).collect(Collectors.toList());
             FRIENDS_LIST.put(uuid,friends);
-            FRIEND_REQUESTS.put(uuid,requests);
         }
     }
 }
