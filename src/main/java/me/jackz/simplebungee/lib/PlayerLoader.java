@@ -1,7 +1,5 @@
 package me.jackz.simplebungee.lib;
 
-import com.sun.istack.internal.NotNull;
-import jdk.internal.jline.internal.Nullable;
 import me.jackz.simplebungee.SimpleBungee;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
@@ -21,7 +19,7 @@ public class PlayerLoader {
      * @param player The ProxiedPlayer to save to file
      * @throws IOException Thrown if data could not be saved
      */
-    public void save(@NotNull ProxiedPlayer player) throws IOException {
+    public void save(ProxiedPlayer player) throws IOException {
         Configuration data = plugin.data;
         if(player == null) throw new IllegalArgumentException("ProxiedPlayer provided is null");
         OfflinePlayerStore store = new OfflinePlayerStore(player);
@@ -38,8 +36,7 @@ public class PlayerLoader {
      * @param uuid Player's UUID
      * @return boolean representing if player is online or not
      */
-    @Nullable
-    public boolean isPlayerOnline(@Nullable UUID uuid) {
+    public boolean isPlayerOnline(UUID uuid) {
         ProxiedPlayer p = plugin.getProxy().getPlayer(uuid);
         return p != null;
     }
@@ -48,8 +45,7 @@ public class PlayerLoader {
      * @param username The player's real username
      * @return boolean representing if player is online or not
      */
-    @Nullable
-    public boolean isPlayerOnline(@Nullable String username) {
+    public boolean isPlayerOnline(String username) {
         ProxiedPlayer p = plugin.getProxy().getPlayer(username);
         return p != null;
     }
@@ -57,8 +53,7 @@ public class PlayerLoader {
      * @param uuid player's unique id
      * @return OfflinePlayerStore
      */
-    @Nullable
-    public OfflinePlayerStore getPlayer(@Nullable UUID uuid) {
+    public OfflinePlayerStore getPlayer(UUID uuid) {
         Configuration data =  plugin.data;
         String key = "players." + uuid + ".";
         Configuration player = data.getSection("players." + uuid);
@@ -74,8 +69,7 @@ public class PlayerLoader {
      * @param username Player's username
      * @return OfflinePlayerStore or null
      */
-    @Nullable
-    public OfflinePlayerStore getOfflinePlayer(@Nullable String username){
+    public OfflinePlayerStore getOfflinePlayer(String username){
         UUID uuid = FindOfflinePlayer(username);
         if(uuid != null) {
             return getPlayer(uuid);
@@ -87,8 +81,7 @@ public class PlayerLoader {
      * @param username The username to search for
      * @return UUID
      */
-    @Nullable
-    public UUID FindOfflinePlayer(@Nullable String username) {
+    public UUID FindOfflinePlayer(String username) {
         Configuration players = plugin.data.getSection("players");
         for (String uuid : players.getKeys()) {
             String last_username = players.getString(uuid + ".last_username");
