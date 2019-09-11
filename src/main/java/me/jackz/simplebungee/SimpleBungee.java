@@ -14,22 +14,13 @@ import net.md_5.bungee.config.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /*
 TODO:
-[10%] 1. reporting
-[10%] 2. bans?
-[10%] 3. parties?
-[80%] 4. friends? -> saved on quit, possibly save loop;
-        NEED friend join/leave message? (disable if global on)
-5. staff chat
-[10%] 6. global chat?
-[DONE] 7. lookup (name, ip, ping, last login, playtime) -> last online info stored on player quit
-    -> data.yml, store users & their last login, and when online store session
-[DONE] 8. global join/leave messages
-9. mail utilities
-
-10. save loop (run tasks to save, ex: friends)
+moved to
+https://trello.com/b/9v1N8q0l/simplebungee
  */
 
 public final class SimpleBungee extends Plugin {
@@ -51,16 +42,22 @@ public final class SimpleBungee extends Plugin {
         try {
             Configuration config = getConfig();
             PluginManager pm = getProxy().getPluginManager();
-            if(config.getBoolean("commands.ping")) pm.registerCommand(this,new PingCommand(this));
+            if(config.getBoolean("commands.ping"))    pm.registerCommand(this,new PingCommand(this));
             if(config.getBoolean("commands.servers")) pm.registerCommand(this,new Servers(this));
-            if(config.getBoolean("commands.online")) pm.registerCommand(this,new OnlineCount(this));
-            if(config.getBoolean("commands.uuid")) pm.registerCommand(this,new UUIDCommand(this));
+            if(config.getBoolean("commands.online"))  pm.registerCommand(this,new OnlineCount(this));
+            if(config.getBoolean("commands.uuid"))    pm.registerCommand(this,new UUIDCommand(this));
+            if(config.getBoolean("commands.report"))  pm.registerCommand(this,new Report(this));
+            if(config.getBoolean("commands.global"))  {
+                Global global = new Global(this);
+                pm.registerCommand(this,global);
+                pm.registerListener(this,global);
+            }
+            if(config.getBoolean("commands.lookup"))  pm.registerCommand(this,new Lookup(this));
             pm.registerCommand(this,new MainCommand(this));
             if(config.getBoolean("commands.friends")) {
                 friends.LoadFriendsList();
                 pm.registerCommand(this, friends);
             }
-            if(config.getBoolean("commands.lookup")) pm.registerCommand(this,new Lookup(this));
             pm.registerListener(this,new PlayerEvents(this));
 
         } catch (IOException e) {
@@ -100,14 +97,19 @@ public final class SimpleBungee extends Plugin {
         }
         if(config == null) config = new Configuration();
         ConfigProperty cp = new ConfigProperty(config);
-        
+        List<String> REPORT_REASONS = Arrays.asList("Griefing","Harassment","Hacking");
+
         cp.addDefault("commands.ping",true);
         cp.addDefault("commands.servers",true);
         cp.addDefault("commands.online",true);
+        cp.addDefault("commands.global",true);
         cp.addDefault("commands.uuid",true);
         cp.addDefault("commands.friends",true);
         cp.addDefault("commands.report",true);
         cp.addDefault("commands.lookup",true);
+        cp.addDefault("report.use_reason_list",true);
+        cp.addDefault("report.reasons",REPORT_REASONS);
+        cp.addDefault("formats.global","&9GLOBAL %servername%> &e%displayname%:&r");
         cp.addDefault("connection-messages.bungee",true);
         cp.addDefault("connection-messages.serverswitch",true);
         cp.addDefault("connection-messages.friends",true);
