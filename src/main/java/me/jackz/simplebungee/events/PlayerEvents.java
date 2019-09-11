@@ -7,10 +7,7 @@ import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.event.ServerConnectEvent;
-import net.md_5.bungee.api.event.ServerSwitchEvent;
+import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
@@ -94,7 +91,7 @@ public class PlayerEvents implements Listener {
         if(switch_server_messages) {
             ServerInfo previous = LAST_SERVER_MAP.get(player.getUniqueId());
             ServerInfo current = player.getServer().getInfo();
-            if(current != null && current != previous) {
+            if(previous != null && current != previous) {
                 TextComponent tc = new TextComponent(player.getName() + " switched servers from " + previous.getName() + " to " + current.getName());
                 tc.setColor(ChatColor.YELLOW);
                 plugin.getProxy().broadcast(tc);
@@ -102,4 +99,5 @@ public class PlayerEvents implements Listener {
         }
 
     }
+
 }
