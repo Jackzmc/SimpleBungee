@@ -115,7 +115,7 @@ public class Friends extends Command {
                             removeFriend(friend.getUniqueId(),player.getUniqueId());
                             removeFriend(player.getUniqueId(),friend.getUniqueId());
                             sender.sendMessage(new TextComponent("§cRemoved " + friend.getName() + " from your friends list"));
-                            friend.sendMessage(new TextComponent("§c" + player.getName() + " has unfriended you."));
+                            sender.sendMessage(new TextComponent("§c" + player.getName() + " has unfriended you."));
                         }else{
                             sender.sendMessage(new TextComponent("§cCould not find any friend matching that name online."));
                         }

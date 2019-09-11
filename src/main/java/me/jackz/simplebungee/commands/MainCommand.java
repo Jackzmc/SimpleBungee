@@ -44,7 +44,6 @@ public class MainCommand extends Command {
                     if(config.getBoolean("commands.uuid")) tc.addExtra("\n§e/uuid [player] §7- get a player's UUID");
                     if(config.getBoolean("commands.online")) tc.addExtra("\n§e/online §7- view all online players");
                     if(config.getBoolean("commands.friends")) tc.addExtra("\n§e/friends <help/add/list/etc..> §7- friends management system");
-                    if(config.getBoolean("commands.global")) tc.addExtra("\n§e/global [message] §7- toggle or use global chat");
                     sender.sendMessage(tc);
                 } catch (IOException e) {
                     plugin.getLogger().warning("Can not get configuration file");
