@@ -1,0 +1,36 @@
+#Enable or disable commands/modules here:
+commands:
+  ping: true
+  servers: true
+  online: true
+  uuid: true
+  friends: true
+  report: true
+  lookup: true
+  global: true
+
+#Global connection messages
+connection-messages:
+  bungee: true #announce on join of server (X joined the network/left the network)
+  serverswitch: true #announce server switch (X switched servers from X to Y)
+  friends: true #announce to players their friend joined or left
+
+#not used yet, will be used for /<server> -> /server <server> shortcut
+server_shortcuts: []
+
+#reporting configuration
+report:
+  use_reason_list: true #should players use a predefined list of reasons, or enter reason manually?
+  reasons:
+    - Griefing
+    - Harassment
+    - Hacking
+# formats for messages (will be moved later into messages.yml)
+formats:
+  global: '&9GLOBAL %servername%> &e%displayname%:&r' #global chat display
+
+# more for testing, should plugin kick players on shutdown?
+kick-players-on-shutdown: true
+
+# should /servers show restricted servers (with [restricted] text)
+show_restricted_servers: false
