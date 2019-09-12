@@ -47,7 +47,7 @@ public final class SimpleBungee extends Plugin {
             if(config.getBoolean("commands.servers")) pm.registerCommand(this,new Servers(this));
             if(config.getBoolean("commands.online"))  pm.registerCommand(this,new OnlineCount(this));
             if(config.getBoolean("commands.uuid"))    pm.registerCommand(this,new UUIDCommand(this));
-            if(config.getBoolean("commands.report"))  pm.registerCommand(this,new Report(this));
+            //if(config.getBoolean("commands.report"))  pm.registerCommand(this,new Report(this));
             if(config.getBoolean("commands.global"))  {
                 Global global = new Global(this);
                 pm.registerCommand(this,global);
@@ -109,7 +109,7 @@ public final class SimpleBungee extends Plugin {
         cp.addDefault("commands.global",true);
         cp.addDefault("commands.uuid",true);
         cp.addDefault("commands.friends",true);
-        cp.addDefault("commands.report",true);
+        //cp.addDefault("commands.report",true);
         cp.addDefault("commands.lookup",true);
         cp.addDefault("report.use_reason_list",true);
         cp.addDefault("report.reasons",REPORT_REASONS);
