@@ -11,16 +11,21 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
+import java.io.IOException;
 import java.util.stream.Collectors;
 
 public class Servers extends Command {
     private SimpleBungee plugin;
-    private boolean show_restricted;
+    private boolean show_restricted = false;
 
     public Servers(SimpleBungee plugin)  {
         super("servers","simplebungee.command.servers");
         this.plugin = plugin;
-        this.show_restricted = plugin.getConfig().getBoolean("show_restricted_servers",false);
+        try {
+            this.show_restricted = plugin.getConfig().getBoolean("show_restricted_servers",false);
+        } catch (IOException ignored) {
+
+        }
     }
     @Override
     public void execute(CommandSender sender, String[] args) {
