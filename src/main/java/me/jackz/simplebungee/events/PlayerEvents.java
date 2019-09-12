@@ -68,10 +68,11 @@ public class PlayerEvents implements Listener {
             plugin.getProxy().broadcast(leave_message);
         }
         DataStore.CURRENT_PLAYTIME_STORE.remove(player.getUniqueId());
-
         try {
             playerLoader.save(player);
-        } catch (Exception ex) {
+        } catch (NoClassDefFoundError ex) {
+            plugin.getLogger().warning("Could not save player information for " + player.getName() + " [NoClassDefFoundError]");
+        } catch(Exception ex) {
             plugin.getLogger().warning("Could not save player information for " + player.getName());
         }
     }
