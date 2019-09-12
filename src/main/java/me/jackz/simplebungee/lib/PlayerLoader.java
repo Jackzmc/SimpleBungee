@@ -15,7 +15,7 @@ public class PlayerLoader {
     }
 
 
-    /** Attempt to save the proxiedplayer into an OfflinePlayerStore & file
+    /** Attempt to save the proxiedplayer into an OfflinePlayerStore and file
      * @param player The ProxiedPlayer to save to file
      * @throws IOException Thrown if data could not be saved
      */
