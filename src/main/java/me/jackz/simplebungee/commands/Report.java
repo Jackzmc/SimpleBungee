@@ -67,7 +67,7 @@ public class Report extends Command implements Listener {
                     ProxiedPlayer p = plugin.getProxy().getPlayer(args[0].toLowerCase());
                     if(p != null) {
                         if(USE_REASON_LIST) {
-                            TextComponent tc = new TextComponent("§7Please choose a reason: ");
+                            TextComponent tc = new TextComponent("§7Please choose a reason:");
                             for (String reason : REASONS) {
                                 TextComponent comp_reason = new TextComponent("[" + reason + "]");
                                 comp_reason.setColor(ChatColor.AQUA);

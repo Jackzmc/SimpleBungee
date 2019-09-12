@@ -62,6 +62,7 @@ public class Global extends Command implements Listener {
 
     @EventHandler(priority =  EventPriority.HIGH)
     public void onChat(ChatEvent e) {
+        if(e.getMessage().startsWith("/")) return;
         ProxiedPlayer player = (ProxiedPlayer) e.getSender();
         String message = e.getMessage();
         boolean is_global = isGlobalEnabled(player.getUniqueId());
