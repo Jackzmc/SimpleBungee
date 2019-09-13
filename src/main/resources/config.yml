@@ -16,7 +16,11 @@ connection-messages:
   friends: true #announce to players their friend joined or left
 
 #not used yet, will be used for /<server> -> /server <server> shortcut
-server_shortcuts: []
+server_shortcuts:
+  - examplebungeeserver:
+      aliases:
+        - exampleshortcut
+      permissions: true
 
 #reporting configuration
 report:

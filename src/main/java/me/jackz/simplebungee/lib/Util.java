@@ -22,6 +22,9 @@ public class Util {
         Collections.reverse(strings);
         return String.join(", ", strings);
     }
+    public static String getSectioned(String... keys) {
+        return String.join(".",keys);
+    }
     public static String getServerName(Server server) {
         if(server == null) return null;
         return (server.isConnected()) ? server.getInfo().getName() : null;

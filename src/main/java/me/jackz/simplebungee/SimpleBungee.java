@@ -4,6 +4,7 @@ import me.jackz.simplebungee.commands.*;
 import me.jackz.simplebungee.events.PlayerEvents;
 import me.jackz.simplebungee.lib.ConfigProperty;
 import me.jackz.simplebungee.lib.PlayerLoader;
+import me.jackz.simplebungee.lib.ServerShortcut;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -16,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /*
 TODO:
@@ -59,6 +59,9 @@ public final class SimpleBungee extends Plugin {
                 friends.LoadFriendsList();
                 pm.registerCommand(this, friends);
             }
+            Configuration servers = config.getSection("server_shortcuts");
+            ServerShortcut.setupShortcuts(this,servers);
+
             pm.registerListener(this,new PlayerEvents(this));
 
         } catch (IOException e) {
@@ -101,8 +104,6 @@ public final class SimpleBungee extends Plugin {
         }
         if(config == null) config = new Configuration();
         ConfigProperty cp = new ConfigProperty(config);
-        List<String> REPORT_REASONS = Arrays.asList("Griefing","Harassment","Hacking");
-
         cp.addDefault("commands.ping",true);
         cp.addDefault("commands.servers",true);
         cp.addDefault("commands.online",true);
@@ -112,7 +113,7 @@ public final class SimpleBungee extends Plugin {
         //cp.addDefault("commands.report",true);
         cp.addDefault("commands.lookup",true);
         cp.addDefault("report.use_reason_list",true);
-        cp.addDefault("report.reasons",REPORT_REASONS);
+        cp.addDefault("report.reasons",Arrays.asList("Griefing","Harassment","Hacking"));
         cp.addDefault("formats.global","&9GLOBAL %servername%> &e%displayname%:&r");
         cp.addDefault("connection-messages.bungee",true);
         cp.addDefault("connection-messages.serverswitch",true);
@@ -120,8 +121,7 @@ public final class SimpleBungee extends Plugin {
         cp.addDefault("kick-players-on-shutdown",false);
         cp.addDefault("server_shortcuts",new ArrayList<String>());
         cp.addDefault("show_restricted_servers",false);
-        config = cp.getConfig();
-        saveConfiguration(config,config_file);
+        saveConfiguration(cp.getConfig(),config_file);
         return config;
     }
 
