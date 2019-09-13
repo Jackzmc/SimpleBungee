@@ -370,13 +370,15 @@ public class Friends extends Command {
         Configuration data = plugin.data;
         Configuration sub_friends = data.getSection("friends");
         FRIENDS_LIST = new HashMap<>();
-        for (String id : sub_friends.getKeys()) {
-            UUID uuid = UUID.fromString(id);
-            Configuration sub_player = data.getSection("friends." + id);
-            List<String> str_friends = sub_player.getStringList("friends");
+        if(sub_friends != null) {
+            for (String id : sub_friends.getKeys()) {
+                UUID uuid = UUID.fromString(id);
+                Configuration sub_player = data.getSection("friends." + id);
+                List<String> str_friends = sub_player.getStringList("friends");
 
-            List<UUID> friends = str_friends.stream().map(UUID::fromString).collect(Collectors.toList());
-            FRIENDS_LIST.put(uuid,friends);
+                List<UUID> friends = str_friends.stream().map(UUID::fromString).collect(Collectors.toList());
+                FRIENDS_LIST.put(uuid, friends);
+            }
         }
     }
 }
