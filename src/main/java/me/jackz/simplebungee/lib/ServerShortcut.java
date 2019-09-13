@@ -16,7 +16,7 @@ public class ServerShortcut {
         Map<String,ServerInfo> SERVERS = plugin.getProxy().getServers();
         if(servers != null) {
             for (String key : servers.getKeys()) {
-                if(key.equals("example")) continue; //ignore 'example'
+                if(key.equals("examplebungeeserver")) continue; //ignore 'example'
                 boolean use_perms = servers.getBoolean(Util.getSectioned(key,"permissions"),false);
                 List<String> aliases_list = servers.getStringList(Util.getSectioned(key,"aliases"));
 

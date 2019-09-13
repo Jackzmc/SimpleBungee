@@ -119,7 +119,7 @@ public final class SimpleBungee extends Plugin {
         cp.addDefault("connection-messages.serverswitch",true);
         cp.addDefault("connection-messages.friends",true);
         cp.addDefault("kick-players-on-shutdown",false);
-        cp.addDefault("server_shortcuts",new ArrayList<String>());
+        cp.addDefault("server_shortcuts.examplebungeeserver.aliases",new ArrayList<String>());
         cp.addDefault("show_restricted_servers",false);
         saveConfiguration(cp.getConfig(),config_file);
         return config;
