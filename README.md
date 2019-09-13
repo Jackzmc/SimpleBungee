@@ -24,7 +24,7 @@ Currently in development, features are still in development and may change.
 | kick-players-on-shutdown         | boolean         | false   |  Should the plugin kick players on server shutdown?
 | report.reasons                   | List\<String>   |         |  List of reasons to use in reporting if use_reason_list = false
 | report.use_reason_list           | List\<String>   | true    |  Should players use predefined reasons, or enter a reason manually?
-| server_shortcuts                 | n/a             |         |  Not used at the moment
+| server_shortcuts                 | Custom          |         |  See config.yml on spigot page for example
 | show_restricted_servers          | boolean         | false   | Should /servers show restricted servers?
 ## Development Builds
 View development builds on jenkins at https://ci.jackz.me/view/Java/job/SimpleBungee/

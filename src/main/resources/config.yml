@@ -15,12 +15,12 @@ connection-messages:
   serverswitch: true #announce server switch (X switched servers from X to Y)
   friends: true #announce to players their friend joined or left
 
-#not used yet, will be used for /<server> -> /server <server> shortcut
+#Add /<alias> shortcuts to connect a bungeecord server.
 server_shortcuts:
-  - examplebungeeserver:
-      aliases:
+  - examplebungeeserver: #bungeecoord server here
+      aliases: #list of aliases to use to connect to server
         - exampleshortcut
-      permissions: true
+      permissions: true #should there be permissions to connect?
 
 #reporting configuration
 report:

@@ -15,7 +15,7 @@ public class ServerShortcut {
         if(servers != null) {
             for (String key : servers.getKeys()) {
                 if(key.equals("example")) continue; //ignore 'example'
-                boolean use_perms = servers.getBoolean(Util.getSectioned("server_shortcuts",key,"permissions"));
+                boolean use_perms = servers.getBoolean(Util.getSectioned("server_shortcuts",key,"permissions"),false);
                 List<String> aliases_list = servers.getStringList(Util.getSectioned("server_shortcuts",key,"aliases"));
                 if(aliases_list.size() > 0) {
                     ServerInfo server = plugin.getProxy().getServerInfo(key);
