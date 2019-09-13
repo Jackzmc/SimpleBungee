@@ -35,6 +35,10 @@ public final class SimpleBungee extends Plugin {
         friends = new Friends(this);
         playerLoader = new PlayerLoader(this);
         try {
+            if(!getDataFolder().exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                getDataFolder().mkdir();
+            }
             data = loadData();
             //PLAYER_MAP;
         }catch(IOException e) {
@@ -90,10 +94,6 @@ public final class SimpleBungee extends Plugin {
     }
     public Configuration getConfig() throws IOException {
         File config_file = new File(getDataFolder(),"config.yml");
-        if(!getDataFolder().exists()) {
-            //noinspection ResultOfMethodCallIgnored
-            getDataFolder().mkdir();
-        }
         Configuration config = null;
         if(config_file.exists()) {
             try {
