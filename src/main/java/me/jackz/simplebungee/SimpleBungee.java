@@ -5,6 +5,7 @@ import me.jackz.simplebungee.events.PlayerEvents;
 import me.jackz.simplebungee.lib.LanguageManager;
 import me.jackz.simplebungee.lib.PlayerLoader;
 import me.jackz.simplebungee.lib.ServerShortcut;
+import me.jackz.simplebungee.modules.DiscordBridge;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
@@ -79,6 +80,13 @@ public final class SimpleBungee extends Plugin {
             if(config.contains("server_shortcuts")) {
                 Configuration servers = config.getSection("server_shortcuts");
                 ServerShortcut.setupShortcuts(this, servers);
+            }
+            if(config.contains("discord")) {
+                boolean discord_enabled = config.getBoolean("discord.enabled",false);
+                if(discord_enabled) {
+                    DiscordBridge db = new DiscordBridge(this);
+                    pm.registerListener(this,db);
+                }
             }
 
             pm.registerListener(this,new PlayerEvents(this));

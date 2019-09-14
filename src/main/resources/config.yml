@@ -33,6 +33,17 @@ report:
     - Harassment
     - Hacking
 
+#discord integration
+discord:
+  enabled: false
+  channelID: "312396863594692608"
+  bot:
+    id: ""
+    token: ""
+  link:
+    discordtobungee: true
+    bungeetodiscord: true
+
 
 # should /servers show restricted servers (with [restricted] text)
 show_restricted_servers: false
