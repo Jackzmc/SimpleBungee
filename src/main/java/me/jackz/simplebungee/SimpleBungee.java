@@ -2,6 +2,7 @@ package me.jackz.simplebungee;
 
 import me.jackz.simplebungee.commands.*;
 import me.jackz.simplebungee.events.PlayerEvents;
+import me.jackz.simplebungee.lib.LanguageManager;
 import me.jackz.simplebungee.lib.PlayerLoader;
 import me.jackz.simplebungee.lib.ServerShortcut;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -22,6 +23,7 @@ public final class SimpleBungee extends Plugin {
     private Friends friends;
     private PlayerLoader playerLoader;
     public Configuration data;
+    private LanguageManager languageManager;
 
     @Override
     public void onEnable() {
@@ -41,6 +43,7 @@ public final class SimpleBungee extends Plugin {
         try {
             saveResource("config.yml");
             saveResource("messages.yml");
+            languageManager = new LanguageManager(this);
         }catch(IOException ex) {
             getLogger().severe("Failed to copy resources " + ex.getMessage());
         }
@@ -95,18 +98,27 @@ public final class SimpleBungee extends Plugin {
     }
     public Configuration getConfig() throws IOException {
         File config_file = new File(getDataFolder(),"config.yml");
-        Configuration config = null;
         if(config_file.exists()) {
             try {
-                config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(config_file);
+                return ConfigurationProvider.getProvider(YamlConfiguration.class).load(config_file);
             } catch (IOException e) {
                 getLogger().warning("Could not load config.yml, using default config");
             }
-        }else{
-            saveResource("config.yml");
-            return ConfigurationProvider.getProvider(YamlConfiguration.class).load(config_file);
         }
-        return config;
+        saveResource("config.yml");
+        return ConfigurationProvider.getProvider(YamlConfiguration.class).load(config_file);
+    }
+    public Configuration getMessages() throws IOException {
+        File messages_file = new File(getDataFolder(),"messages.yml");
+        if(messages_file.exists()) {
+            try {
+                return ConfigurationProvider.getProvider(YamlConfiguration.class).load(messages_file);
+            } catch (IOException e) {
+                getLogger().warning("Could not load messages.yml, using default messages.yml");
+            }
+        }
+        saveResource("messages.yml");
+        return ConfigurationProvider.getProvider(YamlConfiguration.class).load(messages_file);
     }
 
     private Configuration loadData() throws IOException {
@@ -135,5 +147,8 @@ public final class SimpleBungee extends Plugin {
             }
         }
 
+    }
+    public LanguageManager getLanguageManager() {
+        return languageManager;
     }
 }

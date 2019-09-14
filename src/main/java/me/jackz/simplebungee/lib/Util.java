@@ -29,7 +29,7 @@ public class Util {
     }
     public static String formatPlaceholders(String string, ProxiedPlayer player) {
         string = string
-                .replaceAll("%servername%", player.getServer().getInfo().getName())
+                .replaceAll("%server_name%", player.getServer().getInfo().getName())
                 .replaceAll("%player_display%", player.getDisplayName())
                 .replaceAll("%player_name%", player.getName());
         return ChatColor.translateAlternateColorCodes('&',string);
