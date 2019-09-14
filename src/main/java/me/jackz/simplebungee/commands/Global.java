@@ -1,11 +1,11 @@
 package me.jackz.simplebungee.commands;
 
 import me.jackz.simplebungee.SimpleBungee;
+import me.jackz.simplebungee.lib.LanguageManager;
 import me.jackz.simplebungee.lib.Util;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Command;
@@ -19,15 +19,18 @@ import java.util.UUID;
 
 public class Global extends Command implements Listener {
     private Map<UUID,Boolean> GLOBAL_CHAT_TOGGLED = new HashMap<>();
-    private String format = "&9GLOBAL %servername%> &e%displayname%:&r";
+    private String format = "&9GLOBAL %server_name%> &e%displayname%:&r";
     private SimpleBungee plugin;
+    private LanguageManager lm;
 
     public Global(SimpleBungee plugin) {
         super("global","simplebungee.command.global","g");
         this.plugin = plugin;
+        lm = plugin.getLanguageManager();
+        format = lm.getRawString("formats.global");
     }
 
-    /* format: '&9GLOBAL %servername%> &e%fullname%: %message%' */
+    /* format: '&9GLOBAL %server_name%> &e%fullname%: %message%' */
 
 
     @Override
@@ -42,14 +45,14 @@ public class Global extends Command implements Listener {
                 boolean toggled = GLOBAL_CHAT_TOGGLED.getOrDefault(player.getUniqueId(),false);
                 if(toggled) {
                     GLOBAL_CHAT_TOGGLED.put(player.getUniqueId(),false);
-                    sender.sendMessage(new TextComponent("§aNow talking in local chat"));
+                    sender.sendMessage(lm.getTextComponent("global.NOW_LOCALCHAT"));
                 }else{
                     GLOBAL_CHAT_TOGGLED.put(player.getUniqueId(),true);
-                    sender.sendMessage(new TextComponent("§aNow talking in global chat"));
+                    sender.sendMessage(lm.getTextComponent("global.NOW_GLOBALCHAT"));
                 }
             }
         }else{
-            sender.sendMessage(new TextComponent("§cYou must be a player to use this."));
+            sender.sendMessage(lm.getTextComponent("core.PLAYER_ONLY"));
         }
 
     }
