@@ -106,28 +106,6 @@ public final class SimpleBungee extends Plugin {
             saveResource("config.yml");
             return ConfigurationProvider.getProvider(YamlConfiguration.class).load(config_file);
         }
-        /*
-        if(config == null) config = new Configuration();
-
-        ConfigProperty cp = new ConfigProperty(config);
-        cp.addDefault("commands.ping",true);
-        cp.addDefault("commands.servers",true);
-        cp.addDefault("commands.online",true);
-        cp.addDefault("commands.global",true);
-        cp.addDefault("commands.uuid",true);
-        cp.addDefault("commands.friends",true);
-        //cp.addDefault("commands.report",true);
-        cp.addDefault("commands.lookup",true);
-        cp.addDefault("report.use_reason_list",true);
-        cp.addDefault("report.reasons",Arrays.asList("Griefing","Harassment","Hacking"));
-        cp.addDefault("formats.global","&9GLOBAL %servername%> &e%displayname%:&r");
-        cp.addDefault("connection-messages.bungee",true);
-        cp.addDefault("connection-messages.serverswitch",true);
-        cp.addDefault("connection-messages.friends",true);
-        cp.addDefault("kick-players-on-shutdown",false);
-        cp.addDefault("server_shortcuts.examplebungeeserver.aliases",new ArrayList<String>());
-        cp.addDefault("show_restricted_servers",false);
-        ConfigurationProvider.getProvider(YamlConfiguration.class).save(cp.getConfig(),config_file);*/
         return config;
     }
 

@@ -24,7 +24,7 @@ public class UUIDCommand extends Command {
             Collection<ProxiedPlayer> players = plugin.getProxy().matchPlayer(args[0]);
             if(players.size() > 0) {
                 ProxiedPlayer player = players.iterator().next();
-                sender.sendMessage(new TextComponent("§7" + player.getName() + "'s UUID: §e" + player.getUniqueId() + " ms"));
+                sender.sendMessage(new TextComponent("§7" + player.getName() + "'s UUID: §e" + player.getUniqueId()));
             }else{
                 sender.sendMessage(new TextComponent("§cCould not find a player online with that name."));
             }

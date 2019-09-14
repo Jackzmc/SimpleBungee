@@ -1,7 +1,7 @@
 package me.jackz.simplebungee.commands;
 
 import me.jackz.simplebungee.SimpleBungee;
-import net.md_5.bungee.api.ChatColor;
+import me.jackz.simplebungee.lib.Util;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -28,20 +28,14 @@ public class Global extends Command implements Listener {
     }
 
     /* format: '&9GLOBAL %servername%> &e%fullname%: %message%' */
-    private static String getFormatted(String string, ProxiedPlayer player) {
-        string = string
-                .replaceAll("%servername%",player.getServer().getInfo().getName())
-                .replaceAll("%displayname%",player.getDisplayName())
-                .replaceAll("%username%",player.getName());
-        return ChatColor.translateAlternateColorCodes('&', string);
-    }
+
 
     @Override
     public void execute(CommandSender sender, String[] args) {
         if(sender instanceof ProxiedPlayer) {
             ProxiedPlayer player = (ProxiedPlayer) sender;
             if(args.length > 0) {
-                BaseComponent[] tc = new ComponentBuilder(getFormatted(format,player))
+                BaseComponent[] tc = new ComponentBuilder(Util.formatPlaceholders(format, player))
                         .append(" " + String.join(" ",args)).create();
                 plugin.getProxy().broadcast(tc);
             }else{
@@ -67,7 +61,7 @@ public class Global extends Command implements Listener {
         String message = e.getMessage();
         boolean is_global = isGlobalEnabled(player.getUniqueId());
         if(is_global && !e.isCancelled())    {
-            BaseComponent[] tc = new ComponentBuilder(getFormatted(format,player))
+            BaseComponent[] tc = new ComponentBuilder(Util.formatPlaceholders(format,player))
                     .append(" " + String.join(" ",message)).create();
             plugin.getProxy().broadcast(tc);
             e.setCancelled(true);

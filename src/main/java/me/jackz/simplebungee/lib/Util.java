@@ -1,5 +1,7 @@
 package me.jackz.simplebungee.lib;
 
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
 
 import java.util.ArrayList;
@@ -24,6 +26,13 @@ public class Util {
     }
     public static String getSectioned(String... keys) {
         return String.join(".",keys);
+    }
+    public static String formatPlaceholders(String string, ProxiedPlayer player) {
+        string = string
+                .replaceAll("%servername%", player.getServer().getInfo().getName())
+                .replaceAll("%player_display%", player.getDisplayName())
+                .replaceAll("%player_name%", player.getName());
+        return ChatColor.translateAlternateColorCodes('&',string);
     }
     public static String getServerName(Server server) {
         if(server == null) return null;
