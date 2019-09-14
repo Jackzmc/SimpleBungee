@@ -1,6 +1,6 @@
 # formats for chat messages
 formats:
-  global: '&9GLOBAL %servername%> &e%displayname%:&r' #global chat display
+  global: '&9GLOBAL %server_name%> &e%player_display%:&r' #global chat display
 
 #used in different commands
 core:
@@ -21,7 +21,7 @@ friends:
   ALREADY_SENT_REQUEST: "&cYou already sent a friend request to %player_name%"
   FRIENDS_WITH_SELF: "&cYou can't be friends with yourself!"
   REQUEST_SEND: "&aSent a friend request to %player_name%"
-  RECIEVE_REQUEST: "&e%player_name&7 sent you a friend request"
+  RECEIVE_REQUEST: "&e%player_name&7 sent you a friend request"
   ACCEPT_FRIEND_TOOLTIP: "Approve friend request"
   REJECT_FRIEND_TOOLTIP: "Rejects friend request"
   ADD_FRIEND_USAGE: "&cPlease enter an online player. Usage: /friend add <username>"
@@ -39,15 +39,15 @@ friends:
   INVITE_SERVER_TOOLTIP: "&7Click to invite them to join your server"
   NO_FRIENDS: "&cYou have no friends, why not find some?"
   REQUESTS_HEADING: "&6&nFriend Requests&r"
-  FRIEND_REQUEST_SIZE: "&7You have %d friend requests"
+  FRIEND_REQUEST_SIZE: "&7You have %requests% friend requests"
   ACCEPT_SUCCESS: "&aYou accepted the friend request from %player_name%"
-  RECIEVE_ACCEPT_SUCCESS: "&e%player_name% has accepted your friend request"
+  RECEIVE_ACCEPT_SUCCESS: "&e%player_name% has accepted your friend request"
   NO_PENDING_REQUEST: "&cThere is no pending friend request from that player."
   ACCEPT_USAGE: "&cPlease enter the username of the player to accept"
   REJECT_REQUEST: "&cRejected friend request from %player_name%"
   REJECT_USAGE: "&cPlease enter the username of the player to reject"
   UNKNOWN_ARGUMENT: "&cUnknown argument, try &e/friends help"
-  JOIN_FRIEND: "&eConnecting you to %player_name's active server..."
+  JOIN_FRIEND: "&eConnecting you to %player_name%'s active server..."
 
 global:
   NOW_LOCALCHAT: "&aNow talking in local chat"

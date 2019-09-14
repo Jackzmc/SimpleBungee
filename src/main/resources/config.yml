@@ -29,9 +29,6 @@ report:
     - Griefing
     - Harassment
     - Hacking
-# formats for messages (will be moved later into messages.yml)
-formats:
-  global: '&9GLOBAL %servername%> &e%displayname%:&r' #global chat display
 
 # more for testing, should plugin kick players on shutdown?
 kick-players-on-shutdown: true
