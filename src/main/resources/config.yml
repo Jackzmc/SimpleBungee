@@ -19,11 +19,11 @@ connection-messages:
   friends: true #announce to players their friend joined or left
 
 #Add /<alias> shortcuts to connect a bungeecord server.
-server_shortcuts:
-  examplebungeeserver: #bungeecoord server here
-      aliases: #list of aliases to use to connect to server
-        - exampleshortcut
-      permissions: true #should there be permissions to connect?
+server_shortcuts: {}
+#  examplebungeeserver: #bungeecoord server here
+#      aliases: #list of aliases to use to connect to server
+#        - exampleshortcut
+#      permissions: true #should there be permissions to connect?
 
 #reporting configuration
 report:
@@ -33,12 +33,9 @@ report:
     - Harassment
     - Hacking
 
-# more for testing, should plugin kick players on shutdown?
-kick-players-on-shutdown: true
 
 # should /servers show restricted servers (with [restricted] text)
 show_restricted_servers: false
 
-
-# do not edit:
+# do not edit, used for version check:
 config-version: 1.0

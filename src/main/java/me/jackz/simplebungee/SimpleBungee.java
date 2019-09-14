@@ -5,7 +5,6 @@ import me.jackz.simplebungee.events.PlayerEvents;
 import me.jackz.simplebungee.lib.LanguageManager;
 import me.jackz.simplebungee.lib.PlayerLoader;
 import me.jackz.simplebungee.lib.ServerShortcut;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
@@ -89,11 +88,9 @@ public final class SimpleBungee extends Plugin {
     public void onDisable() {
         try {
             friends.SaveFriendsList();
-            boolean kick_players_on_shutdown = getConfig().getBoolean("kick-players-on-shutdown",false);
             for (ProxiedPlayer player : getProxy().getPlayers()) {
                 playerLoader.save(player);
                 //use english.yml later
-                if(kick_players_on_shutdown) player.disconnect(new TextComponent("§cServer is shutting down"));
             }
         } catch (IOException e) {
             getLogger().severe("Could not save friend list and friend requests.");
