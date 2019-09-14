@@ -1,3 +1,6 @@
+# choose language file (default = english.yml)
+language-file: "english.yml"
+
 #Enable or disable commands/modules here:
 commands:
   ping: true
@@ -35,3 +38,7 @@ kick-players-on-shutdown: true
 
 # should /servers show restricted servers (with [restricted] text)
 show_restricted_servers: false
+
+
+# do not edit:
+config-version: 1.0

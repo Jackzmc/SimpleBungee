@@ -13,7 +13,7 @@ public class LanguageManager {
         try {
             messages = plugin.getMessages();
         } catch (IOException e) {
-            plugin.getLogger().severe("Could not load messages.yml file. " + e.getMessage());
+            plugin.getLogger().severe("Could not load the language file.  " + e.getMessage());
         }
     }
     public String getRawString(String path) {

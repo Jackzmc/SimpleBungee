@@ -25,6 +25,8 @@ public final class SimpleBungee extends Plugin {
     public Configuration data;
     private LanguageManager languageManager;
 
+    private final static String LATEST_CONFIG_VERSION = "1.0";
+
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -42,13 +44,18 @@ public final class SimpleBungee extends Plugin {
         }
         try {
             saveResource("config.yml");
-            saveResource("messages.yml");
+            saveResource("english.yml");
             languageManager = new LanguageManager(this);
         }catch(IOException ex) {
             getLogger().severe("Failed to copy resources " + ex.getMessage());
         }
         try {
             Configuration config = getConfig();
+            String version = config.getString("config-version");
+            if(version != null || !version.equalsIgnoreCase(LATEST_CONFIG_VERSION )) {
+                getLogger().warning("The config file has been updated since last time. Please delete your config.yml to upgrade it to the latest version");
+            }
+
             PluginManager pm = getProxy().getPluginManager();
             if(config.getBoolean("commands.ping"))    pm.registerCommand(this,new PingCommand(this));
             if(config.getBoolean("commands.servers")) pm.registerCommand(this,new Servers(this));
@@ -85,7 +92,7 @@ public final class SimpleBungee extends Plugin {
             boolean kick_players_on_shutdown = getConfig().getBoolean("kick-players-on-shutdown",false);
             for (ProxiedPlayer player : getProxy().getPlayers()) {
                 playerLoader.save(player);
-                //use messages.yml later
+                //use english.yml later
                 if(kick_players_on_shutdown) player.disconnect(new TextComponent("§cServer is shutting down"));
             }
         } catch (IOException e) {
@@ -109,15 +116,16 @@ public final class SimpleBungee extends Plugin {
         return ConfigurationProvider.getProvider(YamlConfiguration.class).load(config_file);
     }
     public Configuration getMessages() throws IOException {
-        File messages_file = new File(getDataFolder(),"messages.yml");
+        String lang_file = getConfig().getString("language-file","english.yml");
+        File messages_file = new File(getDataFolder(), lang_file);
         if(messages_file.exists()) {
             try {
                 return ConfigurationProvider.getProvider(YamlConfiguration.class).load(messages_file);
             } catch (IOException e) {
-                getLogger().warning("Could not load messages.yml, using default messages.yml");
+                getLogger().warning("Could not load english.yml, using default english.yml");
             }
         }
-        saveResource("messages.yml");
+        saveResource("english.yml");
         return ConfigurationProvider.getProvider(YamlConfiguration.class).load(messages_file);
     }
 
