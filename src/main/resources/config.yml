@@ -17,7 +17,7 @@ connection-messages:
 
 #Add /<alias> shortcuts to connect a bungeecord server.
 server_shortcuts:
-  - examplebungeeserver: #bungeecoord server here
+  examplebungeeserver: #bungeecoord server here
       aliases: #list of aliases to use to connect to server
         - exampleshortcut
       permissions: true #should there be permissions to connect?

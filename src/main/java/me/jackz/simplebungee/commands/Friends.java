@@ -156,7 +156,7 @@ public class Friends extends Command {
                                 ServerInfo player_server = player.getServer().getInfo();
 
                                 TextComponent tc = new TextComponent("§e" + player.getName() + " has sent you an invite to join " + player_server.getName());
-                                TextComponent join = new TextComponent("[JOIN]");
+                                TextComponent join = new TextComponent(" [JOIN]");
                                 join.setColor(ChatColor.GREEN);
                                 join.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/friend _join " + player.getUniqueId() ));
                                 join.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("Join your friend's game").create()));

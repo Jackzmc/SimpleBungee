@@ -2,7 +2,6 @@ package me.jackz.simplebungee;
 
 import me.jackz.simplebungee.commands.*;
 import me.jackz.simplebungee.events.PlayerEvents;
-import me.jackz.simplebungee.lib.ConfigProperty;
 import me.jackz.simplebungee.lib.PlayerLoader;
 import me.jackz.simplebungee.lib.ServerShortcut;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -15,14 +14,9 @@ import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.InputStream;
+import java.nio.file.Files;
 
-/*
-TODO:
-moved to
-https://trello.com/b/9v1N8q0l/simplebungee
- */
 
 public final class SimpleBungee extends Plugin {
     private Friends friends;
@@ -45,6 +39,12 @@ public final class SimpleBungee extends Plugin {
             getLogger().severe("Could not save or load data.yml. " + e.getMessage());
         }
         try {
+            saveResource("config.yml");
+            saveResource("messages.yml");
+        }catch(IOException ex) {
+            getLogger().severe("Failed to copy resources " + ex.getMessage());
+        }
+        try {
             Configuration config = getConfig();
             PluginManager pm = getProxy().getPluginManager();
             if(config.getBoolean("commands.ping"))    pm.registerCommand(this,new PingCommand(this));
@@ -63,15 +63,16 @@ public final class SimpleBungee extends Plugin {
                 friends.LoadFriendsList();
                 pm.registerCommand(this, friends);
             }
-            Configuration servers = config.getSection("server_shortcuts");
-            ServerShortcut.setupShortcuts(this,servers);
+            if(config.contains("server_shortcuts")) {
+                Configuration servers = config.getSection("server_shortcuts");
+                ServerShortcut.setupShortcuts(this, servers);
+            }
 
             pm.registerListener(this,new PlayerEvents(this));
 
         } catch (IOException e) {
             getLogger().severe("Could not save or load config.yml. " + e.getMessage());
         }
-
     }
 
     @Override
@@ -101,8 +102,13 @@ public final class SimpleBungee extends Plugin {
             } catch (IOException e) {
                 getLogger().warning("Could not load config.yml, using default config");
             }
+        }else{
+            saveResource("config.yml");
+            return ConfigurationProvider.getProvider(YamlConfiguration.class).load(config_file);
         }
+        /*
         if(config == null) config = new Configuration();
+
         ConfigProperty cp = new ConfigProperty(config);
         cp.addDefault("commands.ping",true);
         cp.addDefault("commands.servers",true);
@@ -121,7 +127,7 @@ public final class SimpleBungee extends Plugin {
         cp.addDefault("kick-players-on-shutdown",false);
         cp.addDefault("server_shortcuts.examplebungeeserver.aliases",new ArrayList<String>());
         cp.addDefault("show_restricted_servers",false);
-        saveConfiguration(cp.getConfig(),config_file);
+        ConfigurationProvider.getProvider(YamlConfiguration.class).save(cp.getConfig(),config_file);*/
         return config;
     }
 
@@ -138,12 +144,18 @@ public final class SimpleBungee extends Plugin {
         ConfigurationProvider.getProvider(YamlConfiguration.class).save(data, data_file);
         return data;
     }
-    public void saveConfiguration(Configuration c, File file ) throws IOException {
-        ConfigurationProvider.getProvider(YamlConfiguration.class).save(c, file);
-    }
     public void saveData() throws IOException {
         File file = new File(getDataFolder(),"data.yml");
         if(data == null) throw new NullPointerException("Data Configuration is null");
-        saveConfiguration(data,file);
+        ConfigurationProvider.getProvider(YamlConfiguration.class).save(data,file);
+    }
+    private void saveResource(String filename) throws IOException {
+        File file = new File(getDataFolder(),filename);
+        if (!file.exists()) {
+            try (InputStream in = getResourceAsStream(filename)) {
+                Files.copy(in, file.toPath());
+            }
+        }
+
     }
 }
