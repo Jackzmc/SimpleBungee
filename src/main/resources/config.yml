@@ -38,4 +38,4 @@ report:
 show_restricted_servers: false
 
 # do not edit, used for version check:
-config-version: 1.0
+config-version: "1.0"

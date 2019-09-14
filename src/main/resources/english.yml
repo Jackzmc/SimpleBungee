@@ -12,11 +12,12 @@ core:
 # friends system
 friends:
   HELP: |-
-    "&e/friend add <player>&7 - send a friend request
+    &6&nFriends Help Menu
+    &e/friend add <player>&7 - send a friend request
     &e/friend remove <player>&7 - unfriend a player
     &e/friend join <player>&7 - join your friend's game
     &e/friend invite <player>&7 - invite a friend to join your current server
-    &e/friend list&7 - view all friends, friend requests, and join/invite them."
+    &e/friend list&7 - view all friends, friend requests, and join/invite them.
   ALREADY_FRIENDS: "&cYou are already friends with %player_name%"
   ALREADY_SENT_REQUEST: "&cYou already sent a friend request to %player_name%"
   FRIENDS_WITH_SELF: "&cYou can't be friends with yourself!"
@@ -58,9 +59,9 @@ lookup:
 
 main:
   HELP: |-
-    "&6SimpleBungee Help
+    &6SimpleBungee Help
     &e/simplebungee reload &7- reload the config.yml
-    &e/simplebungee commands &7- view all commands in plugin"
+    &e/simplebungee commands &7- view all commands in plugin
   UNKNOWN_ARGUMENT: "&cUnknown argument, try /simplebungee help"
 
 players:
@@ -72,9 +73,9 @@ ping:
 
 report:
   HELP: |-
-    "&6Report Help Menu
+    &6Report Help Menu
     &e/report <player> &7- start a report
-    &e/report status &7- view status on your reports"
+    &e/report status &7- view status on your reports
   NONE_ACTIVE: "&cYou have no reports active."
   CHOOSE_REASON: "&7Please choose a reason:"
   CHOOSE_REASON_MANUAL: "&7Please type a reason you want to report &e%player_name%&7:"

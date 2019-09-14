@@ -28,9 +28,7 @@ public final class SimpleBungee extends Plugin {
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
-        friends = new Friends(this);
-        playerLoader = new PlayerLoader(this);
+        /* load data */
         try {
             if(!getDataFolder().exists()) {
                 //noinspection ResultOfMethodCallIgnored
@@ -41,6 +39,7 @@ public final class SimpleBungee extends Plugin {
         }catch(IOException e) {
             getLogger().severe("Could not save or load data.yml. " + e.getMessage());
         }
+        /*load resources & language manager */
         try {
             saveResource("config.yml");
             saveResource("english.yml");
@@ -48,11 +47,16 @@ public final class SimpleBungee extends Plugin {
         }catch(IOException ex) {
             getLogger().severe("Failed to copy resources " + ex.getMessage());
         }
+        /* load main config and commands */
         try {
+            friends = new Friends(this);
+            playerLoader = new PlayerLoader(this);
+
             Configuration config = getConfig();
-            String version = config.getString("config-version");
-            if(version != null || !version.equalsIgnoreCase(LATEST_CONFIG_VERSION )) {
-                getLogger().warning("The config file has been updated since last time. Please delete your config.yml to upgrade it to the latest version");
+            String version = config.getString("config-version","0");
+            if(version == null || !version.equalsIgnoreCase(LATEST_CONFIG_VERSION )) {
+                String message = String.format("Your config file is version %s, the latest is %s. Please upgrade the file by deleting the config.yml.", version,LATEST_CONFIG_VERSION);
+                getLogger().warning(message);
             }
 
             PluginManager pm = getProxy().getPluginManager();
@@ -80,7 +84,7 @@ public final class SimpleBungee extends Plugin {
             pm.registerListener(this,new PlayerEvents(this));
 
         } catch (IOException e) {
-            getLogger().severe("Could not save or load config.yml. " + e.getMessage());
+            getLogger().severe("A critical error while loading the plugin has occurred. " + e.getMessage());
         }
     }
 
