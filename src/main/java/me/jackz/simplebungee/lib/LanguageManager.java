@@ -25,6 +25,10 @@ public class LanguageManager {
         String message = messages.getString(path);
         return ChatColor.translateAlternateColorCodes('&',Util.formatPlaceholders(message,player));
     }
+    public String getString(String path) {
+        String message = messages.getString(path);
+        return ChatColor.translateAlternateColorCodes('&',message);
+    }
     public TextComponent getTextComponent(String path) {
         String v = messages.getString(path);
         return (v != null) ? new TextComponent(ChatColor.translateAlternateColorCodes('&',v)) : default_component;

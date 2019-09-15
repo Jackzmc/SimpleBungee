@@ -1,6 +1,7 @@
 package me.jackz.simplebungee.commands;
 
 import me.jackz.simplebungee.SimpleBungee;
+import me.jackz.simplebungee.lib.LanguageManager;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -17,10 +18,12 @@ import java.util.stream.Collectors;
 public class Servers extends Command {
     private SimpleBungee plugin;
     private boolean show_restricted = false;
+    private LanguageManager lm;
 
     public Servers(SimpleBungee plugin)  {
         super("servers","simplebungee.command.servers");
         this.plugin = plugin;
+        lm = plugin.getLanguageManager();
         try {
             this.show_restricted = plugin.getConfig().getBoolean("show_restricted_servers",false);
         } catch (IOException ignored) {
@@ -29,14 +32,14 @@ public class Servers extends Command {
     }
     @Override
     public void execute(CommandSender sender, String[] args) {
-        TextComponent base = new TextComponent("§6Server Status: ");
+        TextComponent base = lm.getTextComponent("servers.HEADER");
         for (ServerInfo server : plugin.getProxy().getServers().values()) {
             String name = server.getName();
             TextComponent comp_server = new TextComponent(String.format("\n%s[%s]",ChatColor.GREEN,name));
             comp_server.setColor(ChatColor.GREEN);
             if(server.isRestricted()) {
                 if(show_restricted) {
-                    comp_server.addExtra(" [restricted]");
+                    comp_server.addExtra(" " + lm.getString("servers.RESTRICTED"));
                     comp_server.setColor(ChatColor.RED);
                 }else{
                     break;

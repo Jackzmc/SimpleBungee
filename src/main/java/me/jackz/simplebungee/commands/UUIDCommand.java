@@ -1,8 +1,9 @@
 package me.jackz.simplebungee.commands;
 
 import me.jackz.simplebungee.SimpleBungee;
+import me.jackz.simplebungee.lib.LanguageManager;
+import me.jackz.simplebungee.lib.Placeholder;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
@@ -10,12 +11,14 @@ import java.util.Collection;
 
 public class UUIDCommand extends Command {
     private SimpleBungee plugin;
+    private LanguageManager lm;
     public UUIDCommand() {
         super("uuid");
     }
     public UUIDCommand(SimpleBungee plugin)  {
         super("uuid");
         this.plugin = plugin;
+        this.lm = plugin.getLanguageManager();
     }
 
     @Override
@@ -24,16 +27,20 @@ public class UUIDCommand extends Command {
             Collection<ProxiedPlayer> players = plugin.getProxy().matchPlayer(args[0]);
             if(players.size() > 0) {
                 ProxiedPlayer player = players.iterator().next();
-                sender.sendMessage(new TextComponent("§7" + player.getName() + "'s UUID: §e" + player.getUniqueId()));
+                Placeholder uuid = new Placeholder("uuid",player.getUniqueId());
+
+                sender.sendMessage(lm.getTextComponent("uuid.OTHER",player,uuid));
             }else{
-                sender.sendMessage(new TextComponent("§cCould not find a player online with that name."));
+                sender.sendMessage(lm.getTextComponent("core.NO_PLAYER_FOUND"));
             }
         }else{
             if(sender instanceof ProxiedPlayer) {
                 ProxiedPlayer player = (ProxiedPlayer) sender;
-                sender.sendMessage(new TextComponent("§7Your UUID: §e" + player.getUniqueId()));
+                Placeholder uuid = new Placeholder("uuid",player.getUniqueId());
+
+                sender.sendMessage(lm.getTextComponent("uuid.SELF",uuid));
             }else{
-                sender.sendMessage(new TextComponent("§cPlease enter a user to get the UUID of. Usage: /uuid <player>"));
+                sender.sendMessage(lm.getTextComponent("core.NO_PLAYER_FOUND"));
             }
         }
     }
