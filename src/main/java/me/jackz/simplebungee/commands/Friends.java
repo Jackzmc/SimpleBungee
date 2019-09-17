@@ -131,7 +131,6 @@ public class Friends extends Command {
                             ProxiedPlayer friend = friends.iterator().next();
                             if(fm.getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
                                 player.sendMessage(lm.getTextComponent("friends.INVITE_SUCCESS",friend));
-                                ServerInfo player_server = player.getServer().getInfo();
 
                                 TextComponent tc = lm.getTextComponent("friends.RECIEVE_INVITE",player);
                                 TextComponent join = new TextComponent(" [JOIN]");

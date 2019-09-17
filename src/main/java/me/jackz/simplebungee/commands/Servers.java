@@ -24,11 +24,7 @@ public class Servers extends Command {
         super("servers","simplebungee.command.servers");
         this.plugin = plugin;
         lm = plugin.getLanguageManager();
-        try {
-            this.show_restricted = plugin.getConfig().getBoolean("show_restricted_servers",false);
-        } catch (IOException ignored) {
-
-        }
+        this.show_restricted = plugin.getConfig().getBoolean("show_restricted_servers",false);
     }
     @Override
     public void execute(CommandSender sender, String[] args) {

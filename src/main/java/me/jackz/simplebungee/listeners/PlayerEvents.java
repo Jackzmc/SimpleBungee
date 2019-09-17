@@ -40,14 +40,11 @@ public class PlayerEvents implements Listener {
         this.plugin = plugin;
         this.playerLoader = plugin.getPlayerLoader();
         this.lm = plugin.getLanguageManager();
-        try {
-            Configuration config = plugin.getConfig();
-            network_messages = config.getBoolean("connection-messages.bungee",false);
-            switch_server_messages = config.getBoolean("connection-messages.serverswitch",false);
-            friends_messages = config.getBoolean("connection-messages.friends",true);
-        } catch (IOException e) {
-            plugin.getLogger().warning("Could not load config.yml, join messages disconnected");
-        }
+
+        Configuration config = plugin.getConfig();
+        network_messages = config.getBoolean("connection-messages.bungee",false);
+        switch_server_messages = config.getBoolean("connection-messages.serverswitch",false);
+        friends_messages = config.getBoolean("connection-messages.friends",true);
 
         if(friends_messages) {
             friendsManager = plugin.getFriendsManager();

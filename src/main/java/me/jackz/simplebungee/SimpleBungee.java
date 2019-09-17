@@ -22,6 +22,7 @@ import java.nio.file.Files;
 public final class SimpleBungee extends Plugin {
     private PlayerLoader playerLoader;
     public Configuration data;
+    private Configuration config;
     private LanguageManager languageManager;
     private FriendsManager friendsManager;
 
@@ -53,7 +54,7 @@ public final class SimpleBungee extends Plugin {
             playerLoader = new PlayerLoader(this);
             this.friendsManager = new FriendsManager(this);
 
-            Configuration config = getConfig();
+            config = loadConfig();
             String version = config.getString("config-version","0");
             if(version == null || !version.equalsIgnoreCase(LATEST_CONFIG_VERSION )) {
                 String message = String.format("Your config file is version %s, the latest is %s. Please upgrade the file by deleting the config.yml.", version,LATEST_CONFIG_VERSION);
@@ -106,7 +107,7 @@ public final class SimpleBungee extends Plugin {
         return playerLoader;
     }
     public FriendsManager getFriendsManager() { return friendsManager; }
-    public Configuration getConfig() throws IOException {
+    private Configuration loadConfig() throws IOException {
         File config_file = new File(getDataFolder(),"config.yml");
         if(config_file.exists()) {
             try {
@@ -145,6 +146,15 @@ public final class SimpleBungee extends Plugin {
         ConfigurationProvider.getProvider(YamlConfiguration.class).save(data, data_file);
         return data;
     }
+
+    public Configuration getConfig() {
+         return this.config;
+    }
+
+    public void reloadConfig() throws IOException {
+        this.config = loadConfig();
+    }
+
     public void saveData() throws IOException {
         File file = new File(getDataFolder(),"data.yml");
         if(data == null) throw new NullPointerException("Data Configuration is null");

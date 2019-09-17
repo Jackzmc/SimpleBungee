@@ -22,13 +22,9 @@ public class Report extends Command implements Listener {
     public Report(SimpleBungee plugin) {
         super("report","simplebungee.command.report");
         this.plugin = plugin;
-        try {
-            Configuration config = plugin.getConfig();
-            REASONS = config.getStringList("report.reasons");
-            USE_REASON_LIST = config.getBoolean("report.use_reason_list");
-        } catch (IOException e) {
-            plugin.getLogger().warning("Cannot load config");
-        }
+        Configuration config = plugin.getConfig();
+        REASONS = config.getStringList("report.reasons");
+        USE_REASON_LIST = config.getBoolean("report.use_reason_list");
 
     }
 

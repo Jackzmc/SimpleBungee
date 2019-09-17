@@ -27,28 +27,28 @@ public class MainCommand extends Command {
         switch(args[0].toLowerCase()) {
             case "reload": {
                 if(sender.hasPermission("simplebungee.command.reload")) {
-                    sender.sendMessage(new TextComponent("§cFeature not implemented"));
+                    try {
+                        plugin.reloadConfig();
+                        sender.sendMessage(new TextComponent(ChatColor.GREEN+ "Successfully reloaded the config."));
+                    }catch(IOException ex) {
+                        sender.sendMessage(new TextComponent(ChatColor.RED + "Failed to reload the config. " + ex.getMessage()));
+                    }
+                    //sender.sendMessage(new TextComponent("§cFeature not implemented"));
                 }else{
                     sender.sendMessage(new TextComponent("§cYou don't have permission to use this command."));
                 }
                 break;
             }
             case "commands": {
-                Configuration config = null;
-                try {
-                    config = plugin.getConfig();
-                    TextComponent tc = new TextComponent("§6Commands");
-                    if(config.getBoolean("commands.lookup")) tc.addExtra("\n§e/lookup <player> §7- get information about a player");
-                    if(config.getBoolean("commands.ping")) tc.addExtra("\n§e/ping [player] §7- view a players ping to the network");
-                    if(config.getBoolean("commands.servers")) tc.addExtra("\n§e/servers §7- view all bungeecoord servers with ability to join");
-                    if(config.getBoolean("commands.uuid")) tc.addExtra("\n§e/uuid [player] §7- get a player's UUID");
-                    if(config.getBoolean("commands.online")) tc.addExtra("\n§e/online §7- view all online players");
-                    if(config.getBoolean("commands.friends")) tc.addExtra("\n§e/friends <help/add/list/etc..> §7- friends management system");
-                    sender.sendMessage(tc);
-                } catch (IOException e) {
-                    plugin.getLogger().warning("Can not get configuration file");
-                    sender.sendMessage(new TextComponent(e.getMessage()));
-                }
+                Configuration config = plugin.getConfig();
+                TextComponent tc = new TextComponent("§6Commands");
+                if(config.getBoolean("commands.lookup")) tc.addExtra("\n§e/lookup <player> §7- get information about a player");
+                if(config.getBoolean("commands.ping")) tc.addExtra("\n§e/ping [player] §7- view a players ping to the network");
+                if(config.getBoolean("commands.servers")) tc.addExtra("\n§e/servers §7- view all bungeecoord servers with ability to join");
+                if(config.getBoolean("commands.uuid")) tc.addExtra("\n§e/uuid [player] §7- get a player's UUID");
+                if(config.getBoolean("commands.online")) tc.addExtra("\n§e/online §7- view all online players");
+                if(config.getBoolean("commands.friends")) tc.addExtra("\n§e/friends <help/add/list/etc..> §7- friends management system");
+                sender.sendMessage(tc);
                 break;
             }
             default:
