@@ -17,6 +17,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 
 public final class SimpleBungee extends Plugin {
@@ -30,64 +33,61 @@ public final class SimpleBungee extends Plugin {
 
     @Override
     public void onEnable() {
-        /* load data */
+        /*load resources & language manager */
+        try {
+            saveDefaultResource("config.yml",false);
+            saveDefaultResource("english.yml",true);
+        }catch(IOException ex) {
+            getLogger().severe("Failed to copy resources " + ex.getMessage());
+        }
+        /* load data & config */
+
         try {
             if(!getDataFolder().exists()) {
                 //noinspection ResultOfMethodCallIgnored
                 getDataFolder().mkdir();
             }
+            config = loadConfig();
             data = loadData();
             //PLAYER_MAP;
         }catch(IOException e) {
-            getLogger().severe("Could not save or load data.yml. " + e.getMessage());
+            getLogger().severe("Error occurred while loading configuration or data files. " + e.getMessage());
         }
-        /*load resources & language manager */
-        try {
-            saveResource("config.yml");
-            saveResource("english.yml");
-            languageManager = new LanguageManager(this);
-        }catch(IOException ex) {
-            getLogger().severe("Failed to copy resources " + ex.getMessage());
+
+        /* load managers, commands, and listeners */
+        languageManager = new LanguageManager(this);
+        playerLoader = new PlayerLoader(this);
+        this.friendsManager = new FriendsManager(this);
+
+        String version = config.getString("config-version","0");
+        if(version == null || !version.equalsIgnoreCase(LATEST_CONFIG_VERSION )) {
+            String message = String.format("Your config file is version %s, the latest is %s. Please upgrade the file by deleting the config.yml.", version,LATEST_CONFIG_VERSION);
+            getLogger().warning(message);
         }
-        /* load main config and commands */
-        try {
-            playerLoader = new PlayerLoader(this);
-            this.friendsManager = new FriendsManager(this);
 
-            config = loadConfig();
-            String version = config.getString("config-version","0");
-            if(version == null || !version.equalsIgnoreCase(LATEST_CONFIG_VERSION )) {
-                String message = String.format("Your config file is version %s, the latest is %s. Please upgrade the file by deleting the config.yml.", version,LATEST_CONFIG_VERSION);
-                getLogger().warning(message);
-            }
-
-            PluginManager pm = getProxy().getPluginManager();
-            if(config.getBoolean("commands.ping"))    pm.registerCommand(this,new PingCommand(this));
-            if(config.getBoolean("commands.servers")) pm.registerCommand(this,new Servers(this));
-            if(config.getBoolean("commands.online"))  pm.registerCommand(this,new OnlineCount(this));
-            if(config.getBoolean("commands.uuid"))    pm.registerCommand(this,new UUIDCommand(this));
-            //if(config.getBoolean("commands.report"))  pm.registerCommand(this,new Report(this));
-            if(config.getBoolean("commands.global"))  {
-                Global global = new Global(this);
-                pm.registerCommand(this,global);
-                pm.registerListener(this,global);
-            }
-            if(config.getBoolean("commands.lookup"))  pm.registerCommand(this,new Lookup(this));
-            pm.registerCommand(this,new MainCommand(this));
-            if(config.getBoolean("commands.friends")) {
-                friendsManager.loadFriendsList();
-                pm.registerCommand(this, new Friends(this));
-            }
-            if(config.contains("server_shortcuts")) {
-                Configuration servers = config.getSection("server_shortcuts");
-                ServerShortcut.setupShortcuts(this, servers);
-            }
-
-            pm.registerListener(this,new PlayerEvents(this));
-
-        } catch (IOException e) {
-            getLogger().severe("A critical error while loading the plugin has occurred. " + e.getMessage());
+        PluginManager pm = getProxy().getPluginManager();
+        if(config.getBoolean("commands.ping"))    pm.registerCommand(this,new PingCommand(this));
+        if(config.getBoolean("commands.servers")) pm.registerCommand(this,new Servers(this));
+        if(config.getBoolean("commands.online"))  pm.registerCommand(this,new OnlineCount(this));
+        if(config.getBoolean("commands.uuid"))    pm.registerCommand(this,new UUIDCommand(this));
+        //if(config.getBoolean("commands.report"))  pm.registerCommand(this,new Report(this));
+        if(config.getBoolean("commands.global"))  {
+            Global global = new Global(this);
+            pm.registerCommand(this,global);
+            pm.registerListener(this,global);
         }
+        if(config.getBoolean("commands.lookup"))  pm.registerCommand(this,new Lookup(this));
+        pm.registerCommand(this,new MainCommand(this));
+        if(config.getBoolean("commands.friends")) {
+            friendsManager.loadFriendsList();
+            pm.registerCommand(this, new Friends(this));
+        }
+        if(config.contains("server_shortcuts")) {
+            Configuration servers = config.getSection("server_shortcuts");
+            ServerShortcut.setupShortcuts(this, servers);
+        }
+
+        pm.registerListener(this,new PlayerEvents(this));
     }
 
     @Override
@@ -103,10 +103,21 @@ public final class SimpleBungee extends Plugin {
         }
         // Plugin shutdown logic
     }
+    //region getters
     public PlayerLoader getPlayerLoader() {
         return playerLoader;
     }
-    public FriendsManager getFriendsManager() { return friendsManager; }
+    public LanguageManager getLanguageManager() {
+        return languageManager;
+    }
+    public FriendsManager getFriendsManager() {
+        return friendsManager;
+    }
+    public Configuration getConfig() {
+        return this.config;
+    }
+    //endregion
+    //region configuration
     private Configuration loadConfig() throws IOException {
         File config_file = new File(getDataFolder(),"config.yml");
         if(config_file.exists()) {
@@ -116,23 +127,15 @@ public final class SimpleBungee extends Plugin {
                 getLogger().warning("Could not load config.yml, using default config");
             }
         }
-        saveResource("config.yml");
+        saveDefaultResource("config.yml",false);
         return ConfigurationProvider.getProvider(YamlConfiguration.class).load(config_file);
     }
-    public Configuration getMessages() throws IOException {
-        String lang_file = getConfig().getString("language-file","english.yml");
-        File messages_file = new File(getDataFolder(), lang_file);
-        if(messages_file.exists()) {
-            try {
-                return ConfigurationProvider.getProvider(YamlConfiguration.class).load(messages_file);
-            } catch (IOException e) {
-                getLogger().warning("Could not load english.yml, using default english.yml");
-            }
-        }
-        saveResource("english.yml");
-        return ConfigurationProvider.getProvider(YamlConfiguration.class).load(messages_file);
-    }
 
+    public void reloadConfig() throws IOException {
+        this.config = loadConfig();
+    }
+    //endregion
+    //region data.yml
     private Configuration loadData() throws IOException {
         File data_file = new File(getDataFolder(),"data.yml");
         if(data_file.exists()) {
@@ -147,29 +150,32 @@ public final class SimpleBungee extends Plugin {
         return data;
     }
 
-    public Configuration getConfig() {
-         return this.config;
-    }
-
-    public void reloadConfig() throws IOException {
-        this.config = loadConfig();
-    }
-
     public void saveData() throws IOException {
         File file = new File(getDataFolder(),"data.yml");
         if(data == null) throw new NullPointerException("Data Configuration is null");
         ConfigurationProvider.getProvider(YamlConfiguration.class).save(data,file);
     }
-    private void saveResource(String filename) throws IOException {
-        File file = new File(getDataFolder(),filename);
-        if (!file.exists()) {
-            try (InputStream in = getResourceAsStream(filename)) {
-                Files.copy(in, file.toPath());
+    //endregion
+    public Configuration getMessages() throws IOException {
+        String lang_file = getConfig().getString("language-file","english.yml");
+        File messages_file = new File(getDataFolder(), lang_file);
+        if(messages_file.exists()) {
+            try {
+                return ConfigurationProvider.getProvider(YamlConfiguration.class).load(messages_file);
+            } catch (IOException e) {
+                getLogger().warning("Could not load english.yml, using default english.yml");
             }
         }
-
+        saveDefaultResource("english.yml",true);
+        return ConfigurationProvider.getProvider(YamlConfiguration.class).load(messages_file);
     }
-    public LanguageManager getLanguageManager() {
-        return languageManager;
+    private void saveDefaultResource(String filename, boolean force) throws IOException {
+        Path file = Paths.get(getDataFolder().getAbsolutePath(),filename);
+        if (force || !Files.exists(file)) {
+            try (InputStream in = getResourceAsStream(filename)) {
+                //won't replace existing because of File.exists, unless force
+                Files.copy(in, file, StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
     }
 }

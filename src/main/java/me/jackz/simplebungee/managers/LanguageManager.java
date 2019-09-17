@@ -2,7 +2,6 @@ package me.jackz.simplebungee.managers;
 
 import me.jackz.simplebungee.SimpleBungee;
 import me.jackz.simplebungee.utils.Placeholder;
-import me.jackz.simplebungee.utils.Util;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -25,7 +24,7 @@ public class LanguageManager {
     }
     public String getString(String path, ProxiedPlayer player) {
         String message = messages.getString(path);
-        return ChatColor.translateAlternateColorCodes('&', Util.formatPlaceholders(message,player));
+        return ChatColor.translateAlternateColorCodes('&', formatPlaceholders(message,player));
     }
     public String getString(String path) {
         String message = messages.getString(path);
@@ -37,19 +36,19 @@ public class LanguageManager {
     }
     public TextComponent getTextComponent(String path, ProxiedPlayer player) {
         String v = messages.getString(path);
-        if(v != null) {
-            return new TextComponent(ChatColor.translateAlternateColorCodes('&',Util.formatPlaceholders(v,player)));
+        if(v != null && player != null) {
+            return new TextComponent(ChatColor.translateAlternateColorCodes('&',formatPlaceholders(v,player)));
         }else{
             return default_component;
         }
     }
     public TextComponent getTextComponent(String path, ProxiedPlayer player, Placeholder... placeholders) {
         String v = messages.getString(path);
-        if(v != null) {
+        if(v != null && player != null) {
             for (Placeholder placeholder : placeholders) {
                 v = placeholder.process(v);
             }
-            return new TextComponent(ChatColor.translateAlternateColorCodes('&',Util.formatPlaceholders(v,player)));
+            return new TextComponent(ChatColor.translateAlternateColorCodes('&',formatPlaceholders(v,player)));
         }else{
             return default_component;
         }
@@ -64,6 +63,18 @@ public class LanguageManager {
         }else{
             return default_component;
         }
+    }
+
+    private static String formatPlaceholders(String string, ProxiedPlayer player) {
+        if(player != null) {
+            String server = player.getServer() != null? player.getServer().getInfo().getName() : "";
+            string = string
+                    .replaceAll("%player_server%", server)
+                    .replaceAll("%player_display%", player.getDisplayName())
+                    .replaceAll("%player_name%", player.getName())
+                    .replaceAll("%player%", player.getName());
+        }
+        return ChatColor.translateAlternateColorCodes('&',string);
     }
 }
 

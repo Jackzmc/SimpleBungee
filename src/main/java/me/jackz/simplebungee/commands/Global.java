@@ -2,7 +2,6 @@ package me.jackz.simplebungee.commands;
 
 import me.jackz.simplebungee.SimpleBungee;
 import me.jackz.simplebungee.managers.LanguageManager;
-import me.jackz.simplebungee.utils.Util;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -19,7 +18,6 @@ import java.util.UUID;
 
 public class Global extends Command implements Listener {
     private final Map<UUID,Boolean> GLOBAL_CHAT_TOGGLED = new HashMap<>();
-    private String format;
     private final SimpleBungee plugin;
     private final LanguageManager lm;
 
@@ -27,7 +25,6 @@ public class Global extends Command implements Listener {
         super("global","simplebungee.command.global","g");
         this.plugin = plugin;
         lm = plugin.getLanguageManager();
-        format = lm.getString("formats.global");
     }
 
     /* format: '&9GLOBAL %server_name%> &e%fullname%: %message%' */
@@ -38,7 +35,7 @@ public class Global extends Command implements Listener {
         if(sender instanceof ProxiedPlayer) {
             ProxiedPlayer player = (ProxiedPlayer) sender;
             if(args.length > 0) {
-                BaseComponent[] tc = new ComponentBuilder(Util.formatPlaceholders(format, player))
+                BaseComponent[] tc = new ComponentBuilder(lm.getString("formats.GLOBAL",player))
                         .append(" " + String.join(" ",args)).create();
                 plugin.getProxy().broadcast(tc);
             }else{
@@ -64,7 +61,7 @@ public class Global extends Command implements Listener {
         String message = e.getMessage();
         boolean is_global = isGlobalEnabled(player.getUniqueId());
         if(is_global && !e.isCancelled())    {
-            BaseComponent[] tc = new ComponentBuilder(Util.formatPlaceholders(format,player))
+            BaseComponent[] tc = new ComponentBuilder(lm.getString("formats.GLOBAL",player))
                     .append(" " + String.join(" ",message)).create();
             plugin.getProxy().broadcast(tc);
             e.setCancelled(true);

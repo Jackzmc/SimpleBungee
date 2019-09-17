@@ -200,6 +200,7 @@ public class Friends extends Command {
                             title_friends.addExtra(comp_friend);
                         }
                     } else {
+                        title_friends.addExtra("\n");
                         title_friends.addExtra(lm.getTextComponent("friends.NO_FRIENDS"));
                     }
 
