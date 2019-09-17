@@ -1,6 +1,6 @@
 # formats for chat messages
 formats:
-  global: '&9GLOBAL %server_name%> &e%player_display%:&r' #global chat display
+  GLOBAL: '&9GLOBAL %player_server%> &e%player_display%:&r' #global chat display
 
 #used in different commands
 core:
@@ -31,7 +31,7 @@ friends:
   DEL_FRIEND_USAGE: "&cPlease enter a friend to remove. Usage: /friend remove <username>"
   JOIN_USAGE: "&cPlease enter a friend to join. Usage: /friend join <username>"
   INVITE_SUCCESS: "&aInvited %player_name% to join your server."
-  RECEIVE_INVITE: "&e%player_name has sent you an invite to join %server_name"
+  RECEIVE_INVITE: "&e%player_name has sent you an invite to join %player_server"
   JOIN_FRIEND_TOOLTIP: "Join your friend's game"
   NOT_FRIENDS_WITH: "&cYou are not friends with %player_name%"
   INVITE_USAGE: "&cPlease enter a friend to invite. Usage: /friend invite <username>"
@@ -92,8 +92,9 @@ uuid:
 connection-messages:
   JOIN: "&e%player% has joined the network"
   QUIT: "&e%player% has left the network"
-  SERVERSWITCH: "&e%player% switched servers from %previous% to %server%" # %previous% for previous, %server% for current
+  SERVERSWITCH: "&e%player% switched servers from %previous% to %player_server%" # %previous% for previous, %player_server% for current
   friends:
     JOIN: "&a%player% is now online"
     QUIT: "&a%player% has left"
-    SERVERSWITCH: "&a%player% is now on %server%" # %previous% for previous, %server% for current
+    SERVERSWITCH: "&a%player% is now on %player_server%" # %previous% for previous, %player_server% for current
+
