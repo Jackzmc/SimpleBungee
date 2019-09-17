@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 public class PlayerLoader {
-    private SimpleBungee plugin;
+    private final SimpleBungee plugin;
 
     public PlayerLoader(SimpleBungee plugin) {
         this.plugin = plugin;

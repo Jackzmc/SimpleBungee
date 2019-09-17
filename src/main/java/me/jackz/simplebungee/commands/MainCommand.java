@@ -1,6 +1,7 @@
 package me.jackz.simplebungee.commands;
 
 import me.jackz.simplebungee.SimpleBungee;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
@@ -9,7 +10,7 @@ import net.md_5.bungee.config.Configuration;
 import java.io.IOException;
 
 public class MainCommand extends Command {
-    private SimpleBungee plugin;
+    private final SimpleBungee plugin;
     public MainCommand(SimpleBungee plugin) {
         super("simplebungee","simplebungee.command.simplebungee","sb");
         this.plugin = plugin;

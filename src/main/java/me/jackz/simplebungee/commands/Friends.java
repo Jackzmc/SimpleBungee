@@ -18,11 +18,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class Friends extends Command {
-    private SimpleBungee plugin;
-    private PlayerLoader playerLoader;
-    private FriendsManager fm;
+    private final SimpleBungee plugin;
+    private final PlayerLoader playerLoader;
+    private final FriendsManager fm;
 
-    private LanguageManager lm;
+    private final LanguageManager lm;
 
     public Friends(SimpleBungee plugin) {
         super("friends","simplebungee.command.friends","friend");
@@ -132,7 +132,7 @@ public class Friends extends Command {
                             if(fm.getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
                                 player.sendMessage(lm.getTextComponent("friends.INVITE_SUCCESS",friend));
 
-                                TextComponent tc = lm.getTextComponent("friends.RECIEVE_INVITE",player);
+                                TextComponent tc = lm.getTextComponent("friends.RECEIVE_INVITE",player);
                                 TextComponent join = new TextComponent(" [JOIN]");
                                 join.setColor(ChatColor.GREEN);
                                 join.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/friend _join " + player.getUniqueId() ));

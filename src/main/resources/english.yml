@@ -31,7 +31,7 @@ friends:
   DEL_FRIEND_USAGE: "&cPlease enter a friend to remove. Usage: /friend remove <username>"
   JOIN_USAGE: "&cPlease enter a friend to join. Usage: /friend join <username>"
   INVITE_SUCCESS: "&aInvited %player_name% to join your server."
-  RECIEVE_INVITE: "&e%player_name has sent you an invite to join %server_name"
+  RECEIVE_INVITE: "&e%player_name has sent you an invite to join %server_name"
   JOIN_FRIEND_TOOLTIP: "Join your friend's game"
   NOT_FRIENDS_WITH: "&cYou are not friends with %player_name%"
   INVITE_USAGE: "&cPlease enter a friend to invite. Usage: /friend invite <username>"

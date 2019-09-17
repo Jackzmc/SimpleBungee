@@ -10,8 +10,8 @@ import net.md_5.bungee.api.plugin.Command;
 import java.util.Collection;
 
 public class UUIDCommand extends Command {
-    private SimpleBungee plugin;
-    private LanguageManager lm;
+    private final SimpleBungee plugin;
+    private final LanguageManager lm;
     public UUIDCommand(SimpleBungee plugin)  {
         super("uuid");
         this.plugin = plugin;

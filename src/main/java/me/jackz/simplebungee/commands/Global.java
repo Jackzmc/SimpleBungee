@@ -18,16 +18,16 @@ import java.util.Map;
 import java.util.UUID;
 
 public class Global extends Command implements Listener {
-    private Map<UUID,Boolean> GLOBAL_CHAT_TOGGLED = new HashMap<>();
-    private String format = "&9GLOBAL %server_name%> &e%displayname%:&r";
-    private SimpleBungee plugin;
-    private LanguageManager lm;
+    private final Map<UUID,Boolean> GLOBAL_CHAT_TOGGLED = new HashMap<>();
+    private String format;
+    private final SimpleBungee plugin;
+    private final LanguageManager lm;
 
     public Global(SimpleBungee plugin) {
         super("global","simplebungee.command.global","g");
         this.plugin = plugin;
         lm = plugin.getLanguageManager();
-        format = lm.getRawString("formats.global");
+        format = lm.getString("formats.global");
     }
 
     /* format: '&9GLOBAL %server_name%> &e%fullname%: %message%' */
@@ -71,7 +71,7 @@ public class Global extends Command implements Listener {
         }
     }
 
-    public boolean isGlobalEnabled(UUID uuid) {
+    private boolean isGlobalEnabled(UUID uuid) {
         return GLOBAL_CHAT_TOGGLED.getOrDefault(uuid,false);
     }
 }

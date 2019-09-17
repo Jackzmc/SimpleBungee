@@ -11,13 +11,12 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 
-import java.io.IOException;
 import java.util.*;
 
 public class Report extends Command implements Listener {
-    private List<String> REASONS = new ArrayList<>();
-    private boolean USE_REASON_LIST;
-    private SimpleBungee plugin;
+    private List<String> REASONS;
+    private final boolean USE_REASON_LIST;
+    private final SimpleBungee plugin;
 
     public Report(SimpleBungee plugin) {
         super("report","simplebungee.command.report");
@@ -86,7 +85,7 @@ public class Report extends Command implements Listener {
     private void addReport(UUID Victim, String reason, ProxiedPlayer reporter) {
         reporter.sendMessage(new TextComponent("§cNot implemented."));
     }
-    private Map<UUID,UUID> CHAT_STATUS = new HashMap<>();
+    private final Map<UUID,UUID> CHAT_STATUS = new HashMap<>();
     @EventHandler
     public void onChat(ChatEvent e) {
         ProxiedPlayer player = (ProxiedPlayer) e.getSender();

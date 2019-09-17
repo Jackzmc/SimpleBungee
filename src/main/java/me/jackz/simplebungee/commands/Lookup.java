@@ -14,8 +14,8 @@ import net.md_5.bungee.api.plugin.Command;
 import java.util.Collection;
 
 public class Lookup extends Command {
-    private SimpleBungee plugin;
-    private PlayerLoader playerLoader;
+    private final SimpleBungee plugin;
+    private final PlayerLoader playerLoader;
     public Lookup(SimpleBungee plugin) {
         super("lookup");
         this.plugin = plugin;

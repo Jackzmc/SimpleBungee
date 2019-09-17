@@ -9,11 +9,11 @@ import java.util.UUID;
 public class OfflinePlayerStore {
     //private transient ProxiedPlayer player;
     //things to store
-    private UUID id;
-    private String last_username;
-    private String last_server;
-    private long last_online;
-    private String IP;
+    private final UUID id;
+    private final String last_username;
+    private final String last_server;
+    private final long last_online;
+    private final String IP;
     //public static Map<UUID,Long> CURRENT_PLAYTIME_STORE;
 
     public OfflinePlayerStore(UUID id, String username, String server, long lastonline, String IP) {

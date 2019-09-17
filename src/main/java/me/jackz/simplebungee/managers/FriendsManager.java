@@ -9,11 +9,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class FriendsManager {
-    private SimpleBungee plugin;
-    private LanguageManager lm;
+    private final SimpleBungee plugin;
+    private final LanguageManager lm;
 
     private Map<UUID, List<UUID>> FRIENDS_LIST = new HashMap<>();
-    private Map<UUID, List<UUID>> FRIEND_REQUESTS = new HashMap<>();
+    private final Map<UUID, List<UUID>> FRIEND_REQUESTS = new HashMap<>();
 
     public FriendsManager(SimpleBungee plugin) {
         this.plugin = plugin;
@@ -81,7 +81,7 @@ public class FriendsManager {
         }
         plugin.saveData();
     }
-    public void loadFriendsList() throws IOException {
+    public void loadFriendsList() {
         Configuration data = plugin.data;
         Configuration sub_friends = data.getSection("friends");
         FRIENDS_LIST = new HashMap<>();

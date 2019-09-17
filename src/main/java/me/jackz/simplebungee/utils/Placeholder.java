@@ -1,8 +1,8 @@
 package me.jackz.simplebungee.utils;
 
 public class Placeholder {
-    private String name;
-    private Object value;
+    private final String name;
+    private final Object value;
     public Placeholder(String name, Object value) {
         this.name = name;
         this.value = value;
