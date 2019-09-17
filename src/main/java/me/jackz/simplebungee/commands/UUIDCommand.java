@@ -1,8 +1,8 @@
 package me.jackz.simplebungee.commands;
 
 import me.jackz.simplebungee.SimpleBungee;
-import me.jackz.simplebungee.lib.LanguageManager;
-import me.jackz.simplebungee.lib.Placeholder;
+import me.jackz.simplebungee.managers.LanguageManager;
+import me.jackz.simplebungee.utils.Placeholder;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -12,9 +12,6 @@ import java.util.Collection;
 public class UUIDCommand extends Command {
     private SimpleBungee plugin;
     private LanguageManager lm;
-    public UUIDCommand() {
-        super("uuid");
-    }
     public UUIDCommand(SimpleBungee plugin)  {
         super("uuid");
         this.plugin = plugin;

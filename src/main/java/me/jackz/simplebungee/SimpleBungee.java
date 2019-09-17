@@ -1,10 +1,11 @@
 package me.jackz.simplebungee;
 
 import me.jackz.simplebungee.commands.*;
-import me.jackz.simplebungee.events.PlayerEvents;
-import me.jackz.simplebungee.lib.LanguageManager;
-import me.jackz.simplebungee.lib.PlayerLoader;
-import me.jackz.simplebungee.lib.ServerShortcut;
+import me.jackz.simplebungee.listeners.PlayerEvents;
+import me.jackz.simplebungee.managers.FriendsManager;
+import me.jackz.simplebungee.managers.LanguageManager;
+import me.jackz.simplebungee.managers.PlayerLoader;
+import me.jackz.simplebungee.utils.ServerShortcut;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
@@ -19,10 +20,10 @@ import java.nio.file.Files;
 
 
 public final class SimpleBungee extends Plugin {
-    private Friends friends;
     private PlayerLoader playerLoader;
     public Configuration data;
     private LanguageManager languageManager;
+    private FriendsManager friendsManager;
 
     private final static String LATEST_CONFIG_VERSION = "1.0";
 
@@ -49,8 +50,8 @@ public final class SimpleBungee extends Plugin {
         }
         /* load main config and commands */
         try {
-            friends = new Friends(this);
             playerLoader = new PlayerLoader(this);
+            this.friendsManager = new FriendsManager(this);
 
             Configuration config = getConfig();
             String version = config.getString("config-version","0");
@@ -73,8 +74,8 @@ public final class SimpleBungee extends Plugin {
             if(config.getBoolean("commands.lookup"))  pm.registerCommand(this,new Lookup(this));
             pm.registerCommand(this,new MainCommand(this));
             if(config.getBoolean("commands.friends")) {
-                friends.LoadFriendsList();
-                pm.registerCommand(this, friends);
+                friendsManager.loadFriendsList();
+                pm.registerCommand(this, new Friends(this));
             }
             if(config.contains("server_shortcuts")) {
                 Configuration servers = config.getSection("server_shortcuts");
@@ -91,7 +92,7 @@ public final class SimpleBungee extends Plugin {
     @Override
     public void onDisable() {
         try {
-            friends.SaveFriendsList();
+            friendsManager.saveFriendsList();
             for (ProxiedPlayer player : getProxy().getPlayers()) {
                 playerLoader.save(player);
                 //use english.yml later
@@ -104,6 +105,7 @@ public final class SimpleBungee extends Plugin {
     public PlayerLoader getPlayerLoader() {
         return playerLoader;
     }
+    public FriendsManager getFriendsManager() { return friendsManager; }
     public Configuration getConfig() throws IOException {
         File config_file = new File(getDataFolder(),"config.yml");
         if(config_file.exists()) {

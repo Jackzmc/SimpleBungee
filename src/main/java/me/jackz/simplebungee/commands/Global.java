@@ -1,8 +1,8 @@
 package me.jackz.simplebungee.commands;
 
 import me.jackz.simplebungee.SimpleBungee;
-import me.jackz.simplebungee.lib.LanguageManager;
-import me.jackz.simplebungee.lib.Util;
+import me.jackz.simplebungee.managers.LanguageManager;
+import me.jackz.simplebungee.utils.Util;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;

@@ -1,6 +1,8 @@
-package me.jackz.simplebungee.lib;
+package me.jackz.simplebungee.managers;
 
 import me.jackz.simplebungee.SimpleBungee;
+import me.jackz.simplebungee.utils.Placeholder;
+import me.jackz.simplebungee.utils.Util;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -23,7 +25,7 @@ public class LanguageManager {
     }
     public String getString(String path, ProxiedPlayer player) {
         String message = messages.getString(path);
-        return ChatColor.translateAlternateColorCodes('&',Util.formatPlaceholders(message,player));
+        return ChatColor.translateAlternateColorCodes('&', Util.formatPlaceholders(message,player));
     }
     public String getString(String path) {
         String message = messages.getString(path);

@@ -1,4 +1,4 @@
-package me.jackz.simplebungee.lib;
+package me.jackz.simplebungee.utils;
 
 import net.md_5.bungee.config.Configuration;
 

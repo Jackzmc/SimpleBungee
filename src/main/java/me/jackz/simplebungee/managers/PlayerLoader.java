@@ -1,6 +1,7 @@
-package me.jackz.simplebungee.lib;
+package me.jackz.simplebungee.managers;
 
 import me.jackz.simplebungee.SimpleBungee;
+import me.jackz.simplebungee.utils.OfflinePlayerStore;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 

@@ -1,27 +1,27 @@
 package me.jackz.simplebungee.commands;
 
 import me.jackz.simplebungee.SimpleBungee;
-import me.jackz.simplebungee.lib.LanguageManager;
-import me.jackz.simplebungee.lib.OfflinePlayerStore;
-import me.jackz.simplebungee.lib.Placeholder;
-import me.jackz.simplebungee.lib.PlayerLoader;
+import me.jackz.simplebungee.managers.FriendsManager;
+import me.jackz.simplebungee.managers.LanguageManager;
+import me.jackz.simplebungee.managers.PlayerLoader;
+import me.jackz.simplebungee.utils.OfflinePlayerStore;
+import me.jackz.simplebungee.utils.Placeholder;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.*;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import net.md_5.bungee.config.Configuration;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 public class Friends extends Command {
     private SimpleBungee plugin;
     private PlayerLoader playerLoader;
-    private Map<UUID, List<UUID>> FRIENDS_LIST = new HashMap<>();
-    private Map<UUID, List<UUID>> FRIEND_REQUESTS = new HashMap<>();
+    private FriendsManager fm;
+
     private LanguageManager lm;
 
     public Friends(SimpleBungee plugin) {
@@ -29,6 +29,7 @@ public class Friends extends Command {
         this.plugin = plugin;
         this.playerLoader = new PlayerLoader(plugin);
         this.lm = plugin.getLanguageManager();
+        this.fm = plugin.getFriendsManager();
     }
     @Override
     public void execute(CommandSender sender, String[] args) {
@@ -48,8 +49,8 @@ public class Friends extends Command {
                         Collection<ProxiedPlayer> playerMatches = plugin.getProxy().matchPlayer(args[1]);
                         if (playerMatches.size() > 0) {
                             ProxiedPlayer friend = playerMatches.iterator().next();
-                            List<UUID> friends_list = getFriends(friend.getUniqueId());
-                            List<UUID> friend_requests = getFriendRequests(friend.getUniqueId());
+                            List<UUID> friends_list = fm.getFriends(friend.getUniqueId());
+                            List<UUID> friend_requests = fm.getFriendRequests(friend.getUniqueId());
                             if(friends_list.contains(player.getUniqueId())) {
                                 sender.sendMessage(lm.getTextComponent("friends.ALREADY_FRIENDS",friend));
                                 return;
@@ -60,7 +61,7 @@ public class Friends extends Command {
                                 sender.sendMessage(lm.getTextComponent("friends.FRIENDS_WITH_SELF"));
                                 return;
                             }
-                            addFriendRequest(friend.getUniqueId(), player.getUniqueId());
+                            fm.addFriendRequest(friend.getUniqueId(), player.getUniqueId());
                             sender.sendMessage(lm.getTextComponent("friends.REQUEST_SEND",friend));
 
                             TextComponent base = lm.getTextComponent("friends.RECEIVE_REQUEST",player);
@@ -89,8 +90,8 @@ public class Friends extends Command {
                         Collection<ProxiedPlayer> friends = plugin.getProxy().matchPlayer(args[1]);
                         if(friends.size() > 0) {
                             ProxiedPlayer friend = friends.iterator().next();
-                            removeFriend(friend.getUniqueId(),player.getUniqueId());
-                            removeFriend(player.getUniqueId(),friend.getUniqueId());
+                            fm.removeFriend(friend.getUniqueId(),player.getUniqueId());
+                            fm.removeFriend(player.getUniqueId(),friend.getUniqueId());
                             sender.sendMessage(lm.getTextComponent("friends.REMOVE_PLAYER",friend));
                             sender.sendMessage(lm.getTextComponent("friends.FRIENDSHIP_REMOVED",player));
                         }else{
@@ -105,7 +106,7 @@ public class Friends extends Command {
                     try {
                         UUID uuid = UUID.fromString(args[1]);
                         ProxiedPlayer friend = plugin.getProxy().getPlayer(uuid);
-                        joinFriend(player, friend);
+                        fm.joinFriend(player, friend);
                     }catch(IllegalArgumentException e) {
                         player.sendMessage(lm.getTextComponent("core.NO_PLAYER_FOUND_ALT"));
                     }
@@ -115,7 +116,7 @@ public class Friends extends Command {
                         Collection<ProxiedPlayer> friends = plugin.getProxy().matchPlayer(args[1]);
                         if(friends.size() > 0) {
                             ProxiedPlayer friend = friends.iterator().next();
-                            joinFriend(player, friend);
+                            fm.joinFriend(player, friend);
                         }else{
                             player.sendMessage(lm.getTextComponent("core.NO_PLAYER_FOUND"));
                         }
@@ -128,7 +129,7 @@ public class Friends extends Command {
                         Collection<ProxiedPlayer> friends = plugin.getProxy().matchPlayer(args[1]);
                         if(friends.size() > 0) {
                             ProxiedPlayer friend = friends.iterator().next();
-                            if(getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
+                            if(fm.getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
                                 player.sendMessage(lm.getTextComponent("friends.INVITE_SUCCESS",friend));
                                 ServerInfo player_server = player.getServer().getInfo();
 
@@ -151,8 +152,8 @@ public class Friends extends Command {
 
                     break;
                 case "list": {
-                    List<UUID> friends = FRIENDS_LIST.get(player.getUniqueId());
-                    List<UUID> requests = FRIEND_REQUESTS.get(player.getUniqueId());
+                    List<UUID> friends = fm.getFriends(player.getUniqueId()); //FRIENDS_LIST.get(player.getUniqueId());
+                    List<UUID> requests = fm.getFriendRequests(player.getUniqueId()); //FRIEND_REQUESTS.get(player.getUniqueId());
                     ServerInfo player_server = player.getServer().getInfo();
                     TextComponent title_friends = lm.getTextComponent("friends.LIST_HEADING");
                     if (friends != null && friends.size() > 0) {
@@ -237,13 +238,13 @@ public class Friends extends Command {
                     if(args.length >= 2) {
                         try {
                             UUID uuid = UUID.fromString(args[1]);
-                            List<UUID> requests = getFriendRequests(player.getUniqueId());
+                            List<UUID> requests = fm.getFriendRequests(player.getUniqueId());
                             if(requests.contains(uuid)) {
                                 OfflinePlayerStore friend = playerLoader.getPlayer(uuid);
-
+                            //TODO: actually remove request ? may not be removed now
                                 requests.remove(uuid);
-                                addFriend(player.getUniqueId(),uuid);
-                                addFriend(uuid,player.getUniqueId());
+                                fm.addFriend(player.getUniqueId(),uuid);
+                                fm.addFriend(uuid,player.getUniqueId());
 
                                 Placeholder username = new Placeholder("player_name",friend.getLastUsername());
                                 Placeholder server = new Placeholder("server_name",friend.getLastServer());
@@ -271,9 +272,10 @@ public class Friends extends Command {
                     if(args.length >= 2) {
                         try {
                             UUID uuid = UUID.fromString(args[1]);
-                            List<UUID> requests = getFriendRequests(player.getUniqueId());
+                            List<UUID> requests = fm.getFriendRequests(player.getUniqueId());
                             if(requests.contains(uuid)) {
                                 OfflinePlayerStore friend = playerLoader.getPlayer(uuid);
+                                //TODO: view todo at above
                                 requests.remove(uuid);
                                 Placeholder username = new Placeholder("player_name",friend.getLastUsername());
                                 Placeholder server = new Placeholder("server_name",friend.getLastServer());
@@ -296,71 +298,5 @@ public class Friends extends Command {
         }
     }
 
-    private void joinFriend(ProxiedPlayer player, ProxiedPlayer friend) {
-        if(friend != null) {
-            if(getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
-                player.connect(friend.getServer().getInfo());
-                player.sendMessage(lm.getTextComponent("friends.JOIN_FRIEND",friend));
-            }else{
-                player.sendMessage(lm.getTextComponent("friends.NOT_FRIENDS_WITH",friend));
-            }
-        }else{
-            player.sendMessage(lm.getTextComponent("core.NO_PLAYER_FOUND"));
-        }
-    }
 
-    private List<UUID> getFriends(UUID target) {
-        List<UUID> list = FRIENDS_LIST.get(target);
-        return (list != null) ? list : new ArrayList<>();
-    }
-    private List<UUID> getFriendRequests(UUID target) {
-        List<UUID> list = FRIEND_REQUESTS.get(target);
-        return (list != null) ? list : new ArrayList<>();
-    }
-    private void addFriend(UUID target, UUID friend) {
-        if(target == friend) return; //if trying to add self as friend ,fail
-        List<UUID> list = getFriends(target);
-        if(list.contains(friend)) return; //silent fail if friend is already friends with target
-
-        list.add(friend);
-        FRIENDS_LIST.put(target, list);
-    }
-    private void removeFriend(UUID target, UUID friend) {
-        if(target == friend) return;
-        List<UUID> list = getFriends(target);
-        list.remove(friend);
-        FRIENDS_LIST.put(target, list);
-    }
-    private void addFriendRequest(UUID target, UUID friend) {
-        if(target == friend) return;
-        List<UUID> list = getFriendRequests(target);
-        list.add(friend);
-        FRIEND_REQUESTS.put(target,list);
-    }
-
-    public void SaveFriendsList() throws IOException {
-        Configuration data = plugin.data;
-        for (Map.Entry<UUID, List<UUID>> entry : FRIENDS_LIST.entrySet()) {
-            Configuration sub_player = data.getSection("friends." + entry.getKey().toString());
-
-            List<String> string_friends = entry.getValue().stream().map(UUID::toString).collect(Collectors.toList());
-            sub_player.set("friends",string_friends);
-        }
-        plugin.saveData();
-    }
-    public void LoadFriendsList() throws IOException {
-        Configuration data = plugin.data;
-        Configuration sub_friends = data.getSection("friends");
-        FRIENDS_LIST = new HashMap<>();
-        if(sub_friends != null) {
-            for (String id : sub_friends.getKeys()) {
-                UUID uuid = UUID.fromString(id);
-                Configuration sub_player = data.getSection("friends." + id);
-                List<String> str_friends = sub_player.getStringList("friends");
-
-                List<UUID> friends = str_friends.stream().map(UUID::fromString).collect(Collectors.toList());
-                FRIENDS_LIST.put(uuid, friends);
-            }
-        }
-    }
 }

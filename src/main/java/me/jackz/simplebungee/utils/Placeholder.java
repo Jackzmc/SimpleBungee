@@ -1,4 +1,4 @@
-package me.jackz.simplebungee.lib;
+package me.jackz.simplebungee.utils;
 
 public class Placeholder {
     private String name;

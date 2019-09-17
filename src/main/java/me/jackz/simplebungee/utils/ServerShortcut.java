@@ -1,4 +1,4 @@
-package me.jackz.simplebungee.lib;
+package me.jackz.simplebungee.utils;
 
 import me.jackz.simplebungee.SimpleBungee;
 import net.md_5.bungee.api.CommandSender;

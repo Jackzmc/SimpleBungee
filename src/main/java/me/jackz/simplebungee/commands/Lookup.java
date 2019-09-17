@@ -2,9 +2,9 @@ package me.jackz.simplebungee.commands;
 
 import me.jackz.simplebungee.DataStore;
 import me.jackz.simplebungee.SimpleBungee;
-import me.jackz.simplebungee.lib.OfflinePlayerStore;
-import me.jackz.simplebungee.lib.PlayerLoader;
-import me.jackz.simplebungee.lib.Util;
+import me.jackz.simplebungee.utils.OfflinePlayerStore;
+import me.jackz.simplebungee.managers.PlayerLoader;
+import me.jackz.simplebungee.utils.Util;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;

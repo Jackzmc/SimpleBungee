@@ -1,6 +1,6 @@
 package me.jackz.simplebungee;
 
-import me.jackz.simplebungee.lib.OfflinePlayerStore;
+import me.jackz.simplebungee.utils.OfflinePlayerStore;
 
 import java.util.HashMap;
 import java.util.Map;

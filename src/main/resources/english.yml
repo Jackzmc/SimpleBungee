@@ -88,3 +88,12 @@ servers:
 uuid:
   OTHER: "&7%player_name's UUID: &e%uuid%"
   SELF: "&7Your UUID: &e%uuid%"
+
+connection-messages:
+  JOIN: "&e%player% has joined the network"
+  QUIT: "&e%player% has left the network"
+  SERVERSWITCH: "&e%player% switched servers from %previous% to %server%" # %previous% for previous, %server% for current
+  friends:
+    JOIN: "&a%player% is now online"
+    QUIT: "&a%player% has left"
+    SERVERSWITCH: "&a%player% is now on %server%" # %previous% for previous, %server% for current
