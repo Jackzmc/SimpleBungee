@@ -6,6 +6,7 @@ import me.jackz.simplebungee.managers.FriendsManager;
 import me.jackz.simplebungee.managers.LanguageManager;
 import me.jackz.simplebungee.managers.PlayerLoader;
 import me.jackz.simplebungee.utils.ServerShortcut;
+import me.jackz.simplebungee.utils.Version;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
@@ -29,7 +30,7 @@ public final class SimpleBungee extends Plugin {
     private LanguageManager languageManager;
     private FriendsManager friendsManager;
 
-    private final static String LATEST_CONFIG_VERSION = "1.0";
+    private final static Version LATEST_CONFIG_VERSION = new Version("1.0");
 
     @Override
     public void onEnable() {
@@ -59,9 +60,11 @@ public final class SimpleBungee extends Plugin {
         playerLoader = new PlayerLoader(this);
         this.friendsManager = new FriendsManager(this);
 
-        String version = config.getString("config-version","0");
-        if(version == null || !version.equalsIgnoreCase(LATEST_CONFIG_VERSION )) {
-            String message = String.format("Your config file is version %s, the latest is %s. Please upgrade the file by deleting the config.yml.", version,LATEST_CONFIG_VERSION);
+        String config_version = config.getString("config-version","0");
+        Version current_config_version = new Version(config_version);
+        //check if the current config version is less than LATEST_CONFIG_VERSION
+        if(config_version == null || current_config_version.compareTo(LATEST_CONFIG_VERSION) < 0) {
+            String message = String.format("Your config file is version %s, the latest is %s. Please upgrade the file by deleting the config.yml.", config_version,LATEST_CONFIG_VERSION);
             getLogger().warning(message);
         }
 
