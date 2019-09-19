@@ -8,6 +8,7 @@ core:
   PLAYER_ONLY: "&cYou must be a player to use this command."
   NO_PLAYER_FOUND: "&cCould not find any players online with that name."
   NO_PLAYER_FOUND_ALT: "&cCould not find that player"
+  UPDATE_AVAILABLE: "&eThere is an update available. You are on %current%, latest is %latest." #vars: %current%, %latest%
 
 # friends system
 friends:

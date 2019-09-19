@@ -4,7 +4,7 @@ language-file: "english.yml"
 #Should the plugin check for updates on startup?
 check-for-updates: true
 #Should the plugin notify any player with simplebungee.admin
-notify-admins-on-update:
+notify-admins-on-update: true
 
 #Enable or disable commands/modules here:
 commands:

@@ -66,6 +66,17 @@ public class PlayerEvents implements Listener {
                 friend.sendMessage(join_message);
             }
         }
+        if(player.hasPermission("simplebungee.updatecheck") && plugin.getConfig().getBoolean("notify-admins-on-update",true)) {
+            String latest_update = plugin.getLatestUpdate();
+
+            if(latest_update != null) {
+
+                Placeholder current = new Placeholder("current",plugin.getDescription().getVersion());
+                Placeholder latest = new Placeholder("latest",latest_update);
+                TextComponent tc = lm.getTextComponent("core.UPDATE_AVAILABLE",current,latest);
+                player.sendMessage(tc);
+            }
+        }
 
     }
     @EventHandler

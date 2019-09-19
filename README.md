@@ -17,7 +17,7 @@ Currently in development, features are still in development and may change.
 | /\<server shortcut>  | simplebungee.command.\<server shortcut> IF enabled              | The shortcut of any server shortcut, and if perms enabled |
 
 ### Other Permissions
-* **simplebungee.admin** - Gives access to /sb reload, and to be notified of updates.
+* **simplebungee.updatecheck** - Notify player with this permission of plugin updates.
 
 ### Configuration
 

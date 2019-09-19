@@ -34,6 +34,8 @@ public final class SimpleBungee extends Plugin {
     private final static Version LATEST_CONFIG_VERSION = new Version("1.0");
     private final static String UPDATE_CHECK_URL = "https://api.spigotmc.org/legacy/update.php?resource=71230";
 
+    private String latest_update = null;
+
     @Override
     public void onEnable() {
         /*load resources & language manager */
@@ -122,6 +124,9 @@ public final class SimpleBungee extends Plugin {
     public Configuration getConfig() {
         return this.config;
     }
+    public String getLatestUpdate() {
+        return latest_update;
+    }
     //endregion
     //region configuration
     private Configuration loadConfig() throws IOException {
@@ -200,6 +205,7 @@ public final class SimpleBungee extends Plugin {
 
                 if(latest.compareTo(current) >= 0) {
                     getLogger().info("There is a new version of SimpleBungee. Current: " + current + ", Latest: " + latest);
+                    latest_update = latest;
                 }
 
                 // close our reader
