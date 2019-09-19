@@ -107,6 +107,8 @@ public class PlayerEvents implements Listener {
         ProxiedPlayer player = e.getPlayer();
         ServerInfo previous = LAST_SERVER_MAP.get(player.getUniqueId());
         ServerInfo current = player.getServer().getInfo();
+        long diff = (System.currentTimeMillis() / 1000 ) - DataStore.CURRENT_PLAYTIME_STORE.get(player.getUniqueId());
+        if(diff <= 1000) return;
         if(previous != null && current != previous) {
             Placeholder ph_previous = new Placeholder("previous",previous.getName());
             if(switch_server_messages) {
