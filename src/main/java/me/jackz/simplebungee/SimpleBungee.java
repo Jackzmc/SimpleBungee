@@ -186,29 +186,32 @@ public final class SimpleBungee extends Plugin {
     }
     private void checkForUpdates() {
         PluginDescription pd = getDescription();
-        Version current = new Version(pd.getVersion());
-        // create the url
         try {
-            URL url = new URL(UPDATE_CHECK_URL);
-            // open the url stream, wrap it an a few "readers"
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            Version current = new Version(pd.getVersion());
+            // create the url
+            try {
+                URL url = new URL(UPDATE_CHECK_URL);
+                // open the url stream, wrap it an a few "readers"
+                BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
 
-            // write the output to stdout
-            String line = reader.readLine();;
-            Version latest = new Version(line);
+                // write the output to stdout
+                String line = reader.readLine();;
+                Version latest = new Version(line);
 
-            if(latest.compareTo(current) >= 0) {
-                getLogger().info("There is a new version of SimpleBungee. Current: " + current + ", Latest: " + latest);
+                if(latest.compareTo(current) >= 0) {
+                    getLogger().info("There is a new version of SimpleBungee. Current: " + current + ", Latest: " + latest);
+                }
+
+                // close our reader
+                reader.close();
+            } catch (MalformedURLException e) {
+                getLogger().warning("Update checker failed due to incorrect url.");
+            } catch (IOException e) {
+                getLogger().warning("Update checker could not fetch latest version at this time.");
             }
 
-            // close our reader
-            reader.close();
-        } catch (MalformedURLException e) {
-            getLogger().warning("Update checker failed due to incorrect url.");
-        } catch (IOException e) {
-            getLogger().warning("Update checker could not fetch latest version at this time.");
+        }catch(IllegalArgumentException ignored) {
+
         }
-
-
     }
 }
