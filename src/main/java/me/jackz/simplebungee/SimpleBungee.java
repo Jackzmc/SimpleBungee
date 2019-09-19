@@ -204,8 +204,8 @@ public final class SimpleBungee extends Plugin {
                 Version latest = new Version(line);
 
                 if(latest.compareTo(current) >= 0) {
-                    getLogger().info("There is a new version of SimpleBungee. Current: " + current + ", Latest: " + latest);
-                    latest_update = latest;
+                    getLogger().info("There is a new version of SimpleBungee. Current: " + current + ", Latest: " + line);
+                    latest_update = line;
                 }
 
                 // close our reader
