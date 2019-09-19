@@ -1,8 +1,23 @@
-# formats for chat messages
+##############################################################################################
+# Placeholder Information
+#
+# Default placeholders are:
+# %player_name% or %player% - Player's username.
+# %player_display% - The player's display name (can be nickname or other)
+# %player_server% - The player's current server's name
+#
+# Any message can have custom placeholders. It will be stated after the string what it is
+##############################################################################################
+
+# Message formats for chat messages.
 formats:
   GLOBAL: '&9GLOBAL %player_server%> &e%player_display%:&r' #global chat display
 
-#used in different commands
+####################################
+# Friends Command Messages
+# Placeholders: [none]
+# UPDATE_AVAILABLE: %current%, %latest
+####################################
 core:
   NO_PERMISSION: "&cYou don't have permission to use this command."
   PLAYER_ONLY: "&cYou must be a player to use this command."
@@ -10,7 +25,10 @@ core:
   NO_PLAYER_FOUND_ALT: "&cCould not find that player"
   UPDATE_AVAILABLE: "&eThere is an update available. You are on %current%, latest is %latest." #vars: %current%, %latest%
 
-# friends system
+####################################
+# Friends Command Messages
+# Placeholders: defaults
+####################################
 friends:
   HELP: |-
     &6&nFriends Help Menu
@@ -51,13 +69,25 @@ friends:
   UNKNOWN_ARGUMENT: "&cUnknown argument, try &e/friends help"
   JOIN_FRIEND: "&eConnecting you to %player_name%'s active server..."
 
+####################################
+# Global Chat Command Messages
+# Placeholders: defaults
+####################################
 global:
   NOW_LOCALCHAT: "&aNow talking in local chat"
   NOW_GLOBALCHAT: "&aNow talking in global chat"
 
+####################################
+# Lookup Command Messages
+# Placeholders: defaults
+####################################
 lookup:
   USAGE: "&cPlease enter a user to lookup (Usage: /lookup <username>)"
 
+####################################
+#  Main /simplebungee Command
+# Placeholders: defaults
+####################################
 main:
   HELP: |-
     &6SimpleBungee Help
@@ -65,13 +95,25 @@ main:
     &e/simplebungee commands &7- view all commands in plugin
   UNKNOWN_ARGUMENT: "&cUnknown argument, try /simplebungee help"
 
+####################################
+#  /players command
+# Placeholders: defaults
+####################################
 players:
   NONE: "&cThere are no players online."
 
+####################################
+#  /players command
+# Placeholders: defaults, %ping% - ping in ms
+####################################
 ping:
   SELF: "&7Your ping is &e%ping% ms"
   OTHER: "&7%player_name's ping: &e%ping% ms"
 
+####################################
+#  /report Command
+# Placeholders: defaults
+####################################
 report:
   HELP: |-
     &6Report Help Menu
@@ -81,15 +123,28 @@ report:
   CHOOSE_REASON: "&7Please choose a reason:"
   CHOOSE_REASON_MANUAL: "&7Please type a reason you want to report &e%player_name%&7:"
 
+####################################
+#  /servers command
+# Placeholders: defaults
+####################################
 servers:
   HEADER: "&6Server Status: "
   TOOLTIP: "Connect to this server"
   RESTRICTED: "&c[restricted]"
 
+####################################
+#  /uuid command
+# Placeholders: defaults, %uuid% - player's uuid (unique id)
+####################################
 uuid:
   OTHER: "&7%player_name's UUID: &e%uuid%"
   SELF: "&7Your UUID: &e%uuid%"
 
+####################################
+#  Global or Friend Connection Messages
+# Placeholders: defaults
+# SERVERSWITCH: %previous% - previous server's name
+####################################
 connection-messages:
   JOIN: "&e%player% has joined the network"
   QUIT: "&e%player% has left the network"

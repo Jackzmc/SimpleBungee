@@ -3,7 +3,8 @@ language-file: "english.yml"
 
 #Should the plugin check for updates on startup?
 check-for-updates: true
-#Should the plugin notify any player with simplebungee.admin
+
+#Should the plugin notify any player with simplebungee.admin of an update?
 notify-admins-on-update: true
 
 #Enable or disable commands/modules here:
@@ -17,11 +18,13 @@ commands:
   lookup: true
   global: true
 
+
 #Global connection messages
 connection-messages:
   bungee: true #announce on join of server (X joined the network/left the network)
   serverswitch: true #announce server switch (X switched servers from X to Y)
   friends: true #announce to players their friend joined or left
+
 
 #Add /<alias> shortcuts to connect a bungeecord server.
 server_shortcuts: {}
@@ -30,7 +33,8 @@ server_shortcuts: {}
 #        - exampleshortcut
 #      permissions: true #should there be permissions to connect?
 
-#reporting configuration
+
+# Report Command Settings
 report:
   use_reason_list: true #should players use a predefined list of reasons, or enter reason manually?
   reasons:
@@ -38,9 +42,9 @@ report:
     - Harassment
     - Hacking
 
-
-# should /servers show restricted servers (with [restricted] text)
+# Should /servers show restricted servers (with [restricted] text)
 show_restricted_servers: false
 
-# do not edit, used for version check:
+
+# do not edit, this is used for version check:
 config-version: "1.0"
