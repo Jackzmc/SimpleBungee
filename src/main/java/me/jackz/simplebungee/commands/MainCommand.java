@@ -43,6 +43,10 @@ public class MainCommand extends Command {
                 break;
             }
             case "update": {
+                if(!sender.hasPermission("simplebungee.command.updatecheck")) {
+                    sender.sendMessage(new TextComponent("§cYou don't have the permission to check for updates."));
+                    break;
+                }
                 try {
                     String latest_string = plugin.fetchLatestUpdate();
                     if(latest_string == null) {
