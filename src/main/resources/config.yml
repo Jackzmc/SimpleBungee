@@ -1,3 +1,7 @@
+####################
+# Generic Settings #
+####################
+
 # choose language file (default = english.yml)
 language-file: "english.yml"
 
@@ -7,8 +11,15 @@ check-for-updates: true
 #Should the plugin notify any player with simplebungee.admin of an update?
 notify-admins-on-update: true
 
+# Should /servers show restricted servers (with [restricted] text)
+show_restricted_servers: false
+
+#######################
+# Specific Categories #
+#######################
+
 #Enable or disable commands/modules here:
-commands:
+commands: #true to enable, false to disable
   ping: true
   servers: true
   online: true
@@ -18,8 +29,7 @@ commands:
   lookup: true
   global: true
 
-
-#Global connection messages
+# Global Connection Configuration
 connection-messages:
   bungee: true #announce on join of server (X joined the network/left the network)
   serverswitch: true #announce server switch (X switched servers from X to Y)
@@ -34,16 +44,14 @@ server_shortcuts: {}
 #      permissions: true #should there be permissions to connect?
 
 
-# Report Command Settings
+# Report System Configuration (Still in development, not used for now!)
 report:
   use_reason_list: true #should players use a predefined list of reasons, or enter reason manually?
   reasons:
+    -
     - Griefing
     - Harassment
     - Hacking
-
-# Should /servers show restricted servers (with [restricted] text)
-show_restricted_servers: false
 
 
 # do not edit, this is used for version check:

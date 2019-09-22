@@ -16,7 +16,6 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.*;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,6 +34,7 @@ public final class SimpleBungee extends Plugin {
     private final static String UPDATE_CHECK_URL = "https://api.spigotmc.org/legacy/update.php?resource=71230";
 
     private String latest_update = null;
+    private String plugin_version = null;
 
     @Override
     public void onEnable() {
@@ -71,7 +71,12 @@ public final class SimpleBungee extends Plugin {
             String message = String.format("Your config file is version %s, the latest is %s. Please upgrade the file by deleting the config.yml.", config_version,LATEST_CONFIG_VERSION);
             getLogger().warning(message);
         }
-        checkForUpdates();
+        PluginDescription pd = getDescription();
+        plugin_version = pd.getVersion();
+        getLatestUpdate();
+        if(latest_update != null) {
+            getLogger().info("There is a new version of SimpleBungee. Current: " + plugin_version + ", Latest: " + latest_update);
+        }
 
         PluginManager pm = getProxy().getPluginManager();
         if(config.getBoolean("commands.ping",true))    pm.registerCommand(this,new PingCommand(this));
@@ -125,7 +130,19 @@ public final class SimpleBungee extends Plugin {
         return this.config;
     }
     public String getLatestUpdate() {
-        return latest_update;
+        if(latest_update != null) {
+            return latest_update;
+        }else{
+            try {
+                return fetchLatestUpdate();
+            }catch (Exception ex) {
+                getLogger().warning("Update Checker ran into an error while fetching latest update." );
+                return null;
+            }
+        }
+    }
+    public String getVersion() {
+        return plugin_version;
     }
     //endregion
     //region configuration
@@ -189,35 +206,31 @@ public final class SimpleBungee extends Plugin {
             }
         }
     }
-    private void checkForUpdates() {
+    public String fetchLatestUpdate() throws IOException {
         PluginDescription pd = getDescription();
         try {
             Version current = new Version(pd.getVersion());
             // create the url
-            try {
-                URL url = new URL(UPDATE_CHECK_URL);
-                // open the url stream, wrap it an a few "readers"
-                BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            URL url = new URL(UPDATE_CHECK_URL);
+            // open the url stream, wrap it an a few "readers"
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
 
-                // write the output to stdout
-                String line = reader.readLine();;
-                Version latest = new Version(line);
+            // write the output to stdout
+            String line = reader.readLine();;
+            Version latest = new Version(line);
 
-                if(latest.compareTo(current) >= 0) {
-                    getLogger().info("There is a new version of SimpleBungee. Current: " + current + ", Latest: " + line);
-                    latest_update = line;
-                }
-
-                // close our reader
-                reader.close();
-            } catch (MalformedURLException e) {
-                getLogger().warning("Update checker failed due to incorrect url.");
-            } catch (IOException e) {
-                getLogger().warning("Update checker could not fetch latest version at this time.");
+            if(latest.compareTo(current) >= 0) {
+                this.latest_update = line;
+                return line;
             }
+
+            // close our reader
+            reader.close();
+
 
         }catch(IllegalArgumentException ignored) {
 
         }
+        return null;
     }
 }

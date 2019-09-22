@@ -1,6 +1,7 @@
 package me.jackz.simplebungee.commands;
 
 import me.jackz.simplebungee.SimpleBungee;
+import me.jackz.simplebungee.utils.Version;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -21,6 +22,7 @@ public class MainCommand extends Command {
         if(args.length == 0 || args[0].equalsIgnoreCase("help")) {
             TextComponent tc = new TextComponent("§6SimpleBungee Help");
             tc.addExtra("\n§e/simplebungee reload §7- reload the config.yml");
+            tc.addExtra("\n§e/simplebungee update §7- check for updates");
             tc.addExtra("\n§e/simplebungee commands §7- view all commands in plugin");
             sender.sendMessage(tc);
             return;
@@ -37,6 +39,26 @@ public class MainCommand extends Command {
                     //sender.sendMessage(new TextComponent("§cFeature not implemented"));
                 }else{
                     sender.sendMessage(new TextComponent("§cYou don't have permission to use this command."));
+                }
+                break;
+            }
+            case "update": {
+                try {
+                    String latest_string = plugin.fetchLatestUpdate();
+                    if(latest_string == null) {
+                        sender.sendMessage(new TextComponent("§aYou are on the latest version!"));
+                        break;
+                    }
+                    Version latest = new Version(latest_string);
+                    Version current = new Version(plugin.getVersion());
+                    if(latest.compareTo(current) >= 0) {
+                        sender.sendMessage(new TextComponent("§eA new version found: " + latest_string + ". You are on " + current));
+                    }else{
+                        sender.sendMessage(new TextComponent("§aYou are on the latest version!"));
+                    }
+                }catch(Exception ex) {
+                    sender.sendMessage(new TextComponent("§cAn error occurred while checking for updates. " + ex.getMessage()));
+                    plugin.getLogger().warning("Failed to check for updates. " + ex.getMessage());
                 }
                 break;
             }
