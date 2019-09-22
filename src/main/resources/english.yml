@@ -1,5 +1,6 @@
 ##############################################################################################
-# Placeholder Information
+# Language File & Placeholder Information
+# NOTE: PLEASE MAKE A COPY OF THIS FILE! THIS WILL BE OVERWRITTEN EVERY CHANGE!
 #
 # Default placeholders are:
 # %player_name% or %player% - Player's username.
@@ -154,3 +155,5 @@ connection-messages:
     QUIT: "&a%player% has left"
     SERVERSWITCH: "&a%player% is now on %player_server%" # %previous% for previous, %player_server% for current
 
+
+# NOTE: PLEASE MAKE A COPY OF THIS FILE! THIS WILL BE OVERWRITTEN EVERY CHANGE!

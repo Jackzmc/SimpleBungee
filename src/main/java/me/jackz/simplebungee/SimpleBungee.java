@@ -74,19 +74,19 @@ public final class SimpleBungee extends Plugin {
         checkForUpdates();
 
         PluginManager pm = getProxy().getPluginManager();
-        if(config.getBoolean("commands.ping"))    pm.registerCommand(this,new PingCommand(this));
-        if(config.getBoolean("commands.servers")) pm.registerCommand(this,new Servers(this));
-        if(config.getBoolean("commands.online"))  pm.registerCommand(this,new OnlineCount(this));
-        if(config.getBoolean("commands.uuid"))    pm.registerCommand(this,new UUIDCommand(this));
+        if(config.getBoolean("commands.ping",true))    pm.registerCommand(this,new PingCommand(this));
+        if(config.getBoolean("commands.servers",true)) pm.registerCommand(this,new Servers(this));
+        if(config.getBoolean("commands.online",true))  pm.registerCommand(this,new OnlineCount(this));
+        if(config.getBoolean("commands.uuid",true))    pm.registerCommand(this,new UUIDCommand(this));
         //if(config.getBoolean("commands.report"))  pm.registerCommand(this,new Report(this));
         if(config.getBoolean("commands.global"))  {
             Global global = new Global(this);
             pm.registerCommand(this,global);
             pm.registerListener(this,global);
         }
-        if(config.getBoolean("commands.lookup"))  pm.registerCommand(this,new Lookup(this));
+        if(config.getBoolean("commands.lookup",true))  pm.registerCommand(this,new Lookup(this));
         pm.registerCommand(this,new MainCommand(this));
-        if(config.getBoolean("commands.friends")) {
+        if(config.getBoolean("commands.friends",true)) {
             friendsManager.loadFriendsList();
             pm.registerCommand(this, new Friends(this));
         }
