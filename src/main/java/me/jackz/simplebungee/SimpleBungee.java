@@ -71,12 +71,15 @@ public final class SimpleBungee extends Plugin {
             String message = String.format("Your config file is version %s, the latest is %s. Please upgrade the file by deleting the config.yml.", config_version,LATEST_CONFIG_VERSION);
             getLogger().warning(message);
         }
-        PluginDescription pd = getDescription();
-        plugin_version = pd.getVersion();
-        getLatestUpdate();
-        if(latest_update != null) {
-            getLogger().info("There is a new version of SimpleBungee. Current: " + plugin_version + ", Latest: " + latest_update);
+        if(config.getBoolean("check-for-updates",true)) {
+            PluginDescription pd = getDescription();
+            plugin_version = pd.getVersion();
+            getLatestUpdate();
+            if(latest_update != null) {
+                getLogger().info("There is a new version of SimpleBungee. Current: " + plugin_version + ", Latest: " + latest_update);
+            }
         }
+
 
         PluginManager pm = getProxy().getPluginManager();
         if(config.getBoolean("commands.ping",true))    pm.registerCommand(this,new PingCommand(this));
