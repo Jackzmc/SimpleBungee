@@ -69,13 +69,14 @@ public class MainCommand extends Command {
             case "commands": {
                 Configuration config = plugin.getConfig();
                 TextComponent tc = new TextComponent("§6Commands");
-                if(config.getBoolean("commands.lookup")) tc.addExtra("\n§e/lookup <player> §7- get information about a player");
-                if(config.getBoolean("commands.ping")) tc.addExtra("\n§e/ping [player] §7- view a players ping to the network");
-                if(config.getBoolean("commands.servers")) tc.addExtra("\n§e/servers §7- view all bungeecoord servers with ability to join");
-                if(config.getBoolean("commands.uuid")) tc.addExtra("\n§e/uuid [player] §7- get a player's UUID");
-                if(config.getBoolean("commands.online")) tc.addExtra("\n§e/online §7- view all online players");
-                if(config.getBoolean("commands.friends")) tc.addExtra("\n§e/friends <help/add/list/etc..> §7- friends management system");
-                if(config.getBoolean("commands.global")) tc.addExtra("\n§e/global [message] §7- send a global message across the bungeecoord");
+                if(config.getBoolean("commands.lookup",true)) tc.addExtra("\n§e/lookup <player> §7- get information about a player");
+                if(config.getBoolean("commands.ping",true)) tc.addExtra("\n§e/ping [player] §7- view a players ping to the network");
+                if(config.getBoolean("commands.servers",true)) tc.addExtra("\n§e/servers §7- view all bungeecoord servers with ability to join");
+                if(config.getBoolean("commands.uuid",true)) tc.addExtra("\n§e/uuid [player] §7- get a player's UUID");
+                if(config.getBoolean("commands.online",true)) tc.addExtra("\n§e/online §7- view all online players");
+                if(config.getBoolean("commands.friends",true)) tc.addExtra("\n§e/friends <help/add/list/etc..> §7- friends management system");
+                if(config.getBoolean("commands.global",true)) tc.addExtra("\n§e/global [message] §7- send a global message across the bungeecoord");
+                if(config.getBoolean("commands.notes",true)) tc.addExtra("\n§e/notes help §7- take and record notes");
                 sender.sendMessage(tc);
                 break;
             }

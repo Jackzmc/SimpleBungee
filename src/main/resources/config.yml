@@ -28,6 +28,7 @@ commands: #true to enable, false to disable
   report: true
   lookup: true
   global: true
+  notes: true
 
 # Global Connection Configuration
 connection-messages:

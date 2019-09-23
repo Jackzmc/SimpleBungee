@@ -15,6 +15,7 @@ Currently in development, features are still in development and may change.
 | /simplebungee reload | simplebungee.command.reload                                     | reloads the config.yml                                    |
 | /global [message]    | simplebungee.command.global                                     | Allows access to global chat                              |
 | /\<server shortcut>  | simplebungee.command.\<server shortcut> IF enabled              | The shortcut of any server shortcut, and if perms enabled |
+| /notes               | simplebungee.command.notes                                      | Allows access to the notes feature                        |
 
 ### Other Permissions
 * **simplebungee.updatecheck** - Notify player with this permission of plugin updates.
@@ -23,6 +24,7 @@ Currently in development, features are still in development and may change.
 
 | Name                             |  Type           | Default     |  Description |
 |----------------------------------|-----------------|-------------|--------------|
+| commands                         | Section         |             | Enable or disable module
 | language-file                    | string          | english.yml | The language file to use for messages
 | connection-messages.bungee       | boolean         | true        |  Send \<player> joined the network messages            
 | connection-messages.serverswitch | boolean         | true        |  Send \<player> switched servers from X to Y messages            

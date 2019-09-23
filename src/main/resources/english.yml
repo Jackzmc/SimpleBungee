@@ -73,6 +73,33 @@ friends:
   SAME_SERVER_JOIN: "&cYou are already on their server."
 
 ####################################
+# Notes Command Messages
+# Placeholders: defaults
+# LIST_HEADING: %count% - count of notes
+# LIST_NOTE*: %number% - id of note, %name% -> name of note, %text% -> note text
+# ADD_SUCCESS: %id% -> int id
+# RENAME_SUCCESS: %name% - name of note/key, %id% -> numerical id
+# REMOVE_SUCCESS: %id% -> numerical id
+####################################
+notes:
+  HELP: |-
+    &e/note add <text to add> &7- add a new note
+    &e/note list &7- view all notes
+    &e/note setname &7- change the name of a note
+    &e/note remove <key> &7- remove a note
+    &e/note <id/key> &7- access note information
+  USAGE: "&c/notes help"
+  MISSING_TEXT: "&cPlease enter the text you want to save."
+  ADD_SUCCESS: "&aSuccessfully created note &e#%id%."
+  LIST_HEADING: "&6You have %count% notes"
+  LIST_NOTE: "&e%id%. &7%text%"
+  LIST_NOTE_NAMED: "&e%id%. &c[%name%] &7%text%"
+  NO_NOTES: "&cYou do not have any notes"
+  NOT_FOUND: "&cCould not find any notes."
+  RENAME_SUCCESS: "&aSet the name of note &e#%id% &ato %name%" #%name% -> notes new key, %id% -> notes real id
+  REMOVE_SUCCESS: "&aSuccessfully removed note &e#%id%"
+
+####################################
 # Global Chat Command Messages
 # Placeholders: defaults
 ####################################

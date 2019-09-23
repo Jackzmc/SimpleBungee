@@ -29,6 +29,7 @@ public final class SimpleBungee extends Plugin {
     private Configuration config;
     private LanguageManager languageManager;
     private FriendsManager friendsManager;
+    private Notes notes;
 
     private final static Version LATEST_CONFIG_VERSION = new Version("1.0");
     private final static String UPDATE_CHECK_URL = "https://api.spigotmc.org/legacy/update.php?resource=71230";
@@ -86,6 +87,11 @@ public final class SimpleBungee extends Plugin {
         if(config.getBoolean("commands.servers",true)) pm.registerCommand(this,new Servers(this));
         if(config.getBoolean("commands.online",true))  pm.registerCommand(this,new OnlineCount(this));
         if(config.getBoolean("commands.uuid",true))    pm.registerCommand(this,new UUIDCommand(this));
+        if(config.getBoolean("commands.notes",true))    {
+            notes = new Notes(this);
+            notes.loadNotes();
+            pm.registerCommand(this,notes);
+        }
         //if(config.getBoolean("commands.report"))  pm.registerCommand(this,new Report(this));
         if(config.getBoolean("commands.global"))  {
             Global global = new Global(this);
@@ -110,6 +116,7 @@ public final class SimpleBungee extends Plugin {
     public void onDisable() {
         try {
             friendsManager.saveFriendsList();
+            if(notes != null) notes.saveNotes();
             for (ProxiedPlayer player : getProxy().getPlayers()) {
                 playerLoader.save(player);
                 //use english.yml later
