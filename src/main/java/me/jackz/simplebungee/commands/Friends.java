@@ -116,7 +116,11 @@ public class Friends extends Command {
                         Collection<ProxiedPlayer> friends = plugin.getProxy().matchPlayer(args[1]);
                         if(friends.size() > 0) {
                             ProxiedPlayer friend = friends.iterator().next();
-                            fm.joinFriend(player, friend);
+                            if(friend.getServer() == player.getServer()) {
+                                player.sendMessage(lm.getTextComponent("friends.SAME_SERVER_JOIN"));
+                            }else{
+                                fm.joinFriend(player, friend);
+                            }
                         }else{
                             player.sendMessage(lm.getTextComponent("core.NO_PLAYER_FOUND"));
                         }
@@ -129,6 +133,10 @@ public class Friends extends Command {
                         Collection<ProxiedPlayer> friends = plugin.getProxy().matchPlayer(args[1]);
                         if(friends.size() > 0) {
                             ProxiedPlayer friend = friends.iterator().next();
+                            if(friend.getServer() == player.getServer()) {
+                                player.sendMessage(lm.getTextComponent("friends.SAME_SERVER_INVITE"));
+                                return;
+                            }
                             if(fm.getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
                                 player.sendMessage(lm.getTextComponent("friends.INVITE_SUCCESS",friend));
 

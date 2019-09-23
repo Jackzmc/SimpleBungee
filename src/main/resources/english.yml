@@ -69,6 +69,8 @@ friends:
   REJECT_USAGE: "&cPlease enter the username of the player to reject"
   UNKNOWN_ARGUMENT: "&cUnknown argument, try &e/friends help"
   JOIN_FRIEND: "&eConnecting you to %player_name%'s active server..."
+  SAME_SERVER_INVITE: "&cThey are already on your server."
+  SAME_SERVER_JOIN: "&cYou are already on their server."
 
 ####################################
 # Global Chat Command Messages
