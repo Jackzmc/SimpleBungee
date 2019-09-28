@@ -62,7 +62,6 @@ public class Notes extends Command {
 //                        return;
 //                    }
                     List<Note> playerNotes = NOTES.getOrDefault(player.getUniqueId(), new ArrayList<>());
-                    player.sendMessage("player notes: " + playerNotes.size());
                     if(playerNotes.size() == 0) {
                         player.sendMessage(lm.getTextComponent("notes.NO_NOTES"));
                         return;
