@@ -35,7 +35,6 @@ public class Friends extends Command {
     public void execute(CommandSender sender, String[] args) {
         if(!(sender instanceof ProxiedPlayer)) {
             sender.sendMessage(lm.getTextComponent("core.PLAYER_ONLY"));
-            sender.sendMessage(new TextComponent("You must be a player to use this command"));
             return;
         }
         ProxiedPlayer player = (ProxiedPlayer) sender;
@@ -65,16 +64,19 @@ public class Friends extends Command {
                             sender.sendMessage(lm.getTextComponent("friends.REQUEST_SEND",friend));
 
                             TextComponent base = lm.getTextComponent("friends.RECEIVE_REQUEST",player);
-                            TextComponent approve = new TextComponent("[ACCEPT] ");
-                            TextComponent reject = new TextComponent("[REJECT]");
-                            approve.setColor(ChatColor.GREEN);
-                            approve.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend approve " + player.getUniqueId()));
-                            approve.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Approve friend request").create())); //TODO: add localization to this
-                            reject.setColor(ChatColor.RED);
-                            reject.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend reject " + player.getUniqueId()));
-                            reject.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Rejects friend request").create())); //TODO: add localization to this
+                            TextComponent approve = lm.getTextComponent("friends.ACCEPT_BUTTON");
+                            TextComponent reject = lm.getTextComponent("friends.REJECT_BUTTON");
+                            BaseComponent[] tooltip_approve = new ComponentBuilder(lm.getString("friends.ACCEPT_FRIEND_TOOLTIP")).create();
+                            BaseComponent[] tooltip_reject = new ComponentBuilder(lm.getString("friends.REJECT_FRIEND_TOOLTIP")).create();
 
+                            approve.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend approve " + player.getUniqueId()));
+                            approve.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip_approve));
+                            reject.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend reject " + player.getUniqueId()));
+                            reject.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip_reject));
+
+                            base.addExtra("\n");
                             base.addExtra(approve);
+                            base.addExtra("\n");
                             base.addExtra(reject);
                             friend.sendMessage(base);
                         } else {
@@ -116,7 +118,9 @@ public class Friends extends Command {
                         Collection<ProxiedPlayer> friends = plugin.getProxy().matchPlayer(args[1]);
                         if(friends.size() > 0) {
                             ProxiedPlayer friend = friends.iterator().next();
-                            if(friend.getServer() == player.getServer()) {
+                            if(friend == player) {
+                                player.sendMessage(lm.getTextComponent("friends.JOIN_SELF"));
+                            }else if(friend.getServer() == player.getServer()) {
                                 player.sendMessage(lm.getTextComponent("friends.SAME_SERVER_JOIN"));
                             }else{
                                 fm.joinFriend(player, friend);
@@ -133,18 +137,20 @@ public class Friends extends Command {
                         Collection<ProxiedPlayer> friends = plugin.getProxy().matchPlayer(args[1]);
                         if(friends.size() > 0) {
                             ProxiedPlayer friend = friends.iterator().next();
-                            if(friend.getServer() == player.getServer()) {
-                                player.sendMessage(lm.getTextComponent("friends.SAME_SERVER_INVITE"));
+                            if(friend == player) {
+                                player.sendMessage(lm.getTextComponent("friends.INVITE_SELF"));
+                            } else if(friend.getServer() == player.getServer()) {
+                                player.sendMessage(lm.getTextComponent("friends.SAME_SERVER_INVITE",friend));
                                 return;
                             }
                             if(fm.getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
                                 player.sendMessage(lm.getTextComponent("friends.INVITE_SUCCESS",friend));
 
                                 TextComponent tc = lm.getTextComponent("friends.RECEIVE_INVITE",player);
-                                TextComponent join = new TextComponent(" [JOIN]");
-                                join.setColor(ChatColor.GREEN);
+                                TextComponent join = lm.getTextComponent("friends.JOIN_SERVER_BUTTON");
                                 join.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/friend _join " + player.getUniqueId() ));
-                                join.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("Join your friend's game").create()));
+                                BaseComponent[] tooltip = new ComponentBuilder(lm.getString("friends.JOIN_FRIEND_TOOLTIP")).create();
+                                join.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,tooltip));
                                 tc.addExtra(join);
                                 friend.sendMessage(tc);
                             }else{
@@ -178,21 +184,25 @@ public class Friends extends Command {
                                         .create();
                                 comp_friend.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,hovertext));
                                 if(!server.equals(player_server)) {
-                                    TextComponent join = new TextComponent(" [JOIN]");
-                                    join.setColor(ChatColor.LIGHT_PURPLE);
+                                    //sec: join
+                                    TextComponent join = lm.getTextComponent("friends.JOIN_SERVER_BUTTON",friend);
                                     join.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/friend _join " + uuid.toString()));
-                                    join.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("§7Click to join their server").create()));
+                                    BaseComponent[] tooltip_join = new ComponentBuilder(lm.getString("friends.JOIN_SERVER_TOOLTIP")).create();
+                                    join.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,tooltip_join));
 
-                                    TextComponent invite = new TextComponent(" [INVITE]");
-                                    invite.setColor(ChatColor.BLUE);
+                                    //sec: inv
+                                    TextComponent invite = lm.getTextComponent("friends.INVITE_SERVER_BUTTON",friend);
                                     invite.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/friend invite " + friend.getName()));
-                                    invite.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("§7Click to invite them to join your server").create()));
+                                    BaseComponent[] tooltip_invite = new ComponentBuilder(lm.getString("friends.INVITE_SERVER_TOOLTIP")).create();
+                                    invite.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,tooltip_invite));
+                                    //sec: combined
+                                    comp_friend.addExtra(" ");
                                     comp_friend.addExtra(join);
+                                    comp_friend.addExtra(" ");
                                     comp_friend.addExtra(invite);
                                 }else{
-                                    TextComponent in_server = new TextComponent(" [In Server]");
-                                    in_server.setColor(ChatColor.LIGHT_PURPLE);
-                                    comp_friend.addExtra(in_server);
+                                    TextComponent in_server = lm.getTextComponent("friends.FRIEND_IN_SERVER",friend);
+                                    comp_friend.addExtra("\n" + in_server);
                                 }
                             }else{
                                 OfflinePlayerStore friend = playerLoader.getPlayer(uuid);
@@ -215,7 +225,9 @@ public class Friends extends Command {
                     if (requests != null && requests.size() > 0) {
                         TextComponent title_friend_requests = lm.getTextComponent("friends.REQUESTS_HEADING");
                         title_friend_requests.setColor(ChatColor.GOLD);
+                        title_friends.addExtra("\n");
                         title_friends.addExtra(title_friend_requests);
+                        title_friends.addExtra("\n");
                         title_friend_requests.addExtra(lm.getTextComponent("friends.FRIEND_REQUEST_SIZE",new Placeholder("requests",requests.size())));
                         //title_friends.addExtra("\n§7You have " + requests.size() + " friend requests");
                         for (UUID request : requests) {
@@ -223,17 +235,21 @@ public class Friends extends Command {
                             TextComponent comp_request = new TextComponent(friend.getLastUsername());
                             comp_request.setColor(ChatColor.YELLOW);
 
-                            TextComponent approve = new TextComponent(" [ACCEPT] ");
-                            TextComponent reject = new TextComponent("[REJECT]");
-                            approve.setColor(ChatColor.GREEN);
-                            approve.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend approve " + player.getUniqueId()));
-                            approve.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Approve friend request").create()));
-                            reject.setColor(ChatColor.RED);
-                            reject.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend reject " + player.getUniqueId()));
-                            reject.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Rejects friend request").create()));
+                            TextComponent approve = lm.getTextComponent("friends.ACCEPT_BUTTON");
+                            TextComponent reject = lm.getTextComponent("friends.REJECT_BUTTON");
+                            BaseComponent[] tooltip_approve = new ComponentBuilder(lm.getString("friends.ACCEPT_FRIEND_TOOLTIP")).create();
+                            BaseComponent[] tooltip_reject = new ComponentBuilder(lm.getString("friends.REJECT_FRIEND_TOOLTIP")).create();
 
+                            approve.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend approve " + player.getUniqueId()));
+                            approve.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip_approve));
+                            reject.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend reject " + player.getUniqueId()));
+                            reject.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip_reject));
+
+                            comp_request.addExtra("\n");
                             comp_request.addExtra(approve);
+                            comp_request.addExtra("\n");
                             comp_request.addExtra(reject);
+
                             title_friends.addExtra("\n");
                             title_friends.addExtra(comp_request);
                         }
