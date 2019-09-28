@@ -167,7 +167,7 @@ servers:
 # Placeholders: defaults, %uuid% - player's uuid (unique id)
 ####################################
 uuid:
-  OTHER: "&7%player_name's UUID: &e%uuid%"
+  OTHER: "&7%player_name%'s UUID: &e%uuid%"
   SELF: "&7Your UUID: &e%uuid%"
 
 ####################################
