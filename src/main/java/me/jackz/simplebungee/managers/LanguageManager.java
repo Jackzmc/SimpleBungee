@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class LanguageManager {
     private Configuration messages;
-    private final TextComponent default_component = new TextComponent("§cCould not get value from language file for this message.");
+    private final TextComponent default_component = new TextComponent("§cCould not get value from language file for this message.&r");
     public LanguageManager(SimpleBungee plugin) {
         try {
             messages = plugin.getMessages();
@@ -24,19 +24,20 @@ public class LanguageManager {
     }
     public String getString(String path, ProxiedPlayer player) {
         String message = messages.getString(path);
-        return ChatColor.translateAlternateColorCodes('&', formatPlaceholders(message,player));
+        return ChatColor.translateAlternateColorCodes('&', formatPlaceholders(message+"&r",player));
     }
     public String getString(String path) {
         String message = messages.getString(path);
-        return ChatColor.translateAlternateColorCodes('&',message);
+        return ChatColor.translateAlternateColorCodes('&',message+"&r");
     }
     public TextComponent getTextComponent(String path) {
         String v = messages.getString(path);
-        return (v != null) ? new TextComponent(ChatColor.translateAlternateColorCodes('&',v)) : default_component;
+        return (v != null) ? new TextComponent(ChatColor.translateAlternateColorCodes('&',v+"&r")) : default_component;
     }
     public TextComponent getTextComponent(String path, ProxiedPlayer player) {
         String v = messages.getString(path);
         if(v != null && player != null) {
+            v += "&r";
             return new TextComponent(ChatColor.translateAlternateColorCodes('&',formatPlaceholders(v,player)));
         }else{
             return default_component;
@@ -48,6 +49,7 @@ public class LanguageManager {
             for (Placeholder placeholder : placeholders) {
                 v = placeholder.process(v);
             }
+            v += "&r";
             return new TextComponent(ChatColor.translateAlternateColorCodes('&',formatPlaceholders(v,player)));
         }else{
             return default_component;
@@ -59,6 +61,7 @@ public class LanguageManager {
             for (Placeholder placeholder : placeholders) {
                 v = placeholder.process(v);
             }
+            v += "&r";
             return new TextComponent(ChatColor.translateAlternateColorCodes('&',v));
         }else{
             return default_component;
@@ -74,7 +77,7 @@ public class LanguageManager {
                     .replaceAll("%player_name%", player.getName())
                     .replaceAll("%player%", player.getName());
         }
-        return ChatColor.translateAlternateColorCodes('&',string);
+        return ChatColor.translateAlternateColorCodes('&',string+"&r");
     }
 }
 
