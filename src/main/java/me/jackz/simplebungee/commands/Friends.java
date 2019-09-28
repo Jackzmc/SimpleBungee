@@ -74,9 +74,9 @@ public class Friends extends Command {
                             reject.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend reject " + player.getUniqueId()));
                             reject.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip_reject));
 
-                            base.addExtra("\n");
+                            base.addExtra(" ");
                             base.addExtra(approve);
-                            base.addExtra("\n");
+                            base.addExtra(" ");
                             base.addExtra(reject);
                             friend.sendMessage(base);
                         } else {
@@ -95,7 +95,7 @@ public class Friends extends Command {
                             fm.removeFriend(friend.getUniqueId(),player.getUniqueId());
                             fm.removeFriend(player.getUniqueId(),friend.getUniqueId());
                             sender.sendMessage(lm.getTextComponent("friends.REMOVE_PLAYER",friend));
-                            sender.sendMessage(lm.getTextComponent("friends.FRIENDSHIP_REMOVED",player));
+                            friend.sendMessage(lm.getTextComponent("friends.FRIENDSHIP_REMOVED",player));
                         }else{
                             sender.sendMessage(lm.getTextComponent("core.NO_PLAYER_FOUND"));
                         }
@@ -120,7 +120,7 @@ public class Friends extends Command {
                             ProxiedPlayer friend = friends.iterator().next();
                             if(friend == player) {
                                 player.sendMessage(lm.getTextComponent("friends.JOIN_SELF"));
-                            }else if(friend.getServer() == player.getServer()) {
+                            }else if(friend.getServer().getInfo().getName().equals(player.getServer().getInfo().getName())) {
                                 player.sendMessage(lm.getTextComponent("friends.SAME_SERVER_JOIN"));
                             }else{
                                 fm.joinFriend(player, friend);
@@ -139,11 +139,11 @@ public class Friends extends Command {
                             ProxiedPlayer friend = friends.iterator().next();
                             if(friend == player) {
                                 player.sendMessage(lm.getTextComponent("friends.INVITE_SELF"));
-                            } else if(friend.getServer() == player.getServer()) {
+                            } else if(friend.getServer().equals(player.getServer())) {
                                 player.sendMessage(lm.getTextComponent("friends.SAME_SERVER_INVITE",friend));
-                                return;
-                            }
-                            if(fm.getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
+                            }else if(friend.getServer().getInfo().getName().equals(player.getServer().getInfo().getName())) {
+                                player.sendMessage(lm.getTextComponent("friends.SAME_SERVER_INVITE",friend));
+                            }else if(fm.getFriends(player.getUniqueId()).contains(friend.getUniqueId())) {
                                 player.sendMessage(lm.getTextComponent("friends.INVITE_SUCCESS",friend));
 
                                 TextComponent tc = lm.getTextComponent("friends.RECEIVE_INVITE",player);
@@ -151,6 +151,7 @@ public class Friends extends Command {
                                 join.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/friend _join " + player.getUniqueId() ));
                                 BaseComponent[] tooltip = new ComponentBuilder(lm.getString("friends.JOIN_FRIEND_TOOLTIP")).create();
                                 join.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,tooltip));
+                                tc.addExtra(" ");
                                 tc.addExtra(join);
                                 friend.sendMessage(tc);
                             }else{
@@ -202,7 +203,8 @@ public class Friends extends Command {
                                     comp_friend.addExtra(invite);
                                 }else{
                                     TextComponent in_server = lm.getTextComponent("friends.FRIEND_IN_SERVER",friend);
-                                    comp_friend.addExtra("\n" + in_server);
+                                    comp_friend.addExtra(" ");
+                                    comp_friend.addExtra(in_server);
                                 }
                             }else{
                                 OfflinePlayerStore friend = playerLoader.getPlayer(uuid);
@@ -223,12 +225,11 @@ public class Friends extends Command {
                     }
 
                     if (requests != null && requests.size() > 0) {
-                        TextComponent title_friend_requests = lm.getTextComponent("friends.REQUESTS_HEADING");
-                        title_friend_requests.setColor(ChatColor.GOLD);
-                        title_friends.addExtra("\n");
+                        title_friends.addExtra("\n"); //new line, separate friends & requests
+
+                        TextComponent title_friend_requests = lm.getTextComponent("friends.REQUESTS_HEADING",new Placeholder("requests",requests.size()));
                         title_friends.addExtra(title_friend_requests);
-                        title_friends.addExtra("\n");
-                        title_friend_requests.addExtra(lm.getTextComponent("friends.FRIEND_REQUEST_SIZE",new Placeholder("requests",requests.size())));
+
                         //title_friends.addExtra("\n§7You have " + requests.size() + " friend requests");
                         for (UUID request : requests) {
                             OfflinePlayerStore friend = playerLoader.getPlayer(request);
@@ -240,14 +241,14 @@ public class Friends extends Command {
                             BaseComponent[] tooltip_approve = new ComponentBuilder(lm.getString("friends.ACCEPT_FRIEND_TOOLTIP")).create();
                             BaseComponent[] tooltip_reject = new ComponentBuilder(lm.getString("friends.REJECT_FRIEND_TOOLTIP")).create();
 
-                            approve.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend approve " + player.getUniqueId()));
+                            approve.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend approve " + request));
                             approve.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip_approve));
-                            reject.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend reject " + player.getUniqueId()));
+                            reject.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend reject " + request));
                             reject.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip_reject));
 
-                            comp_request.addExtra("\n");
+                            comp_request.addExtra(" ");
                             comp_request.addExtra(approve);
-                            comp_request.addExtra("\n");
+                            comp_request.addExtra(" ");
                             comp_request.addExtra(reject);
 
                             title_friends.addExtra("\n");
