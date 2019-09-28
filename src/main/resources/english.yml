@@ -55,10 +55,9 @@ friends:
   FRIENDSHIP_REMOVED: "&c%player_name% has unfriended you."
 
   #list friends:
-  LIST_HEADING: "&6&nFriends&r"
+  LIST_HEADING: "&6Friends&r"
   NO_FRIENDS: "&cYou have no friends, why not find some?"
-  REQUESTS_HEADING: "&6&nFriend Requests&r"
-  FRIEND_REQUEST_SIZE: "&7You have %requests% friend requests"
+  REQUESTS_HEADING: "&6Friend Requests &r&6(%requests%)&r"
   FRIEND_IN_SERVER: "&d[In Your Server]"
 
   #join/invite
@@ -67,8 +66,8 @@ friends:
   INVITE_SUCCESS: "&aInvited %player_name% to join your server."
   INVITE_SELF: "&cYou can't invite yourself!"
   JOIN_SELF: "&CYou can't join yourself!"
-  RECEIVE_INVITE: "&e%player_name% has sent you an invite to join %player_server"
-  JOIN_FRIEND: "&eConnecting you to %player_name%'s active server..."
+  RECEIVE_INVITE: "&e%player_name% has sent you an invite to join %player_server%"
+  JOIN_FRIEND: "&eConnecting you to %player_name%'s server..."
 
   #buttons:
   JOIN_SERVER_BUTTON: "&d[JOIN]"
