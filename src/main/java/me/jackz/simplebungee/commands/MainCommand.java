@@ -42,6 +42,8 @@ public class MainCommand extends Command {
                 }
                 break;
             }
+            case "version":
+                sender.sendMessage(new TextComponent("§eSimpleBungee §7is on version §e"  + plugin.getVersion()));
             case "update": {
                 if(!sender.hasPermission("simplebungee.command.updatecheck")) {
                     sender.sendMessage(new TextComponent("§cYou don't have the permission to check for updates."));
