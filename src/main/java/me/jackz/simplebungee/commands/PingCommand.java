@@ -20,23 +20,23 @@ public class PingCommand extends Command {
     }
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if(sender instanceof ProxiedPlayer) {
-            ProxiedPlayer proxiedPlayer = (ProxiedPlayer) sender;
-            if(args.length == 0) {
+        if(args.length == 0) {
+            if(sender instanceof ProxiedPlayer) {
+                ProxiedPlayer proxiedPlayer = (ProxiedPlayer) sender;
                 int ping = proxiedPlayer.getPing();
                 proxiedPlayer.sendMessage(new TextComponent("§7Your Ping: §e" + ping + " ms"));
-            }else{
-                Collection<ProxiedPlayer> players = plugin.getProxy().matchPlayer(args[0]);
-                if(players.size() > 0) {
-                    ProxiedPlayer player = players.iterator().next();
-                    int ping = player.getPing();
-                    proxiedPlayer.sendMessage(new TextComponent("§7" + player.getName() + "'s ping: §e" + ping + " ms"));
-                }else{
-                    proxiedPlayer.sendMessage(new TextComponent("§cCould not find a player online with that name."));
-                }
+            }else {
+                sender.sendMessage(new TextComponent("This command must be run from a player"));
             }
         }else{
-            sender.sendMessage(new TextComponent("This command must be run from a player"));
+            Collection<ProxiedPlayer> players = plugin.getProxy().matchPlayer(args[0]);
+            if(players.size() > 0) {
+                ProxiedPlayer player = players.iterator().next();
+                int ping = player.getPing();
+                sender.sendMessage(new TextComponent("§7" + player.getName() + "'s ping: §e" + ping + " ms"));
+            }else{
+                sender.sendMessage(new TextComponent("§cCould not find a player online with that name."));
+            }
         }
     }
 }
