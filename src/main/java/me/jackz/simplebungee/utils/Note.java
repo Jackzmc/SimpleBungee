@@ -2,7 +2,7 @@ package me.jackz.simplebungee.utils;
 
 public class Note {
     private String key = null;
-    private String text;
+    private final String text;
     private long created;
 
     public Note(String text) {
@@ -33,7 +33,7 @@ public class Note {
     }
 
     public String getCreatedFormatted() {
-        long now = System.currentTimeMillis() / 1000;;
+        long now = System.currentTimeMillis() / 1000;
         return Util.getTimeBetween(created,now) + " ago";
     }
 

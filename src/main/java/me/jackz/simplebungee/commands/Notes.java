@@ -22,9 +22,9 @@ import java.io.IOException;
 import java.util.*;
 
 public class Notes extends Command {
-    private SimpleBungee plugin;
-    private LanguageManager lm;
-    private Map<UUID, List<Note>> NOTES = new HashMap<>();
+    private final SimpleBungee plugin;
+    private final LanguageManager lm;
+    private final Map<UUID, List<Note>> NOTES = new HashMap<>();
 
     public Notes(SimpleBungee plugin) {
         super("notes","simplebungee.command.notes","note");
@@ -43,7 +43,7 @@ public class Notes extends Command {
                 case "add":
                 case "new": {
                     if(args.length > 1) {
-                        long now = System.currentTimeMillis() / 1000;;
+                        long now = System.currentTimeMillis() / 1000;
                         String text = String.join(" ",Arrays.copyOfRange(args, 1, args.length));
                         Note note = new Note(text);
                         note.setCreated(now);

@@ -234,7 +234,7 @@ public final class SimpleBungee extends Plugin {
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
 
             // write the output to stdout
-            String line = reader.readLine();;
+            String line = reader.readLine();
             Version latest = new Version(line);
 
             if(latest.compareTo(current) >= 0) {

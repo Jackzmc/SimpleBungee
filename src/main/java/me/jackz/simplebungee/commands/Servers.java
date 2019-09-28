@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 public class Servers extends Command {
     private final SimpleBungee plugin;
-    private boolean show_restricted;
+    private final boolean show_restricted;
     private final LanguageManager lm;
 
     public Servers(SimpleBungee plugin)  {

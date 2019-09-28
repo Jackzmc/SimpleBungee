@@ -14,7 +14,7 @@ import net.md_5.bungee.event.EventHandler;
 import java.util.*;
 
 public class Report extends Command implements Listener {
-    private List<String> REASONS;
+    private final List<String> REASONS;
     private final boolean USE_REASON_LIST;
     private final SimpleBungee plugin;
 
