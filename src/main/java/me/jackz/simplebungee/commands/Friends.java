@@ -28,7 +28,7 @@ public class Friends extends Command {
         super("friends","simplebungee.command.friends","friend");
         this.plugin = plugin;
         this.playerLoader = new PlayerLoader(plugin);
-        this.lm = plugin.getLanguageManager();
+        this.lm = SimpleBungee.getLanguageManager();
         this.fm = plugin.getFriendsManager();
     }
     @Override

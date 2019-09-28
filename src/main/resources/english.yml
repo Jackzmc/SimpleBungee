@@ -85,7 +85,7 @@ notes:
   HELP: |-
     &e/note add <text to add> &7- add a new note
     &e/note list &7- view all notes
-    &e/note setname &7- change the name of a note
+    &e/note setname <id> <key> &7- change the name of a note
     &e/note remove <key> &7- remove a note
     &e/note <id/key> &7- access note information
   USAGE: "&c/notes help"

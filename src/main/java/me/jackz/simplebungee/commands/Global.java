@@ -24,7 +24,7 @@ public class Global extends Command implements Listener {
     public Global(SimpleBungee plugin) {
         super("global","simplebungee.command.global","g");
         this.plugin = plugin;
-        lm = plugin.getLanguageManager();
+        lm = SimpleBungee.getLanguageManager();
     }
 
     /* format: '&9GLOBAL %server_name%> &e%fullname%: %message%' */

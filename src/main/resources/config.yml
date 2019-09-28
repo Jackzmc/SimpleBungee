@@ -8,11 +8,14 @@ language-file: "english.yml"
 #Should the plugin check for updates on startup?
 check-for-updates: true
 
+#Should plugin metrics be enabled (Uses bStats)
+metrics-enabled: true
+
 #Should the plugin notify any player with simplebungee.admin of an update?
 notify-admins-on-update: true
 
 # Should /servers show restricted servers (with [restricted] text)
-show_restricted_servers: false
+show-restricted-servers: false
 
 #######################
 # Specific Categories #
@@ -56,4 +59,4 @@ report:
 
 
 # do not edit, this is used for version check:
-config-version: "1.0"
+config-version: "1.1"

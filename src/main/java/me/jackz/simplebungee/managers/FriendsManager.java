@@ -17,7 +17,7 @@ public class FriendsManager {
 
     public FriendsManager(SimpleBungee plugin) {
         this.plugin = plugin;
-        this.lm = plugin.getLanguageManager();
+        this.lm = SimpleBungee.getLanguageManager();
     }
 
     public void joinFriend(ProxiedPlayer player, ProxiedPlayer friend) {

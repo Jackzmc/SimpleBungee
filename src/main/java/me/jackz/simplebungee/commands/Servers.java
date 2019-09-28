@@ -22,8 +22,8 @@ public class Servers extends Command {
     public Servers(SimpleBungee plugin)  {
         super("servers","simplebungee.command.servers");
         this.plugin = plugin;
-        lm = plugin.getLanguageManager();
-        this.show_restricted = plugin.getConfig().getBoolean("show_restricted_servers",false);
+        lm = SimpleBungee.getLanguageManager();
+        this.show_restricted = plugin.getConfig().getBoolean("show-restricted-servers",false);
     }
     @Override
     public void execute(CommandSender sender, String[] args) {

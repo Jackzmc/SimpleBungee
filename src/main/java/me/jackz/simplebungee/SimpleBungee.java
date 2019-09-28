@@ -14,6 +14,7 @@ import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import org.bstats.bungeecord.MetricsLite;
 
 import java.io.*;
 import java.net.URL;
@@ -27,7 +28,7 @@ public final class SimpleBungee extends Plugin {
     private PlayerLoader playerLoader;
     public Configuration data;
     private Configuration config;
-    private LanguageManager languageManager;
+    private static LanguageManager languageManager;
     private FriendsManager friendsManager;
     private Notes notes;
 
@@ -108,6 +109,12 @@ public final class SimpleBungee extends Plugin {
             Configuration servers = config.getSection("server_shortcuts");
             ServerShortcut.setupShortcuts(this, servers);
         }
+        if(config.getBoolean("metrics-enabled",true)) {
+            MetricsLite metrics = new MetricsLite(this);
+            if(metrics.isEnabled()) {
+                getLogger().info("bStats metrics has been enabled.");
+            }
+        }
 
         pm.registerListener(this,new PlayerEvents(this));
     }
@@ -130,9 +137,10 @@ public final class SimpleBungee extends Plugin {
     public PlayerLoader getPlayerLoader() {
         return playerLoader;
     }
-    public LanguageManager getLanguageManager() {
+    public static LanguageManager getLanguageManager() {
         return languageManager;
     }
+    public static LanguageManager lm() { return languageManager; }
     public FriendsManager getFriendsManager() {
         return friendsManager;
     }

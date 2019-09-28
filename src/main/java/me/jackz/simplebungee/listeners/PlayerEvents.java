@@ -38,7 +38,7 @@ public class PlayerEvents implements Listener {
     public PlayerEvents(SimpleBungee plugin) {
         this.plugin = plugin;
         this.playerLoader = plugin.getPlayerLoader();
-        this.lm = plugin.getLanguageManager();
+        this.lm = SimpleBungee.getLanguageManager();
 
         Configuration config = plugin.getConfig();
         network_messages = config.getBoolean("connection-messages.bungee",false);
@@ -80,6 +80,7 @@ public class PlayerEvents implements Listener {
         }
 
     }
+
     @EventHandler
     public void onQuit(PlayerDisconnectEvent e) {
         ProxiedPlayer player = e.getPlayer();

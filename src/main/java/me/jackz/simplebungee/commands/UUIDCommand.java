@@ -15,7 +15,7 @@ public class UUIDCommand extends Command {
     public UUIDCommand(SimpleBungee plugin)  {
         super("uuid");
         this.plugin = plugin;
-        this.lm = plugin.getLanguageManager();
+        this.lm = SimpleBungee.getLanguageManager();
     }
 
     @Override

@@ -29,7 +29,7 @@ public class Notes extends Command {
     public Notes(SimpleBungee plugin) {
         super("notes","simplebungee.command.notes","note");
         this.plugin = plugin;
-        this.lm = plugin.getLanguageManager();
+        this.lm = SimpleBungee.getLanguageManager();
     }
     @Override
     public void execute(CommandSender sender, String[] args) {
