@@ -38,39 +38,61 @@ friends:
     &e/friend join <player>&7 - join your friend's game
     &e/friend invite <player>&7 - invite a friend to join your current server
     &e/friend list&7 - view all friends, friend requests, and join/invite them.
+
+  #add friends:
   ALREADY_FRIENDS: "&cYou are already friends with %player_name%"
   ALREADY_SENT_REQUEST: "&cYou already sent a friend request to %player_name%"
   FRIENDS_WITH_SELF: "&cYou can't be friends with yourself!"
+  NO_PENDING_REQUEST: "&cThere is no pending friend request from that player."
+
   REQUEST_SEND: "&aSent a friend request to %player_name%"
-  RECEIVE_REQUEST: "&e%player_name&7 sent you a friend request"
-  ACCEPT_FRIEND_TOOLTIP: "Approve friend request"
-  REJECT_FRIEND_TOOLTIP: "Rejects friend request"
-  ADD_FRIEND_USAGE: "&cPlease enter an online player. Usage: /friend add <username>"
-  REMOVE_PLAYER: "&cRemoved %player_name from your friends list"
-  FRIENDSHIP_REMOVED: "&c%player_name has unfriended you."
-  DEL_FRIEND_USAGE: "&cPlease enter a friend to remove. Usage: /friend remove <username>"
-  JOIN_USAGE: "&cPlease enter a friend to join. Usage: /friend join <username>"
-  INVITE_SUCCESS: "&aInvited %player_name% to join your server."
-  RECEIVE_INVITE: "&e%player_name has sent you an invite to join %player_server"
-  JOIN_FRIEND_TOOLTIP: "Join your friend's game"
-  NOT_FRIENDS_WITH: "&cYou are not friends with %player_name%"
-  INVITE_USAGE: "&cPlease enter a friend to invite. Usage: /friend invite <username>"
+  RECEIVE_REQUEST: "&e%player_name%&7 sent you a friend request"
+  ACCEPT_SUCCESS: "&aYou accepted the friend request from %player_name%"
+  RECEIVE_ACCEPT_SUCCESS: "&e%player_name% has accepted your friend request"
+
+  REJECT_REQUEST: "&cRejected friend request from %player_name%"
+  REMOVE_PLAYER: "&cRemoved %player_name% from your friends list"
+  FRIENDSHIP_REMOVED: "&c%player_name% has unfriended you."
+
+  #list friends:
   LIST_HEADING: "&6&nFriends&r"
-  JOIN_SERVER_TOOLTIP: "&7Click to join their server"
-  INVITE_SERVER_TOOLTIP: "&7Click to invite them to join your server"
   NO_FRIENDS: "&cYou have no friends, why not find some?"
   REQUESTS_HEADING: "&6&nFriend Requests&r"
   FRIEND_REQUEST_SIZE: "&7You have %requests% friend requests"
-  ACCEPT_SUCCESS: "&aYou accepted the friend request from %player_name%"
-  RECEIVE_ACCEPT_SUCCESS: "&e%player_name% has accepted your friend request"
-  NO_PENDING_REQUEST: "&cThere is no pending friend request from that player."
-  ACCEPT_USAGE: "&cPlease enter the username of the player to accept"
-  REJECT_REQUEST: "&cRejected friend request from %player_name%"
-  REJECT_USAGE: "&cPlease enter the username of the player to reject"
-  UNKNOWN_ARGUMENT: "&cUnknown argument, try &e/friends help"
-  JOIN_FRIEND: "&eConnecting you to %player_name%'s active server..."
+  FRIEND_IN_SERVER: "&d[In Your Server]"
+
+  #join/invite
   SAME_SERVER_INVITE: "&cThey are already on your server."
   SAME_SERVER_JOIN: "&cYou are already on their server."
+  INVITE_SUCCESS: "&aInvited %player_name% to join your server."
+  INVITE_SELF: "&cYou can't invite yourself!"
+  JOIN_SELF: "&CYou can't join yourself!"
+  RECEIVE_INVITE: "&e%player_name% has sent you an invite to join %player_server"
+  JOIN_FRIEND: "&eConnecting you to %player_name%'s active server..."
+
+  #buttons:
+  JOIN_SERVER_BUTTON: "&d[JOIN]"
+  INVITE_SERVER_BUTTON: "&9[INVITE]"
+  ACCEPT_BUTTON: "&a[ACCEPT]"
+  REJECT_BUTTON: "&c[REJECT]"
+
+  #tooltips:
+  ACCEPT_FRIEND_TOOLTIP: "Approve friend request"
+  REJECT_FRIEND_TOOLTIP: "Rejects friend request"
+  JOIN_FRIEND_TOOLTIP: "Join your friend's game"
+  JOIN_SERVER_TOOLTIP: "&7Click to join their server"
+  INVITE_SERVER_TOOLTIP: "&7Click to invite them to join your server"
+  #other/usage:
+  DEL_FRIEND_USAGE: "&cPlease enter a friend to remove. Usage: /friend remove <username>"
+  JOIN_USAGE: "&cPlease enter a friend to join. Usage: /friend join <username>"
+  ADD_FRIEND_USAGE: "&cPlease enter an online player. Usage: /friend add <username>"
+  ACCEPT_USAGE: "&cPlease enter the username of the player to accept"
+  REJECT_USAGE: "&cPlease enter the username of the player to reject"
+  INVITE_USAGE: "&cPlease enter a friend to invite. Usage: /friend invite <username>"
+
+  UNKNOWN_ARGUMENT: "&cUnknown argument, try &e/friends help"
+  NOT_FRIENDS_WITH: "&cYou are not friends with %player_name%"
+
 
 ####################################
 # Notes Command Messages
@@ -138,7 +160,7 @@ players:
 ####################################
 ping:
   SELF: "&7Your ping is &e%ping% ms"
-  OTHER: "&7%player_name's ping: &e%ping% ms"
+  OTHER: "&7%player_name%'s ping: &e%ping% ms"
 
 ####################################
 #  /report Command
