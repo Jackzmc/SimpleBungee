@@ -26,18 +26,18 @@ public class UUIDCommand extends Command {
                 ProxiedPlayer player = players.iterator().next();
                 Placeholder uuid = new Placeholder("uuid",player.getUniqueId());
 
-                sender.sendMessage(lm.getTextComponent("uuid.OTHER",player,uuid));
+                lm.sendMessage(sender,"uuid.OTHER",player,uuid);
             }else{
-                sender.sendMessage(lm.getTextComponent("core.NO_PLAYER_FOUND"));
+                lm.sendMessage(sender,"core.NO_PLAYER_FOUND");
             }
         }else{
             if(sender instanceof ProxiedPlayer) {
                 ProxiedPlayer player = (ProxiedPlayer) sender;
                 Placeholder uuid = new Placeholder("uuid",player.getUniqueId());
 
-                sender.sendMessage(lm.getTextComponent("uuid.SELF",uuid));
+                lm.sendMessage(sender,"uuid.SELF",uuid);
             }else{
-                sender.sendMessage(lm.getTextComponent("core.NO_PLAYER_FOUND"));
+                lm.sendMessage(sender,"core.NO_PLAYER_FOUND");
             }
         }
     }

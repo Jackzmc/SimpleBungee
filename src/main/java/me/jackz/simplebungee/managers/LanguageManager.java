@@ -3,6 +3,7 @@ package me.jackz.simplebungee.managers;
 import me.jackz.simplebungee.SimpleBungee;
 import me.jackz.simplebungee.utils.Placeholder;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
@@ -19,6 +20,7 @@ public class LanguageManager {
             plugin.getLogger().severe("Could not load the language file.  " + e.getMessage());
         }
     }
+    //region getString
     public String getRawString(String path) {
         return messages.getString(path);
     }
@@ -30,6 +32,30 @@ public class LanguageManager {
         String message = messages.getString(path);
         return ChatColor.translateAlternateColorCodes('&',message+"&r");
     }
+    //endregion
+    //region sendMessae
+    public void sendMessage(ProxiedPlayer player, String path) {
+        TextComponent tc = getTextComponent(path,player);
+        player.sendMessage(tc);
+    }
+    public void sendMessage(ProxiedPlayer player, String path, Placeholder... placeholders) {
+        TextComponent tc = getTextComponent(path,player,placeholders);
+        player.sendMessage(tc);
+    }
+    public void sendMessage(CommandSender sender, String path) {
+        TextComponent tc = getTextComponent(path);
+        sender.sendMessage(tc);
+    }
+    public void sendMessage(CommandSender sender, String path, Placeholder... placeholders) {
+        TextComponent tc = getTextComponent(path,placeholders);
+        sender.sendMessage(tc);
+    }
+    public void sendMessage(CommandSender sender, String path, ProxiedPlayer player, Placeholder... placeholders) {
+        TextComponent tc = getTextComponent(path,player,placeholders);
+        sender.sendMessage(tc);
+    }
+    //endregion
+    //region getTextComponent
     public TextComponent getTextComponent(String path) {
         String v = messages.getString(path);
         return (v != null) ? new TextComponent(ChatColor.translateAlternateColorCodes('&',v+"&r")) : default_component;
@@ -67,7 +93,8 @@ public class LanguageManager {
             return default_component;
         }
     }
-
+    //endregion
+    //region internal
     private static String formatPlaceholders(String string, ProxiedPlayer player) {
         if(player != null) {
             String server = player.getServer() != null? player.getServer().getInfo().getName() : "";

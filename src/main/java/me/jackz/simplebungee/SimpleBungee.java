@@ -32,7 +32,7 @@ public final class SimpleBungee extends Plugin {
     private FriendsManager friendsManager;
     private Notes notes;
 
-    private final static Version LATEST_CONFIG_VERSION = new Version("1.0");
+    private final static Version LATEST_CONFIG_VERSION = new Version("1.1");
     private final static String UPDATE_CHECK_URL = "https://api.spigotmc.org/legacy/update.php?resource=71230";
 
     private String latest_update = null;

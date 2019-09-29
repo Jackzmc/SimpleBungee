@@ -42,14 +42,14 @@ public class Global extends Command implements Listener {
                 boolean toggled = GLOBAL_CHAT_TOGGLED.getOrDefault(player.getUniqueId(),false);
                 if(toggled) {
                     GLOBAL_CHAT_TOGGLED.put(player.getUniqueId(),false);
-                    sender.sendMessage(lm.getTextComponent("global.NOW_LOCALCHAT"));
+                    lm.sendMessage(sender,"global.NOW_LOCALCHAT");
                 }else{
                     GLOBAL_CHAT_TOGGLED.put(player.getUniqueId(),true);
-                    sender.sendMessage(lm.getTextComponent("global.NOW_GLOBALCHAT"));
+                    lm.sendMessage(sender,"global.NOW_GLOBALCHAT");
                 }
             }
         }else{
-            sender.sendMessage(lm.getTextComponent("core.PLAYER_ONLY"));
+            lm.sendMessage(sender,"core.PLAYER_ONLY");
         }
 
     }

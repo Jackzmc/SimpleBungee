@@ -34,13 +34,13 @@ public class Friends extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if(!(sender instanceof ProxiedPlayer)) {
-            sender.sendMessage(lm.getTextComponent("core.PLAYER_ONLY"));
+            lm.sendMessage(sender,"core.PLAYER_ONLY");
             return;
         }
         ProxiedPlayer player = (ProxiedPlayer) sender;
         if(args.length == 0 || args[0].equalsIgnoreCase("help")) {
             //show gui
-            sender.sendMessage(lm.getTextComponent("friends.HELP"));
+            lm.sendMessage(sender,"friends.HELP");
         }else{
             switch(args[0].toLowerCase()) {
                 case "add": {
@@ -51,17 +51,17 @@ public class Friends extends Command {
                             List<UUID> friends_list = fm.getFriends(friend.getUniqueId());
                             List<UUID> friend_requests = fm.getFriendRequests(friend.getUniqueId());
                             if(friends_list.contains(player.getUniqueId())) {
-                                sender.sendMessage(lm.getTextComponent("friends.ALREADY_FRIENDS",friend));
+                                lm.sendMessage(sender,"friends.ALREADY_FRIENDS",friend);
                                 return;
                             }else if(friend_requests.contains(player.getUniqueId())) {
-                                sender.sendMessage(lm.getTextComponent("friends.ALREADY_SENT_REQUEST",friend));
+                                lm.sendMessage(sender,"friends.ALREADY_SENT_REQUEST",friend);
                                 return;
                             }else if(friend == player) {
-                                sender.sendMessage(lm.getTextComponent("friends.FRIENDS_WITH_SELF"));
+                                lm.sendMessage(sender,"friends.FRIENDS_WITH_SELF");
                                 return;
                             }
                             fm.addFriendRequest(friend.getUniqueId(), player.getUniqueId());
-                            sender.sendMessage(lm.getTextComponent("friends.REQUEST_SEND",friend));
+                            lm.sendMessage(sender,"friends.REQUEST_SEND",friend);
 
                             TextComponent base = lm.getTextComponent("friends.RECEIVE_REQUEST",player);
                             TextComponent approve = lm.getTextComponent("friends.ACCEPT_BUTTON");
@@ -80,10 +80,10 @@ public class Friends extends Command {
                             base.addExtra(reject);
                             friend.sendMessage(base);
                         } else {
-                            sender.sendMessage(lm.getTextComponent("core.NO_PLAYER_FOUND"));
+                            lm.sendMessage(sender,"core.NO_PLAYER_FOUND");
                         }
                     } else {
-                        sender.sendMessage(lm.getTextComponent("friends.ADD_FRIEND_USAGE"));
+                        lm.sendMessage(sender,"friends.ADD_FRIEND_USAGE");
                     }
                     break;
                 }
@@ -94,13 +94,13 @@ public class Friends extends Command {
                             ProxiedPlayer friend = friends.iterator().next();
                             fm.removeFriend(friend.getUniqueId(),player.getUniqueId());
                             fm.removeFriend(player.getUniqueId(),friend.getUniqueId());
-                            sender.sendMessage(lm.getTextComponent("friends.REMOVE_PLAYER",friend));
+                            lm.sendMessage(sender,"friends.REMOVE_PLAYER",friend);
                             friend.sendMessage(lm.getTextComponent("friends.FRIENDSHIP_REMOVED",player));
                         }else{
-                            sender.sendMessage(lm.getTextComponent("core.NO_PLAYER_FOUND"));
+                            lm.sendMessage(sender,"core.NO_PLAYER_FOUND");
                         }
                     }else{
-                        sender.sendMessage(lm.getTextComponent("friends.DEL_FRIEND_USAGE"));
+                        lm.sendMessage(sender,"friends.DEL_FRIEND_USAGE");
                     }
                     break;
                 }
@@ -155,13 +155,13 @@ public class Friends extends Command {
                                 tc.addExtra(join);
                                 friend.sendMessage(tc);
                             }else{
-                                sender.sendMessage(lm.getTextComponent("friends.NOT_FRIENDS_WITH",friend));
+                                lm.sendMessage(sender,"friends.NOT_FRIENDS_WITH",friend);
                             }
                         }else{
-                            sender.sendMessage(lm.getTextComponent("core.NO_PLAYER_FOUND"));
+                            lm.sendMessage(sender,"core.NO_PLAYER_FOUND");
                         }
                     }else{
-                        sender.sendMessage(lm.getTextComponent("INVITE_USAGE"));
+                        lm.sendMessage(sender,"INVITE_USAGE");
                     }
 
                     break;
@@ -273,7 +273,7 @@ public class Friends extends Command {
 
                                 Placeholder username = new Placeholder("player_name",friend.getLastUsername());
                                 Placeholder server = new Placeholder("server_name",friend.getLastServer());
-                                sender.sendMessage(lm.getTextComponent("friends.ACCEPT_SUCCESS",username,server));
+                                lm.sendMessage(sender,"friends.ACCEPT_SUCCESS",username,server);
 
                                 ProxiedPlayer online_friend = friend.getOnlinePlayer(plugin.getProxy());
                                 //if friend is online
@@ -281,14 +281,14 @@ public class Friends extends Command {
                                     online_friend.sendMessage(lm.getTextComponent("friends.RECEIVE_ACCEPT_SUCCESS",player));
                                 }
                             }else{
-                                sender.sendMessage(lm.getTextComponent("friends.NO_PENDING_REQUEST"));
+                                lm.sendMessage(sender,"friends.NO_PENDING_REQUEST");
                             }
                         }catch(IllegalArgumentException e) {
-                            sender.sendMessage(lm.getTextComponent("core.NO_PLAYER_FOUND"));
+                            lm.sendMessage(sender,"core.NO_PLAYER_FOUND");
                         }
 
                     }else{
-                        sender.sendMessage(lm.getTextComponent("friends.ACCEPT_USAGE"));
+                        lm.sendMessage(sender,"friends.ACCEPT_USAGE");
                     }
                     break;
                 }
@@ -304,21 +304,21 @@ public class Friends extends Command {
                                 requests.remove(uuid);
                                 Placeholder username = new Placeholder("player_name",friend.getLastUsername());
                                 Placeholder server = new Placeholder("server_name",friend.getLastServer());
-                                sender.sendMessage(lm.getTextComponent("friends.REJECT_REQUEST",username,server));
+                                lm.sendMessage(sender,"friends.REJECT_REQUEST",username,server);
                             }else{
-                                sender.sendMessage(lm.getTextComponent("friends.NO_PENDING_REQUEST"));
+                                lm.sendMessage(sender,"friends.NO_PENDING_REQUEST");
                             }
                         }catch(IllegalArgumentException e) {
-                            sender.sendMessage(lm.getTextComponent("core.NO_PLAYER_FOUND_ALT"));
+                            lm.sendMessage(sender,"core.NO_PLAYER_FOUND_ALT");
                         }
 
                     }else{
-                        sender.sendMessage(lm.getTextComponent("friends.REJECT_USAGE"));
+                        lm.sendMessage(sender,"friends.REJECT_USAGE");
                     }
                     break;
                 }
                 default:
-                    sender.sendMessage(lm.getTextComponent("friends.UNKNOWN_ARGUMENT"));
+                    lm.sendMessage(sender,"friends.UNKNOWN_ARGUMENT");
             }
         }
     }

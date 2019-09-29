@@ -36,7 +36,7 @@ public class Notes extends Command {
         if(sender instanceof ProxiedPlayer) {
             ProxiedPlayer player = (ProxiedPlayer) sender;
             if(args.length == 0 || args[0].equalsIgnoreCase("help")) {
-                sender.sendMessage(lm.getTextComponent("notes.HELP",player));
+                lm.sendMessage(sender,"notes.HELP",player);
                 return;
             }
             switch(args[0].toLowerCase()) {
@@ -50,9 +50,9 @@ public class Notes extends Command {
 
                         int index = addToList(player,note);
                         Placeholder id = new Placeholder("id",index);
-                        sender.sendMessage(lm.getTextComponent("notes.ADD_SUCCESS",id));
+                        lm.sendMessage(sender,"notes.ADD_SUCCESS",id);
                     }else{
-                        sender.sendMessage(lm.getTextComponent("notes.MISSING_TEXT"));
+                        lm.sendMessage(sender,"notes.MISSING_TEXT");
                     }
                     break;
                 }
@@ -90,9 +90,9 @@ public class Notes extends Command {
                         //Placeholder name = new Placeholder("name",pair.getValue().getKey());
                         Placeholder id = new Placeholder("id",pair.getKey());
 
-                        sender.sendMessage(lm.getTextComponent("notes.REMOVE_SUCCESS",player,id));
+                        lm.sendMessage(sender,"notes.REMOVE_SUCCESS",player,id);
                     }else{
-                        sender.sendMessage(lm.getTextComponent("notes.NOT_FOUND",player));
+                        lm.sendMessage(sender,"notes.NOT_FOUND",player);
                     }
                     break;
                 }
@@ -106,9 +106,9 @@ public class Notes extends Command {
                         Placeholder name = new Placeholder("name",note.getKey());
                         Placeholder id = new Placeholder("id",pair.getKey());
 
-                        sender.sendMessage(lm.getTextComponent("notes.RENAME_SUCCESS",player,name,id));
+                        lm.sendMessage(sender,"notes.RENAME_SUCCESS",player,name,id);
                     }else{
-                        sender.sendMessage(lm.getTextComponent("notes.NOT_FOUND",player));
+                        lm.sendMessage(sender,"notes.NOT_FOUND",player);
                     }
                     break;
                 }
@@ -133,13 +133,13 @@ public class Notes extends Command {
                         tc.addExtra("\n§7" + note.getText());
                         player.sendMessage(tc);
                     }else{
-                        sender.sendMessage(lm.getTextComponent("notes.NOT_FOUND",player));
+                        lm.sendMessage(sender,"notes.NOT_FOUND",player);
                     }
                     ///notes <note id or key/list/remove/name>
-                    //sender.sendMessage(lm.getTextComponent("notes.USAGE",player));
+                    //lm.sendMessage(sender,"notes.USAGE",player));
             }
         }else{
-            sender.sendMessage(lm.getTextComponent("PLAYER_ONLY"));
+            lm.sendMessage(sender,"PLAYER_ONLY");
         }
     }
     private Pair<Integer,Note> findNote(ProxiedPlayer player, String key) {
