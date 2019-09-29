@@ -121,6 +121,16 @@ notes:
   REMOVE_SUCCESS: "&aSuccessfully removed note &e#%id%"
 
 ####################################
+# Moderation Command Messages
+# Placeholders: defaults
+####################################
+kick:
+  USAGE1: "&cPlease enter a player and a reason. Syntax: /kick <player> [reason]"
+  USAGE2: "&cPlease enter a reason for the kick."
+  PLAYER_NOT_FOUND: "&cThat player could not be found. They must be online."
+
+
+####################################
 # Global Chat Command Messages
 # Placeholders: defaults
 ####################################

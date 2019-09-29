@@ -32,6 +32,11 @@ commands: #true to enable, false to disable
   lookup: true
   global: true
   notes: true
+  moderation: true #kick, ban, and mute type commands
+
+# Moderation Configuration
+moderation:
+  require-reason: true #Should kicking, banning, and muting require a reason?
 
 # Global Connection Configuration
 connection-messages:
