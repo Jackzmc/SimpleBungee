@@ -14,7 +14,7 @@ public class Kick extends Command {
     private SimpleBungee plugin;
     private LanguageManager lm;
     public Kick(SimpleBungee plugin) {
-        super("kick","simplebungee.command.kick");
+        super("kick","simplebungee.command.kick","simplebungee:kick");
         this.plugin = plugin;
         this.lm = SimpleBungee.getLanguageManager();
     }
