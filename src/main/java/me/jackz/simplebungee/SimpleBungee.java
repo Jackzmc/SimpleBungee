@@ -93,6 +93,11 @@ public final class SimpleBungee extends Plugin {
             notes.loadNotes();
             pm.registerCommand(this,notes);
         }
+        if(config.getBoolean("commands.moderation",true)) {
+            pm.registerCommand(this,new Kick(this));
+            pm.registerCommand(this,new Ban(this));
+            pm.registerCommand(this,new Mute(this));
+        }
         //if(config.getBoolean("commands.report"))  pm.registerCommand(this,new Report(this));
         if(config.getBoolean("commands.global"))  {
             Global global = new Global(this);
