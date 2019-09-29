@@ -80,6 +80,9 @@ public class MainCommand extends Command {
                 if(config.getBoolean("commands.friends",true)) tc.addExtra("\n§e/friends <help/add/list/etc..> §7- friends management system");
                 if(config.getBoolean("commands.global",true)) tc.addExtra("\n§e/global [message] §7- send a global message across the bungeecoord");
                 if(config.getBoolean("commands.notes",true)) tc.addExtra("\n§e/notes help §7- take and record notes");
+                if(config.getBoolean("commands.kick",true)) tc.addExtra("\n§e/kick <player> [reason] §7- kick a player from bungeecoord");
+                if(config.getBoolean("commands.ban",true)) tc.addExtra("\n§e/ban <player> <reason> §7- ban a player from bungeecoord");
+                if(config.getBoolean("commands.mute",true)) tc.addExtra("\n§e/mute §7- prevent a player from chatting");
                 sender.sendMessage(tc);
                 break;
             }
