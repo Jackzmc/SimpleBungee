@@ -20,7 +20,7 @@ public class Servers extends Command {
     private final LanguageManager lm;
 
     public Servers(SimpleBungee plugin)  {
-        super("servers","simplebungee.command.servers");
+        super("servers","simplebungee.command.servers","simplebungee:servers");
         this.plugin = plugin;
         lm = SimpleBungee.getLanguageManager();
         this.show_restricted = plugin.getConfig().getBoolean("show-restricted-servers",false);

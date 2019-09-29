@@ -27,7 +27,7 @@ public class Notes extends Command {
     private final Map<UUID, List<Note>> NOTES = new HashMap<>();
 
     public Notes(SimpleBungee plugin) {
-        super("notes","simplebungee.command.notes","note");
+        super("notes","simplebungee.command.notes","note","simplebungee:notes","simplebungee:note");
         this.plugin = plugin;
         this.lm = SimpleBungee.getLanguageManager();
     }

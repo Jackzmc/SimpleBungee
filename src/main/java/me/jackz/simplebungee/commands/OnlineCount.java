@@ -14,7 +14,7 @@ public class OnlineCount extends Command {
     private SimpleBungee plugin;
 
     public OnlineCount()  {
-        super("online");
+        super("online","simplebungee.command.online","simplebungee:online");
     }
     public OnlineCount(SimpleBungee plugin)  {
         super("online");

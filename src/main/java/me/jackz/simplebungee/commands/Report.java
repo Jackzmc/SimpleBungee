@@ -19,7 +19,7 @@ public class Report extends Command implements Listener {
     private final SimpleBungee plugin;
 
     public Report(SimpleBungee plugin) {
-        super("report","simplebungee.command.report");
+        super("report","simplebungee.command.report","simplebungee:report");
         this.plugin = plugin;
         Configuration config = plugin.getConfig();
         REASONS = config.getStringList("report.reasons");

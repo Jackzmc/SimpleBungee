@@ -13,7 +13,7 @@ import java.io.IOException;
 public class MainCommand extends Command {
     private final SimpleBungee plugin;
     public MainCommand(SimpleBungee plugin) {
-        super("simplebungee","simplebungee.command.simplebungee","sb");
+        super("simplebungee","simplebungee.command.simplebungee","sb","simplebungee:simplebungee");
         this.plugin = plugin;
     }
 

@@ -15,7 +15,7 @@ public class PingCommand extends Command {
         super("ping");
     }
     public PingCommand(SimpleBungee plugin)  {
-        super("ping");
+        super("ping","simplebungee.command.ping","simplebungee:ping");
         this.plugin = plugin;
     }
     @Override

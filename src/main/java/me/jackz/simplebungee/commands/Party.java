@@ -6,7 +6,7 @@ import net.md_5.bungee.api.plugin.Command;
 
 public class Party extends Command {
     public Party(SimpleBungee plugin) {
-        super("party");
+        super("party","simplebungee.command.party","simplebungee:party");
     }
 
     @Override

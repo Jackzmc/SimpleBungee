@@ -22,7 +22,7 @@ public class Global extends Command implements Listener {
     private final LanguageManager lm;
 
     public Global(SimpleBungee plugin) {
-        super("global","simplebungee.command.global","g");
+        super("global","simplebungee.command.global","g","simplebungee:global");
         this.plugin = plugin;
         lm = SimpleBungee.getLanguageManager();
     }

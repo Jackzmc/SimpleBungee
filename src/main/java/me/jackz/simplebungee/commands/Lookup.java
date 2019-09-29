@@ -17,7 +17,7 @@ public class Lookup extends Command {
     private final SimpleBungee plugin;
     private final PlayerLoader playerLoader;
     public Lookup(SimpleBungee plugin) {
-        super("lookup");
+        super("lookup","simplebungee.command.lookup","simplebungee:lookup");
         this.plugin = plugin;
         this.playerLoader =  plugin.getPlayerLoader();
     }

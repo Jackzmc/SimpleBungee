@@ -25,7 +25,7 @@ public class Friends extends Command {
     private final LanguageManager lm;
 
     public Friends(SimpleBungee plugin) {
-        super("friends","simplebungee.command.friends","friend");
+        super("friends","simplebungee.command.friends","friend","simplebungee:friend","simplebungee:friends");
         this.plugin = plugin;
         this.playerLoader = new PlayerLoader(plugin);
         this.lm = SimpleBungee.getLanguageManager();

@@ -13,7 +13,7 @@ public class UUIDCommand extends Command {
     private final SimpleBungee plugin;
     private final LanguageManager lm;
     public UUIDCommand(SimpleBungee plugin)  {
-        super("uuid");
+        super("uuid","simplebungee.command.uuid","simplebungee:uuid");
         this.plugin = plugin;
         this.lm = SimpleBungee.getLanguageManager();
     }
