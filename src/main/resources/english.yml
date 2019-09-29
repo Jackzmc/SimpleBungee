@@ -130,10 +130,12 @@ kick:
   USAGE2: "&cPlease enter a reason for the kick."
   PLAYER_NOT_FOUND: "&cThat player could not be found. They must be online."
   SUCCESS: "&aSuccesfully kicked %player_name%"
-  REASON: -|
+  REASON: |-
     &cYou have been kicked!
     &rReason:
+
     &7%reason%&r
+
     &6Kicked by: &r%kickedby%
 
 ####################################

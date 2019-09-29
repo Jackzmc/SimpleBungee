@@ -27,11 +27,17 @@ public class Kick extends Command {
         }else{
             if(reason_required && args.length <= 1) {
                 lm.sendMessage(sender,"kick.USAGE2");
+                return;
             }
             ProxiedPlayer player = Util.findPlayer(args[0]);
             if(player != null) {
                 //String[] reason = args.
-                String reasonText = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+                String reasonText;
+                if(args.length >= 2) {
+                    reasonText =  String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+                }else{
+                    reasonText = "&o[none]";
+                }
                 Placeholder reason = new Placeholder("reason",reasonText);
                 Placeholder kickedby = new Placeholder("kickedby",sender.getName());
                 Placeholder kickedby_display;
