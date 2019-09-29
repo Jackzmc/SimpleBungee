@@ -123,12 +123,18 @@ notes:
 ####################################
 # Moderation Command Messages
 # Placeholders: defaults
+# REASON: %reason% -> message for why, %kickedby% -> who kicked them, %kickedby_display% -> display name of kicker
 ####################################
 kick:
   USAGE1: "&cPlease enter a player and a reason. Syntax: /kick <player> [reason]"
   USAGE2: "&cPlease enter a reason for the kick."
   PLAYER_NOT_FOUND: "&cThat player could not be found. They must be online."
-
+  SUCCESS: "&aSuccesfully kicked %player_name%"
+  REASON: -|
+    &cYou have been kicked!
+    &rReason:
+    &7%reason%&r
+    &6Kicked by: &r%kickedby%
 
 ####################################
 # Global Chat Command Messages
