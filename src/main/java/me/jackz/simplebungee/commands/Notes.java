@@ -173,41 +173,58 @@ public class Notes extends Command {
     public void loadNotes() {
         File data_file = new File(plugin.getDataFolder(),"notes.yml");
         if(data_file.exists()) {
-            try {
-                Configuration notes = ConfigurationProvider.getProvider(YamlConfiguration.class).load(data_file);
-                for (String uuidkey : notes.getKeys()) {
-                    List<Note> noteList = new ArrayList<>();
-                    for(String id : notes.getSection(uuidkey).getKeys()) {
-                        String _key = notes.getString(Util.getSectioned(uuidkey,id,"key"),null);
-                        String _text = notes.getString(Util.getSectioned(uuidkey,id,"text"),null);
-                        long _created = notes.getLong(Util.getSectioned(uuidkey,id,"created"));
-                        if(_key != null && _key.equals("")) _key = null;
-                        //ignore blank text
-                        if(_text == null || _text.equals("")) {
-                            continue;
-                        }
-
-                        Note note = new Note(_key,_text,_created);
-                        noteList.add(note);
-                    }
-                    UUID uuid = UUID.fromString(uuidkey);
-                    NOTES.put(uuid,noteList);
+            migrateNotes(data_file); //migrate notes, and load from here
+            return;
+        }
+        Configuration notes = plugin.data.getSection("notes");
+        for (String uuidkey : notes.getKeys()) {
+            List<Note> noteList = new ArrayList<>();
+            for(String id : notes.getSection(uuidkey).getKeys()) {
+                String _key = notes.getString(Util.getSectioned(uuidkey,id,"key"),null);
+                String _text = notes.getString(Util.getSectioned(uuidkey,id,"text"),null);
+                long _created = notes.getLong(Util.getSectioned(uuidkey,id,"created"));
+                if(_key != null && _key.equals("")) _key = null;
+                //ignore blank text
+                if(_text == null || _text.equals("")) {
+                    continue;
                 }
-            } catch (IOException e) {
-                plugin.getLogger().severe("Could not load notes");
+
+                Note note = new Note(_key,_text,_created);
+                noteList.add(note);
             }
-        }else{
-            Configuration data = new Configuration();
-            try {
-                ConfigurationProvider.getProvider(YamlConfiguration.class).save(data, data_file);
-            } catch (IOException e) {
-                plugin.getLogger().severe("Could not create notes.yml file!");
+            UUID uuid = UUID.fromString(uuidkey);
+            NOTES.put(uuid,noteList);
+        }
+    }
+    private void migrateNotes(File file) {
+        Configuration c = null;
+        try {
+            c = ConfigurationProvider.getProvider(YamlConfiguration.class).load(file);
+            for (String uuidkey : c.getKeys()) {
+                List<Note> noteList = new ArrayList<>();
+                for(String id : c.getSection(uuidkey).getKeys()) {
+                    String _key = c.getString(Util.getSectioned(uuidkey,id,"key"),null);
+                    String _text = c.getString(Util.getSectioned(uuidkey,id,"text"),null);
+                    long _created = c.getLong(Util.getSectioned(uuidkey,id,"created"));
+                    if(_key != null && _key.equals("")) _key = null;
+                    //ignore blank text
+                    if(_text == null || _text.equals("")) {
+                        continue;
+                    }
+
+                    Note note = new Note(_key,_text,_created);
+                    noteList.add(note);
+                }
+                UUID uuid = UUID.fromString(uuidkey);
+                NOTES.put(uuid,noteList);
             }
+            saveNotes();
+        } catch (IOException e) {
+            plugin.getLogger().severe("Could not migrate notes.yml to data.yml. File has been untouched.");
         }
     }
     public void saveNotes() {
-        File data_file = new File(plugin.getDataFolder(),"notes.yml");
-        Configuration section = new Configuration();
+        Configuration section = plugin.data.getSection("notes");
         for (Map.Entry<UUID, List<Note>> uuidListEntry : NOTES.entrySet()) {
             UUID key = uuidListEntry.getKey();
             List<Note> notes = uuidListEntry.getValue();
@@ -218,10 +235,6 @@ public class Notes extends Command {
                 section.set(key + "." + i + ".created",note.getCreated());
             }
         }
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(section,data_file);
-        } catch (IOException e) {
-            plugin.getLogger().severe("Could not save notes.yml file.");
-        }
+        //don't need to save, plugin will handle it
     }
 }
