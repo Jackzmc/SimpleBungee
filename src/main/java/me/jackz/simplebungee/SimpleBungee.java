@@ -45,7 +45,7 @@ public final class SimpleBungee extends Plugin {
             saveDefaultResource("config.yml",false);
             saveDefaultResource("english.yml",true);
         }catch(IOException ex) {
-            getLogger().severe("Failed to copy resources " + ex.getMessage());
+            getLogger().severe("Failed to copy resources. " + ex.getMessage());
         }
         /* load data & config */
 
@@ -58,7 +58,7 @@ public final class SimpleBungee extends Plugin {
             data = loadData();
             //PLAYER_MAP;
         }catch(IOException e) {
-            getLogger().severe("Error occurred while loading configuration or data files. " + e.getMessage());
+            getLogger().severe("Error occurred while loading plugin data & configuration. " + e.getMessage());
         }
 
         /* load managers, commands, and listeners */
@@ -68,11 +68,13 @@ public final class SimpleBungee extends Plugin {
 
         String config_version = config.getString("config-version","0");
         Version current_config_version = new Version(config_version);
+
         //check if the current config version is less than LATEST_CONFIG_VERSION
         if(config_version == null || current_config_version.compareTo(LATEST_CONFIG_VERSION) < 0) {
             String message = String.format("Your config file is version %s, the latest is %s. Please upgrade the file by deleting the config.yml.", config_version,LATEST_CONFIG_VERSION);
             getLogger().warning(message);
         }
+        //update check
         if(config.getBoolean("check-for-updates",true)) {
             PluginDescription pd = getDescription();
             plugin_version = pd.getVersion();
@@ -81,8 +83,36 @@ public final class SimpleBungee extends Plugin {
                 getLogger().info("There is a new version of SimpleBungee. Current: " + plugin_version + ", Latest: " + latest_update);
             }
         }
+        //load commands & events
+        loadCommands();
+        loadEvents();
 
+        //finally, load metrics
+        if(config.getBoolean("metrics-enabled",true)) {
+            MetricsLite metrics = new MetricsLite(this);
+            if(metrics.isEnabled()) {
+                getLogger().info("bStats metrics has been enabled.");
+            }
+        }
+    }
 
+    @Override
+    public void onDisable() {
+        try {
+            friendsManager.saveFriendsList();
+            if(notes != null) notes.saveNotes();
+            for (ProxiedPlayer player : getProxy().getPlayers()) {
+                playerLoader.save(player);
+                //use english.yml later
+            }
+        } catch (IOException e) {
+            getLogger().severe("An exception occurred while saving plugin data. ");
+            e.printStackTrace();
+        }
+        // Plugin shutdown logic
+    }
+
+    private void loadCommands() {
         PluginManager pm = getProxy().getPluginManager();
         if(config.getBoolean("commands.ping",true))    pm.registerCommand(this,new PingCommand(this));
         if(config.getBoolean("commands.servers",true)) pm.registerCommand(this,new Servers(this));
@@ -109,30 +139,13 @@ public final class SimpleBungee extends Plugin {
             Configuration servers = config.getSection("server_shortcuts");
             ServerShortcut.setupShortcuts(this, servers);
         }
-        if(config.getBoolean("metrics-enabled",true)) {
-            MetricsLite metrics = new MetricsLite(this);
-            if(metrics.isEnabled()) {
-                getLogger().info("bStats metrics has been enabled.");
-            }
-        }
 
+    }
+    private void loadEvents() {
+        PluginManager pm = getProxy().getPluginManager();
         pm.registerListener(this,new PlayerEvents(this));
     }
 
-    @Override
-    public void onDisable() {
-        try {
-            friendsManager.saveFriendsList();
-            if(notes != null) notes.saveNotes();
-            for (ProxiedPlayer player : getProxy().getPlayers()) {
-                playerLoader.save(player);
-                //use english.yml later
-            }
-        } catch (IOException e) {
-            getLogger().severe("Could not save friend list and friend requests.");
-        }
-        // Plugin shutdown logic
-    }
     //region getters
     public PlayerLoader getPlayerLoader() {
         return playerLoader;
