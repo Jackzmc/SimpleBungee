@@ -30,7 +30,6 @@ public class PlayerLoader {
         data.set(key + "last_login",store.getLogoutTime());
         data.set(key + "last_ip",store.getIP());
         data.set(key + "last_server",store.getLastServer());
-        plugin.saveData();
     }
 
     /** Check if a certain player is online

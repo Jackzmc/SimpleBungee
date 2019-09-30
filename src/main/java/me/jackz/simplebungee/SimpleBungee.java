@@ -99,12 +99,13 @@ public final class SimpleBungee extends Plugin {
     @Override
     public void onDisable() {
         try {
-            friendsManager.saveFriendsList();
+            if(friendsManager != null) friendsManager.saveFriendsList();
             if(notes != null) notes.saveNotes();
             for (ProxiedPlayer player : getProxy().getPlayers()) {
                 playerLoader.save(player);
                 //use english.yml later
             }
+            saveData();
         } catch (IOException e) {
             getLogger().severe("An exception occurred while saving plugin data. ");
             e.printStackTrace();

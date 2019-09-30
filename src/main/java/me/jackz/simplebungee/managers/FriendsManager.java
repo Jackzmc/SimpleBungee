@@ -79,7 +79,6 @@ public class FriendsManager {
             List<String> string_friends = entry.getValue().stream().map(UUID::toString).collect(Collectors.toList());
             sub_player.set("friends",string_friends);
         }
-        plugin.saveData();
     }
     public void loadFriendsList() {
         Configuration data = plugin.data;
