@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.concurrent.TimeUnit;
 
 
 public final class SimpleBungee extends Plugin {
@@ -34,6 +35,7 @@ public final class SimpleBungee extends Plugin {
 
     private final static Version LATEST_CONFIG_VERSION = new Version("1.1");
     private final static String UPDATE_CHECK_URL = "https://api.spigotmc.org/legacy/update.php?resource=71230";
+    private final long AUTOSAVE_INTERVAL_MIN = 60;
 
     private String latest_update = null;
     private String plugin_version = null;
@@ -87,6 +89,18 @@ public final class SimpleBungee extends Plugin {
         loadCommands();
         loadEvents();
 
+        //set up autosave
+        getProxy().getScheduler().schedule(this, new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    saveData();
+                } catch (IOException e) {
+                    getLogger().warning("Exception during plugin data autosave. " + e.getMessage());
+                }
+            }
+        },0L, AUTOSAVE_INTERVAL_MIN, TimeUnit.MINUTES);
+
         //finally, load metrics
         if(config.getBoolean("metrics-enabled",true)) {
             MetricsLite metrics = new MetricsLite(this);
@@ -94,10 +108,13 @@ public final class SimpleBungee extends Plugin {
                 getLogger().info("bStats metrics has been enabled.");
             }
         }
+
+
     }
 
     @Override
     public void onDisable() {
+        getProxy().getScheduler().cancel(this);
         try {
             if(friendsManager != null) friendsManager.saveFriendsList();
             if(notes != null) notes.saveNotes();
