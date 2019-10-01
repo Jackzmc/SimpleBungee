@@ -90,14 +90,11 @@ public final class SimpleBungee extends Plugin {
         loadEvents();
 
         //set up autosave
-        getProxy().getScheduler().schedule(this, new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    saveData();
-                } catch (IOException e) {
-                    getLogger().warning("Exception during plugin data autosave. " + e.getMessage());
-                }
+        getProxy().getScheduler().schedule(this, () -> {
+            try {
+                saveData();
+            } catch (IOException e) {
+                getLogger().warning("Exception during plugin data autosave. " + e.getMessage());
             }
         },0L, AUTOSAVE_INTERVAL_MIN, TimeUnit.MINUTES);
 
