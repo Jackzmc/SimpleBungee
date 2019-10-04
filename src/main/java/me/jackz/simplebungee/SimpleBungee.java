@@ -2,6 +2,7 @@ package me.jackz.simplebungee;
 
 import me.jackz.simplebungee.commands.*;
 import me.jackz.simplebungee.listeners.PlayerEvents;
+import me.jackz.simplebungee.managers.BanManager;
 import me.jackz.simplebungee.managers.FriendsManager;
 import me.jackz.simplebungee.managers.LanguageManager;
 import me.jackz.simplebungee.managers.PlayerLoader;
@@ -29,6 +30,7 @@ public final class SimpleBungee extends Plugin {
     public Configuration data;
     private Configuration config;
     private static LanguageManager languageManager;
+    private BanManager banManager;
     private FriendsManager friendsManager;
     private Notes notes;
 
@@ -64,7 +66,8 @@ public final class SimpleBungee extends Plugin {
         /* load managers, commands, and listeners */
         languageManager = new LanguageManager(this);
         playerLoader = new PlayerLoader(this);
-        this.friendsManager = new FriendsManager(this);
+        banManager = new BanManager(this);
+        friendsManager = new FriendsManager(this);
 
         String config_version = config.getString("config-version","0");
         Version current_config_version = new Version(config_version);
@@ -149,6 +152,8 @@ public final class SimpleBungee extends Plugin {
     public FriendsManager getFriendsManager() {
         return friendsManager;
     }
+    public BanManager getBanManager() { return this.banManager; }
+
     public Configuration getConfig() {
         return this.config;
     }

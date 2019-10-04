@@ -50,7 +50,7 @@ public class Kick extends Command {
                 player.disconnect(lm.getTextComponent("kick.REASON",reason,kickedby,kickedby_display));
                 sender.sendMessage(lm.getTextComponent("kick.SUCCESS",player));
             }else{
-                lm.sendMessage(sender,"kick.PLAYER_NOT_FOUND");
+                lm.sendMessage(sender,"core.PLAYER_NOT_FOUND");
             }
         }
         //usage: /kick <player> [message]
