@@ -170,7 +170,7 @@ public class Friends extends Command {
                     List<UUID> friends = fm.getFriends(player.getUniqueId()); //FRIENDS_LIST.get(player.getUniqueId());
                     List<UUID> requests = fm.getFriendRequests(player.getUniqueId()); //FRIEND_REQUESTS.get(player.getUniqueId());
                     ServerInfo player_server = player.getServer().getInfo();
-                    TextComponent title_friends = lm.getTextComponent("friends.LIST_HEADING");
+                    TextComponent tc_base = lm.getTextComponent("friends.LIST_HEADING");
                     if (friends != null && friends.size() > 0) {
                         List<TextComponent> onlineFriends = new ArrayList<>();
                         List<TextComponent> offlineFriends = new ArrayList<>();
@@ -232,12 +232,12 @@ public class Friends extends Command {
                         }
                         //print online friends first, then offline
                         for (TextComponent onlineFriend : onlineFriends) {
-                            title_friends.addExtra("\n");
-                            title_friends.addExtra(onlineFriend);
+                            tc_base.addExtra("\n");
+                            tc_base.addExtra(onlineFriend);
                         }
                         for (TextComponent offlineFriend : offlineFriends) {
-                            title_friends.addExtra("\n");
-                            title_friends.addExtra(offlineFriend);
+                            tc_base.addExtra("\n");
+                            tc_base.addExtra(offlineFriend);
                         }
                     } else {
                         //show no friends msg if no friends
