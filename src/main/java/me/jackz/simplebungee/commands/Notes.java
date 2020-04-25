@@ -96,6 +96,7 @@ public class Notes extends Command {
                     }
                     break;
                 }
+                case "setkey":
                 case "setname": {
                     Pair<Integer,Note> pair = findNote(player,args[1]);
                     if(pair != null) {
@@ -219,6 +220,7 @@ public class Notes extends Command {
                 NOTES.put(uuid,noteList);
             }
             saveNotes();
+            file.delete();
         } catch (IOException e) {
             plugin.getLogger().severe("Could not migrate notes.yml to data.yml. File has been untouched.");
         }
