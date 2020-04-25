@@ -37,7 +37,8 @@ friends:
     &e/friend remove <player>&7 - unfriend a player
     &e/friend join <player>&7 - join your friend's game
     &e/friend invite <player>&7 - invite a friend to join your current server
-    &e/friend list&7 - view all friends, friend requests, and join/invite them.
+    &e/friend list&7 - lists all your friends sorted by online.
+    &e/friend requests&7 - view all friend requests
 
   #add friends:
   ALREADY_FRIENDS: "&cYou are already friends with %player_name%"
@@ -59,6 +60,8 @@ friends:
   NO_FRIENDS: "&cYou have no friends, why not find some?"
   REQUESTS_HEADING: "&6Friend Requests &r&6(%requests%)&r"
   FRIEND_IN_SERVER: "&d[In Your Server]"
+  NO_FRIEND_REQUESTS: "&cYou have no friend requests at this time."
+  LIST_NOTICE_REQUESTS: "&dYou have %total% friend requests. View them with /friends requests"
 
   #join/invite
   SAME_SERVER_INVITE: "&cThey are already on your server."

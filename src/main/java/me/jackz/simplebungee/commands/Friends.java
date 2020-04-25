@@ -241,17 +241,17 @@ public class Friends extends Command {
                         }
                     } else {
                         //show no friends msg if no friends
-                        title_friends.addExtra("\n");
-                        title_friends.addExtra(lm.getTextComponent("friends.NO_FRIENDS"));
+                        tc_base.addExtra("\n");
+                        tc_base.addExtra(lm.getTextComponent("friends.NO_FRIENDS"));
                     }
-
+                    sender.sendMessage(tc_base);
+                    break;
+                }
+                case "requests" : {
+                    List<UUID> requests = fm.getFriendRequests(player.getUniqueId());
                     if (requests != null && requests.size() > 0) {
-                        title_friends.addExtra("\n"); //new line, separate friends & requests
+                        TextComponent tc_base = lm.getTextComponent("friends.REQUESTS_HEADING",new Placeholder("requests",requests.size()));
 
-                        TextComponent title_friend_requests = lm.getTextComponent("friends.REQUESTS_HEADING",new Placeholder("requests",requests.size()));
-                        title_friends.addExtra(title_friend_requests);
-
-                        //title_friends.addExtra("\n§7You have " + requests.size() + " friend requests");
                         for (UUID request : requests) {
                             OfflinePlayerStore friend = playerLoader.getPlayer(request);
                             TextComponent comp_request = new TextComponent(friend.getLastUsername());
@@ -275,11 +275,12 @@ public class Friends extends Command {
                             comp_request.addExtra(" ");
                             comp_request.addExtra(reject);
 
-                            title_friends.addExtra("\n");
-                            title_friends.addExtra(comp_request);
+                            tc_base.addExtra("\n");
+                            tc_base.addExtra(comp_request);
                         }
+                    }else{
+                        player.sendMessage(lm.getTextComponent("friends.NO_FRIEND_REQUESTS"));
                     }
-                    sender.sendMessage(title_friends);
                     break;
                 }
                 case "approve":
