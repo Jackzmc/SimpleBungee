@@ -107,6 +107,7 @@ public class PlayerEvents implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onServerConnect(ServerConnectEvent e) {
+        if(e.isCancelled()) return;
         ProxiedPlayer player = e.getPlayer();
         if(player.isConnected() && player.getServer() != null && !e.isCancelled()) {
             if(switch_server_messages) {
@@ -115,7 +116,7 @@ public class PlayerEvents implements Listener {
         }
 
     }
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onServerSwitch(ServerSwitchEvent e) {
         ProxiedPlayer player = e.getPlayer();
         ServerInfo previous = LAST_SERVER_MAP.get(player.getUniqueId());
