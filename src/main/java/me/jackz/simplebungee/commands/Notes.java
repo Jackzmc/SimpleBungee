@@ -26,7 +26,7 @@ public class Notes extends Command {
     private final LanguageManager lm;
     private final Map<UUID, List<Note>> NOTES = new HashMap<>();
 
-    private final int PAGE_SIZE = 20;
+    private final int PAGE_SIZE = 15;
 
     public Notes(SimpleBungee plugin) {
         super("notes","simplebungee.command.notes","note","simplebungee:notes","simplebungee:note");
@@ -100,7 +100,10 @@ public class Notes extends Command {
                     }
                     if(page < totalpages) {
                         Placeholder ph_next_page = new Placeholder("next_page",page+1);
-                        player.sendMessage(lm.getTextComponent("notes.LIST_MORE_NOTES",ph_page,ph_total_pages,ph_next_page));
+                        TextComponent TC_nextpage = lm.getTextComponent("notes.LIST_MORE_NOTES",ph_page,ph_total_pages,ph_next_page);
+                        TC_nextpage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/note list " + page+1 ));
+                        TC_nextpage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder("Click to see next page").create()));
+                        player.sendMessage(TC_nextpage);
                     }
                     break;
                 }
@@ -111,7 +114,6 @@ public class Notes extends Command {
                         playerNotes.remove(pair.getKey().intValue());
                         //Placeholder name = new Placeholder("name",pair.getValue().getKey());
                         Placeholder id = new Placeholder("id",pair.getKey());
-
                         lm.sendMessage(sender,"notes.REMOVE_SUCCESS",player,id);
                     }else{
                         lm.sendMessage(sender,"notes.NOT_FOUND",player);
