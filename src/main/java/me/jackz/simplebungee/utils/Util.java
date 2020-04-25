@@ -40,4 +40,14 @@ public class Util {
            return null;
        }
     }
+    public static int parseIntegerDefault(String input, int defaultValue) {
+        try {
+            return Integer.parseInt(input);
+        } catch(NumberFormatException ex) {
+           return defaultValue;
+        }
+    }
+    public static int parseIntegerDefault(String input) {
+        return parseIntegerDefault(input,0);
+    }
 }
