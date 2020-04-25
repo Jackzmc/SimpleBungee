@@ -13,6 +13,7 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -171,19 +172,25 @@ public class Friends extends Command {
                     ServerInfo player_server = player.getServer().getInfo();
                     TextComponent title_friends = lm.getTextComponent("friends.LIST_HEADING");
                     if (friends != null && friends.size() > 0) {
+                        List<TextComponent> onlineFriends = new ArrayList<>();
+                        List<TextComponent> offlineFriends = new ArrayList<>();
+
+                        //get list of all friends
                         for (UUID uuid : friends) {
                             boolean is_online = playerLoader.isPlayerOnline(uuid);
                             TextComponent comp_friend;
+
                             if(is_online) {
                                 ProxiedPlayer friend = plugin.getProxy().getPlayer(uuid);
                                 ServerInfo server = friend.getServer().getInfo();
                                 comp_friend = new TextComponent(friend.getName());
-
+                                //print server information hovertext
                                 BaseComponent[] hovertext = new ComponentBuilder("§7Server: §e" + server.getName())
                                         .append(" (" + server.getPlayers().size() + " online)")
                                         .append("\n§7Ping: §e" + friend.getPing() + " ms")
                                         .create();
                                 comp_friend.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,hovertext));
+                                //send invite and join if not on same server
                                 if(!server.equals(player_server)) {
                                     //sec: join
                                     TextComponent join = lm.getTextComponent("friends.JOIN_SERVER_BUTTON",friend);
@@ -206,20 +213,34 @@ public class Friends extends Command {
                                     comp_friend.addExtra(" ");
                                     comp_friend.addExtra(in_server);
                                 }
+                                comp_friend.setColor(ChatColor.GREEN);
+                                onlineFriends.add(comp_friend);
                             }else{
                                 OfflinePlayerStore friend = playerLoader.getPlayer(uuid);
                                 comp_friend = new TextComponent(friend.getLastUsername());
 
+                                //get last login info
                                 BaseComponent[] hovertext = new ComponentBuilder("§7Last Online: §e" + friend.getLastOnline())
                                         .append("\n§7Last Server: §e" + friend.getLastServer())
                                         .create();
+
                                 comp_friend.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,hovertext));
+                                comp_friend.setColor(ChatColor.RED);
+                                offlineFriends.add(comp_friend);
                             }
-                            comp_friend.setColor(is_online ? ChatColor.GREEN : ChatColor.RED);
+
+                        }
+                        //print online friends first, then offline
+                        for (TextComponent onlineFriend : onlineFriends) {
                             title_friends.addExtra("\n");
-                            title_friends.addExtra(comp_friend);
+                            title_friends.addExtra(onlineFriend);
+                        }
+                        for (TextComponent offlineFriend : offlineFriends) {
+                            title_friends.addExtra("\n");
+                            title_friends.addExtra(offlineFriend);
                         }
                     } else {
+                        //show no friends msg if no friends
                         title_friends.addExtra("\n");
                         title_friends.addExtra(lm.getTextComponent("friends.NO_FRIENDS"));
                     }
@@ -236,16 +257,19 @@ public class Friends extends Command {
                             TextComponent comp_request = new TextComponent(friend.getLastUsername());
                             comp_request.setColor(ChatColor.YELLOW);
 
+                            //setup friend request [ACCEPT] [REJECT] buttons
                             TextComponent approve = lm.getTextComponent("friends.ACCEPT_BUTTON");
                             TextComponent reject = lm.getTextComponent("friends.REJECT_BUTTON");
                             BaseComponent[] tooltip_approve = new ComponentBuilder(lm.getString("friends.ACCEPT_FRIEND_TOOLTIP")).create();
                             BaseComponent[] tooltip_reject = new ComponentBuilder(lm.getString("friends.REJECT_FRIEND_TOOLTIP")).create();
 
+                            //setup above button's click/hover events
                             approve.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend approve " + request));
                             approve.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip_approve));
                             reject.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/friend reject " + request));
                             reject.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, tooltip_reject));
 
+                            //add buttons to main message
                             comp_request.addExtra(" ");
                             comp_request.addExtra(approve);
                             comp_request.addExtra(" ");
