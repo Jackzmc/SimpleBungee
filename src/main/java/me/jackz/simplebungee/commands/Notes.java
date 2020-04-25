@@ -26,6 +26,8 @@ public class Notes extends Command {
     private final LanguageManager lm;
     private final Map<UUID, List<Note>> NOTES = new HashMap<>();
 
+    private final int PAGE_SIZE = 20;
+
     public Notes(SimpleBungee plugin) {
         super("notes","simplebungee.command.notes","note","simplebungee:notes","simplebungee:note");
         this.plugin = plugin;
@@ -66,19 +68,39 @@ public class Notes extends Command {
                         player.sendMessage(lm.getTextComponent("notes.NO_NOTES"));
                         return;
                     }
-                    Placeholder count = new Placeholder("count",playerNotes.size());
-                    player.sendMessage(lm.getTextComponent("notes.LIST_HEADING",count));
-                    for (int i = 0; i < playerNotes.size(); i++) {
+                    //get page number & starting index
+                    String pageno = args.length > 1 ? args[1] : null;
+                    int page = Util.parseIntegerDefault(pageno,1);
+                    int totalpages = (int) Math.ceil((double)playerNotes.size() / PAGE_SIZE);
+                    if(page <= 1) page = 1;
+                    if(page > totalpages) page = totalpages;
+
+                    int starting_index = PAGE_SIZE * (page-1);
+                    int ending_index = (PAGE_SIZE * (page)) - 1;
+
+                    //setup placeholders for basically only notes.LIST_HEADING
+                    Placeholder ph_count = new Placeholder("count",playerNotes.size());
+                    Placeholder ph_page = new Placeholder("page",page);
+                    Placeholder ph_total_pages = new Placeholder("total",totalpages);
+                    Placeholder ph_page_size = new Placeholder("page_size",PAGE_SIZE);
+                    player.sendMessage(lm.getTextComponent("notes.LIST_HEADING",ph_count,ph_page,ph_total_pages,ph_page_size));
+
+                    //get all notes from page start, only loop if less than PAGE_SIZE or total notes
+                    for (int i = starting_index; i < ending_index && i < playerNotes.size(); i++) {
                         Note note = playerNotes.get(i);
-                        Placeholder id = new Placeholder("id",i+1);
-                        Placeholder created = new Placeholder("created",note.getCreatedFormatted());
-                        Placeholder text = new Placeholder("text",note.getText());
+                        Placeholder ph_id = new Placeholder("id",i+1);
+                        Placeholder ph_created = new Placeholder("created",note.getCreatedFormatted());
+                        Placeholder ph_text = new Placeholder("text",note.getText());
                         if(note.hasKey()) {
                             Placeholder name = new Placeholder("name",note.getKey());
-                            player.sendMessage(lm.getTextComponent("notes.LIST_NOTE_NAMED",id,created,text,name));
+                            player.sendMessage(lm.getTextComponent("notes.LIST_NOTE_NAMED",ph_id,ph_created,ph_text,name));
                         }else{
-                            player.sendMessage(lm.getTextComponent("notes.LIST_NOTE",id,created,text));
+                            player.sendMessage(lm.getTextComponent("notes.LIST_NOTE",ph_id,ph_created,ph_text));
                         }
+                    }
+                    if(page < totalpages) {
+                        Placeholder ph_next_page = new Placeholder("next_page",page+1);
+                        player.sendMessage(lm.getTextComponent("notes.LIST_MORE_NOTES",ph_page,ph_total_pages,ph_next_page));
                     }
                     break;
                 }
