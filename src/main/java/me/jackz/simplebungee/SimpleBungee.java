@@ -129,10 +129,10 @@ public final class SimpleBungee extends Plugin {
 
     private void loadCommands() {
         PluginManager pm = getProxy().getPluginManager();
-        if(config.getBoolean("commands.ping",true))    pm.registerCommand(this,new Ping(this));
+        if(config.getBoolean("commands.ping",true))    pm.registerCommand(this,new PingCommand(this));
         if(config.getBoolean("commands.servers",true)) pm.registerCommand(this,new Servers(this));
         if(config.getBoolean("commands.online",true))  pm.registerCommand(this,new OnlineCount(this));
-        if(config.getBoolean("commands.uuid",true))    pm.registerCommand(this,new UUID(this));
+        if(config.getBoolean("commands.uuid",true))    pm.registerCommand(this,new UUIDCommand(this));
         if(config.getBoolean("commands.notes",true))    {
             notes = new Notes(this);
             notes.loadNotes();

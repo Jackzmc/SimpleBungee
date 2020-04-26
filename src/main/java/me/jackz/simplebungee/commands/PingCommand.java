@@ -8,13 +8,13 @@ import net.md_5.bungee.api.plugin.Command;
 
 import java.util.Collection;
 
-public class Ping extends Command {
+public class PingCommand extends Command {
     private SimpleBungee plugin;
 
-    public Ping()  {
+    public PingCommand()  {
         super("ping");
     }
-    public Ping(SimpleBungee plugin)  {
+    public PingCommand(SimpleBungee plugin)  {
         super("ping","simplebungee.command.ping","simplebungee:ping");
         this.plugin = plugin;
     }
