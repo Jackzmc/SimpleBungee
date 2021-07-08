@@ -126,6 +126,35 @@ notes:
   LIST_MORE_NOTES: "&6Type /notes list %next_page% to goto the next page."
 
 ####################################
+# Moderation Command Messages
+# Placeholders: defaults
+# ban.REASON: %reason% -> message for why, %bannedby% -> who banned them, %bannedby_display% -> display name of banner
+# kick.REASON: %reason% -> message for why, %kickedby% -> who kicked them, %kickedby_display% -> display name of kicker
+####################################
+kick:
+  USAGE1: "&cPlease enter a player and a reason. Syntax: /kick <player> [reason]"
+  USAGE2: "&cPlease enter a reason for the kick."
+  SUCCESS: "&aSuccesfully kicked %player_name%"
+  REASON: |-
+    &cYou have been kicked!
+    &rReason:
+
+    &7%reason%&r
+
+    &6Kicked by: &r%kickedby%
+ban:
+  USAGE: "&cPlease enter a player and a reason. Syntax: /ban <player> [reason]"
+  USAGE2: "&cPlease enter a reason for the ban. Syntax: /ban <player> <reason>"
+  SUCCESS: "&aSuccessfully banned %player_name%"
+  REASON: |-
+    &cYou have been banned!
+    &rReason:
+
+    &7%reason%&r
+
+    &6Banned by: &r%bannedby%
+
+####################################
 # Global Chat Command Messages
 # Placeholders: defaults
 ####################################

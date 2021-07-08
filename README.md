@@ -16,6 +16,9 @@ Currently in development, features are still in development and may change.
 | /global [message]    | simplebungee.command.global                                     | Allows access to global chat                              |
 | /\<server shortcut>  | simplebungee.command.\<server shortcut> IF enabled              | The shortcut of any server shortcut, and if perms enabled |
 | /notes               | simplebungee.command.notes                                      | Allows access to the notes feature                        |
+| /kick                | simplebungee.command.kick                                       | Gives access to the ability to kick a player from bungee  |
+| /ban                 | simplebungee.command.ban                                        | Gives access to ban someone from bungeecoord              |
+| /mute                | simplebungee.command.mute                                       | Gives access to mute someone from chatting                |
 
 ### Other Permissions
 * **simplebungee.updatecheck** - Notify player with this permission of plugin updates.
