@@ -57,6 +57,17 @@ report:
     - Harassment
     - Hacking
 
+# Database Configuration
+# Only if you want to be able to synchronize SimpleBungee
+use-mysql: false
+mysql:
+  prefix: "sb_"
+  hostname: "" #required
+  database: "" #required
+  port: 3306     #optional
+  username: null #optional
+  password: "" #optional
+
 
 # do not edit, this is used for version check:
 config-version: "1.1"
